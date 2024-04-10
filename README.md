@@ -7,7 +7,43 @@
     grenton_id: CLU221001090->ZWA8272
 ```
 
+grenton
 
+```lua
+local reqJson = GATE_HTTP->HA_Listener_Integration->RequestBody
+local code, resp
+
+logDebug("HA integration script start")
+
+if reqJson.command then
+	local s = reqJson.command
+	logDebug("HA integration s>> " .. s)
+	local p1, p2 = string.match(s, "(.-)->(.+)")
+	local g_command = p1 .. ':execute(0, "' .. p2 .. '")'   
+	logDebug("HA integration command cmd>> " .. g_command)
+	load(g_command)()
+	
+	resp = { g_status = "ok" }
+	code = 200
+
+elseif reqJson.status then
+	local s = reqJson.status
+	logDebug("HA integration s>> " .. s)
+	local p1, p2 = string.match(s, "(.-)->(.+)") 
+	local g_command = p1 .. ':execute(0, "' .. p2 .. '")'
+	logDebug("HA integration status cmd>> " .. g_command)
+	local g_object_value = load(g_command)()
+	resp = { object_value = g_object_value }
+	code = 201
+else
+	resp = { g_status = "Grenton script error" }
+	code = 400
+end
+
+GATE_HTTP->HA_Listener_Integration->SetStatusCode(code)
+GATE_HTTP->HA_Listener_Integration->SetResponseBody(resp)
+GATE_HTTP->HA_Listener_Integration->SendResponse()
+```
 
 temp
 
