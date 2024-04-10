@@ -30,15 +30,17 @@ elseif reqJson.status then
 	local s = reqJson.status
 	logDebug("HA integration s>> " .. s)
 	local p1, p2 = string.match(s, "(.-)->(.+)") 
-	local g_command = p1 .. ':execute(0, "' .. p2 .. '")'
+	local g_command = 'return ' .. p1 .. ':execute(0, "' .. p2 .. '")'
 	logDebug("HA integration status cmd>> " .. g_command)
 	local g_object_value = load(g_command)()
+	logDebug("HA integration status g_object_value>> " .. g_object_value)
 	resp = { object_value = g_object_value }
 	code = 201
 else
 	resp = { g_status = "Grenton script error" }
 	code = 400
 end
+
 
 GATE_HTTP->HA_Listener_Integration->SetStatusCode(code)
 GATE_HTTP->HA_Listener_Integration->SetResponseBody(resp)
