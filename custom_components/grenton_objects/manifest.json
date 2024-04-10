@@ -1,0 +1,11 @@
+{
+    "domain": "grenton_objects",
+    "name": "Grenton Objects",
+    "documentation": "https://link.do/dokumentacji",
+    "dependencies": [],
+    "codeowners": [],
+    "requirements": [],
+    "version": "0.1",
+    "issue_tracker": "https://link.do/issuetracker",
+    "autoload": true
+}
