@@ -16,7 +16,7 @@ CONF_LIGHT_NAME = 'name'
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Required(CONF_API_ENDPOINT): str,
     vol.Required(CONF_LIGHT_ID): str,
-    vol.Optional(CONF_LIGHT_NAME, default='Grenton Light'): str,
+    vol.Optional(CONF_LIGHT_NAME, default='Grenton Light'): str
 })
 
 def setup_platform(hass, config, add_entities, discovery_info=None):
@@ -45,7 +45,7 @@ class GrentonLight(LightEntity):
         try:
             response = requests.post(
                 f"{self._api_endpoint}/HAlistener2",
-                json = {"command": f"{self._light_id}:execute(1, 0)"} # on
+                json = {"command": f"{self._light_id}:execute(1, 0)"}
             ) 
             response.raise_for_status()
             self._state = STATE_ON
@@ -56,7 +56,7 @@ class GrentonLight(LightEntity):
         try:
             response = requests.post(
                 f"{self._api_endpoint}/HAlistener2",
-                json = {"command": f"{self._light_id}:execute(2, 0)"} # off
+                json = {"command": f"{self._light_id}:execute(2, 0)"}
             )
             response.raise_for_status()
             self._state = STATE_OFF
@@ -67,7 +67,7 @@ class GrentonLight(LightEntity):
         try:
             response = requests.get(
                 f"{self._api_endpoint}/HAlistener2",
-                json = {"status": f"{self._light_id}:get(0)"} # get device value
+                json = {"status": f"{self._light_id}:get(0)"}
             )
             response.raise_for_status()
             data = response.json()
