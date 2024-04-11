@@ -44,7 +44,7 @@ class GrentonLight(LightEntity):
     def turn_on(self, **kwargs):
         try:
             response = requests.post(
-                f"{self._api_endpoint}/HAlistener2",
+                f"{self._api_endpoint}",
                 json = {"command": f"{self._light_id}:execute(1, 0)"}
             ) 
             response.raise_for_status()
@@ -55,7 +55,7 @@ class GrentonLight(LightEntity):
     def turn_off(self, **kwargs):
         try:
             response = requests.post(
-                f"{self._api_endpoint}/HAlistener2",
+                f"{self._api_endpoint}",
                 json = {"command": f"{self._light_id}:execute(2, 0)"}
             )
             response.raise_for_status()
@@ -66,7 +66,7 @@ class GrentonLight(LightEntity):
     def update(self):
         try:
             response = requests.get(
-                f"{self._api_endpoint}/HAlistener2",
+                f"{self._api_endpoint}",
                 json = {"status": f"{self._light_id}:get(0)"}
             )
             response.raise_for_status()
