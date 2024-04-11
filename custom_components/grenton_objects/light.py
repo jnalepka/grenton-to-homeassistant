@@ -34,6 +34,7 @@ class GrentonLight(LightEntity):
         self._state = None
         self._color_mode = ColorMode.ONOFF
         self._supported_color_modes = [ColorMode.ONOFF]
+        self._unique_id = f"grenton_{light_id.split('->')[1]}"
 
     @property
     def name(self):
@@ -50,6 +51,10 @@ class GrentonLight(LightEntity):
     @property
     def color_mode(self):
         return self._color_mode
+
+    @property
+    def unique_id(self):
+        return self._unique_id
 
     def turn_on(self, **kwargs):
         try:
