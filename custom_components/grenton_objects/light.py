@@ -70,12 +70,21 @@ class GrentonLight(LightEntity):
 
     def turn_on(self, **kwargs):
         try:
+            command = {"command": f"{self._light_id}:set(0, 1)"}
+            if self._light_id.split('->')[1].startswith("LED"):
+                brightness = kwargs.get("brightness", 255)
+                scaled_brightness = brightness / 255
+                command = {"command": f"{self._light_id}:set(0, {scaled_brightness})"}
+                self._brightness = brightness
+            else:
+                self._brightness = None
             response = requests.post(
                 f"{self._api_endpoint}",
-                json = {"command": f"{self._light_id}:set(0, 1)"}
+                json=command
             ) 
             response.raise_for_status()
             self._state = STATE_ON
+            self._brightness = None
         except requests.RequestException as ex:
             _LOGGER.error(f"Failed to turn on the light: {ex}")
 
@@ -99,6 +108,8 @@ class GrentonLight(LightEntity):
             response.raise_for_status()
             data = response.json()
             self._state = STATE_OFF if data.get("object_value") == 0 else STATE_ON
+            if (self._light_id.split('->')[1].startswith("LED")):
+                self._brightness = int(data.get("object_value") * 255)
         except requests.RequestException as ex:
             _LOGGER.error(f"Failed to update the light state: {ex}")
             self._state = None
