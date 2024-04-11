@@ -1,6 +1,6 @@
 # GrentonObjects_HomeAssistant
 
-This is an unofficial integration of the Grenton system with Home Assistant.
+This is an unofficial integration of the Grenton system with the Home Assistant.
 
 ## Installation
 
