@@ -35,7 +35,7 @@ class GrentonLight(LightEntity):
         self._unique_id = f"grenton_{light_id.split('->')[1]}"
         self._brightness = None
 
-        if light_id.split('->')[1].startswith("DIM"):
+        if light_id.split('->')[1].startswith("LED"):
             self._supported_color_modes = [ColorMode.BRIGHTNESS]
         else:
             self._supported_color_modes = [ColorMode.ONOFF]
@@ -52,14 +52,10 @@ class GrentonLight(LightEntity):
     @property
     def supported_color_modes(self):
         return self._supported_color_modes
-
-    @property
-    def color_mode(self):
-        return self._color_mode
     
     @property
     def color_mode(self) -> ColorMode:
-        if (self._light_id.split('->')[1].startswith("DIM")):
+        if (self._light_id.split('->')[1].startswith("LED")):
             return ColorMode.BRIGHTNESS
         else:
             return ColorMode.ONOFF
