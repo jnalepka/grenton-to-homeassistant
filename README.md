@@ -89,11 +89,9 @@ light:
 ```
 
 #### Work with:
+* IO MODULE 8/8
+* IO MODULE 2/2 FM
+* RELAY X2
+* RELAY X4
 * RELAY Z-WAVE
 * RELAY WI-FI
-* 
-
-<feature default="0" enum="0,1" get="true" index="0" name="Value">
-<method call="set" index="0" name="SetValue" return="void">
-<method call="execute" index="1" name="SwitchOn" return="void">
-<method call="execute" index="2" name="SwitchOff" return="void">
