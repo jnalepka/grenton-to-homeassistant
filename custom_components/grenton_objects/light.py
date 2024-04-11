@@ -2,7 +2,7 @@ import requests
 import logging
 import json
 import voluptuous as vol
-from homeassistant.components.light import LightEntity, PLATFORM_SCHEMA
+from homeassistant.components.light import LightEntity, PLATFORM_SCHEMA, ColorMode
 from homeassistant.const import (STATE_ON, STATE_OFF)
 
 _LOGGER = logging.getLogger(__name__)
@@ -32,6 +32,8 @@ class GrentonLight(LightEntity):
         self._light_id = light_id
         self._light_name = light_name
         self._state = None
+        self._color_mode = ColorMode.ONOFF
+        self._supported_color_modes = [ColorMode.ONOFF]
 
     @property
     def name(self):
@@ -41,11 +43,19 @@ class GrentonLight(LightEntity):
     def is_on(self):
         return self._state == STATE_ON
 
+    @property
+    def supported_color_modes(self):
+        return self._supported_color_modes
+
+    @property
+    def color_mode(self):
+        return self._color_mode
+
     def turn_on(self, **kwargs):
         try:
             response = requests.post(
                 f"{self._api_endpoint}",
-                json = {"command": f"{self._light_id}:execute(1, 0)"}
+                json = {"command": f"{self._light_id}:set(0, 1)"}
             ) 
             response.raise_for_status()
             self._state = STATE_ON
@@ -56,7 +66,7 @@ class GrentonLight(LightEntity):
         try:
             response = requests.post(
                 f"{self._api_endpoint}",
-                json = {"command": f"{self._light_id}:execute(2, 0)"}
+                json = {"command": f"{self._light_id}:set(0, 0)"}
             )
             response.raise_for_status()
             self._state = STATE_OFF
