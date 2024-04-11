@@ -54,6 +54,7 @@ GATE_HTTP->HA_Listener_Integration->SendResponse()
 4. Add your Grenton objects to the Home Assistant. Example:
 
 ```yaml
+light:
   - platform: grenton_objects
     name: "Bedroom Lamp"
     api_endpoint: http://192.168.0.4/HAlistener
@@ -72,3 +73,27 @@ where:
 
 
 5. Send configuration to the Grenton Gate HTTP, restart HomeAssistant, and test your new objects in your Dashboard!
+
+> The data update in Home Assistant occurs automatically every 30 seconds.
+
+## Grenton objects
+
+### Light (On_Off)
+
+```yaml
+light:
+  - platform: grenton_objects
+    name: "Bedroom Lamp"
+    api_endpoint: http://192.168.0.4/HAlistener
+    grenton_id: CLU221001090->ZWA8272
+```
+
+#### Work with:
+* RELAY Z-WAVE
+* RELAY WI-FI
+* 
+
+<feature default="0" enum="0,1" get="true" index="0" name="Value">
+<method call="set" index="0" name="SetValue" return="void">
+<method call="execute" index="1" name="SwitchOn" return="void">
+<method call="execute" index="2" name="SwitchOff" return="void">
