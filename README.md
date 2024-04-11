@@ -15,7 +15,7 @@ This is an unofficial integration of the Grenton system with the Home Assistant.
 
   ![image](https://github.com/jnalepka/GrentonHomeAssistantIntegration/assets/70645322/1d69d9fc-95f3-4f89-90e3-588b8637ffad)
 
-3. Create a script and attach it to the OnRequest event of the virtual object.
+3. Create a script named `HA_Integration_Script` and attach it to the OnRequest event of the virtual object.
 
 ```lua
 local reqJson = GATE_HTTP->HA_Listener_Integration->RequestBody
