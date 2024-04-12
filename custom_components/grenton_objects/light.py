@@ -88,10 +88,17 @@ class GrentonLight(LightEntity):
                 command = {"command": f"{self._light_id}:set(0, {scaled_brightness})"}
                 self._brightness = brightness
             elif self._light_id.split('->')[1].startswith("LED"):
-                brightness = kwargs.get("brightness", 255)
-                scaled_brightness = brightness / 255
-                command = {"command": f"{self._light_id}:execute(0, {scaled_brightness})"}
-                self._brightness = brightness
+                rgb_color = kwargs.get("rgb_color")
+                _LOGGER.error(f"Wartość rgb_color: {rgb_color}")
+                if rgb_color:
+                    hex_color = '#{:02x}{:02x}{:02x}'.format(*rgb_color)
+                    command = {"command": f"{self._light_id}:execute(6, '{hex_color}')"}
+                    self._rgb_color = rgb_color
+                else:
+                    brightness = kwargs.get("brightness", 255)
+                    scaled_brightness = brightness / 255
+                    command = {"command": f"{self._light_id}:execute(0, {scaled_brightness})"}
+                    self._brightness = brightness
             else:
                 self._brightness = None
             response = requests.post(
