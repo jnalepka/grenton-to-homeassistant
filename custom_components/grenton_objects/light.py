@@ -33,12 +33,16 @@ class GrentonLight(LightEntity):
         self._light_name = light_name
         self._state = None
         self._unique_id = f"grenton_{light_id.split('->')[1]}"
+        self._supported_color_modes: set[ColorMode | str] = set()
         self._brightness = None
+        self._rgb_color = None
 
         if light_id.split('->')[1].startswith("DIM"):
-            self._supported_color_modes = [ColorMode.BRIGHTNESS]
+            self._supported_color_modes.add(ColorMode.BRIGHTNESS)
+        elif light_id.split('->')[1].startswith("LED"):
+            self._supported_color_modes.add(ColorMode.RGB)
         else:
-            self._supported_color_modes = [ColorMode.ONOFF]
+            self._supported_color_modes.add(ColorMode.ONOFF)
 
 
     @property
@@ -57,6 +61,8 @@ class GrentonLight(LightEntity):
     def color_mode(self) -> ColorMode:
         if (self._light_id.split('->')[1].startswith("DIM")):
             return ColorMode.BRIGHTNESS
+        elif (self._light_id.split('->')[1].startswith("LED")):
+            return ColorMode.RGB
         else:
             return ColorMode.ONOFF
 
@@ -68,6 +74,11 @@ class GrentonLight(LightEntity):
     def brightness(self):
         return self._brightness
 
+    @property
+    def rgb_color(self):
+        return self._rgb_color
+
+
     def turn_on(self, **kwargs):
         try:
             command = {"command": f"{self._light_id}:set(0, 1)"}
@@ -75,6 +86,11 @@ class GrentonLight(LightEntity):
                 brightness = kwargs.get("brightness", 255)
                 scaled_brightness = brightness / 255
                 command = {"command": f"{self._light_id}:set(0, {scaled_brightness})"}
+                self._brightness = brightness
+            elif self._light_id.split('->')[1].startswith("LED"):
+                brightness = kwargs.get("brightness", 255)
+                scaled_brightness = brightness / 255
+                command = {"command": f"{self._light_id}:execute(0, {scaled_brightness})"}
                 self._brightness = brightness
             else:
                 self._brightness = None
@@ -90,9 +106,12 @@ class GrentonLight(LightEntity):
 
     def turn_off(self, **kwargs):
         try:
+            command = {"command": f"{self._light_id}:set(0, 0)"}
+            if self._light_id.split('->')[1].startswith("LED"):
+                command = {"command": f"{self._light_id}:execute(0, 0)"}
             response = requests.post(
                 f"{self._api_endpoint}",
-                json = {"command": f"{self._light_id}:set(0, 0)"}
+                json = command
             )
             response.raise_for_status()
             self._state = STATE_OFF
