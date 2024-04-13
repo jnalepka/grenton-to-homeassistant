@@ -89,9 +89,7 @@ where:
 
 > The data update in Home Assistant occurs automatically every 30 seconds.
 
-## Grenton objects
-
-### Light (On_Off)
+## Grenton object - Light (On_Off)
 
 #### For:
 * IO MODULE 8/8 DIN
@@ -109,7 +107,7 @@ light:
     name: "Bedroom Lamp"
 ```
 
-### Light (Dimmer)
+## Grenton object - Light (Dimmer)
 
 #### For:
 * DIMMER DIN
@@ -135,7 +133,7 @@ light:
     name: "Bedroom Dimmer"
 ```
 
-### Light (RGB)
+## Grenton object - Light (RGB)
 
 #### For:
 * LED RGBW DIN
