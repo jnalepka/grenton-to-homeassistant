@@ -19,27 +19,40 @@ This is an unofficial integration of the Grenton system with the Home Assistant.
 
 ```lua
 local reqJson = GATE_HTTP->HA_Listener_Integration->RequestBody
-local code, resp
+local code = 400
+local resp = { g_status = "Grenton script error" }
 
-if reqJson.command then
-	local s = reqJson.command
-	local p1, p2 = string.match(s, "(.-)->(.+)")
-	local g_command = p1 .. ':execute(0, "' .. p2 .. '")'   
-	logDebug("HA integration command >> " .. g_command)
-	load(g_command)()
-	resp = { g_status = "ok" }
-	code = 200
-elseif reqJson.status then
-	local s = reqJson.status
-	local p1, p2 = string.match(s, "(.-)->(.+)") 
-	local g_command = 'return ' .. p1 .. ':execute(0, "' .. p2 .. '")'
-	logDebug("HA integration status command>> " .. g_command)
-	local g_object_value = load(g_command)()
-	resp = { object_value = g_object_value }
-	code = 200
-else
-	resp = { g_status = "Grenton script error" }
-	code = 400
+if reqJson.command or reqJson.status then
+	local g_command, g_command_2, g_result, g_result_2
+    local s = reqJson.command or reqJson.status
+    local p1, p2 = string.match(s, "(.-)->(.+)")
+    g_command = p1 .. ':execute(0, "' .. p2 .. '")'
+    if reqJson.status then
+        g_command = 'return ' .. g_command
+        if reqJson.status_2 then
+        	local s_2 = reqJson.status_2
+        	local p1_2, p2_2 = string.match(s_2, "(.-)->(.+)")
+        	g_command_2 = 'return ' .. p1_2 .. ':execute(0, "' .. p2_2 .. '")'
+        end
+    end
+    logDebug("HA integration command >> " .. g_command)
+    g_result = load(g_command)()
+    if reqJson.status_2 then
+    	logDebug("HA integration command_2 >> " .. g_command_2)
+    	g_result_2 = load(g_command_2)()
+    end
+    
+    if reqJson.command then
+        resp = { g_status = "ok" }
+    else
+    	if reqJson.status_2 then
+    		resp = { object_value = g_result, object_value_2 = g_result_2 }
+    	else
+       		resp = { object_value = g_result }
+       	end
+    end
+    
+    code = 200
 end
 
 GATE_HTTP->HA_Listener_Integration->SetStatusCode(code)
@@ -80,33 +93,70 @@ where:
 
 ### Light (On_Off)
 
+#### For:
+* IO MODULE 8/8 DIN
+* IO MODULE 2/2 FM
+* RELAY X2 DIN
+* RELAY X4 DIN
+* RELAY Z-WAVE
+* RELAY WI-FI
+
 ```yaml
 light:
   - platform: grenton_objects
     name: "Bedroom Lamp"
     api_endpoint: http://192.168.0.4/HAlistener
-    grenton_id: CLU221001090->ZWA8272
+    grenton_id: CLU221001090->DOU8272
 ```
 
-#### Work with:
-* IO MODULE 8/8
-* IO MODULE 2/2 FM
-* RELAY X2
-* RELAY X4
-* RELAY Z-WAVE
-* RELAY WI-FI
-
 ### Light (Dimmer)
+
+#### For:
+* DIMMER DIN
+* DIMMER FM
+  
+```yaml
+light:
+  - platform: grenton_objects
+    name: "Bedroom Dimmer"
+    api_endpoint: http://192.168.0.4/HAlistener
+    grenton_id: CLU221001090->DIM8272
+```
+
+#### For:
+* LED RGBW Z-WAVE (SINGLE LED OBJECT)
+  
+```yaml
+light:
+  - platform: grenton_objects
+    name: "Bedroom Dimmer"
+    api_endpoint: http://192.168.0.4/HAlistener
+    grenton_id: CLU221001090->ZWA8272
+    grenton_type: DIMMER
+```
+
+### Light (RGB)
+
+#### For:
+* LED RGBW DIN
+* LED RGBW FM
 
 ```yaml
 light:
   - platform: grenton_objects
-    name: "Livingroom Lamp"
+    name: "Bedroom Led"
     api_endpoint: http://192.168.0.4/HAlistener
-    grenton_id: CLU221001090->DIM7452
+    grenton_id: CLU221001090->LED8272
 ```
 
-#### Work with:
-* Dimmer DIN
-* Dimmer FM
-  
+#### For:
+* LED RGBW Z-WAVE
+
+```yaml
+light:
+  - platform: grenton_objects
+    name: "Bedroom Led"
+    api_endpoint: http://192.168.0.4/HAlistener
+    grenton_id: CLU221001090->ZWA8272
+    grenton_type: RGB
+```
