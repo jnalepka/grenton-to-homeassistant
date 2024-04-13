@@ -4,6 +4,7 @@ import json
 import voluptuous as vol
 from homeassistant.components.light import LightEntity, PLATFORM_SCHEMA, ColorMode
 from homeassistant.const import (STATE_ON, STATE_OFF)
+from homeassistant.util import color as color_util
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -44,7 +45,6 @@ class GrentonLight(LightEntity):
         else:
             self._supported_color_modes.add(ColorMode.ONOFF)
 
-
     @property
     def name(self):
         return self._light_name
@@ -59,9 +59,9 @@ class GrentonLight(LightEntity):
     
     @property
     def color_mode(self) -> ColorMode:
-        if (self._light_id.split('->')[1].startswith("DIM")):
+        if self._light_id.split('->')[1].startswith("DIM"):
             return ColorMode.BRIGHTNESS
-        elif (self._light_id.split('->')[1].startswith("LED")):
+        elif self._light_id.split('->')[1].startswith("LED"):
             return ColorMode.RGB
         else:
             return ColorMode.ONOFF
@@ -78,7 +78,6 @@ class GrentonLight(LightEntity):
     def rgb_color(self):
         return self._rgb_color
 
-
     def turn_on(self, **kwargs):
         try:
             command = {"command": f"{self._light_id}:set(0, 1)"}
@@ -89,7 +88,6 @@ class GrentonLight(LightEntity):
                 self._brightness = brightness
             elif self._light_id.split('->')[1].startswith("LED"):
                 rgb_color = kwargs.get("rgb_color")
-                _LOGGER.error(f"Wartość rgb_color: {rgb_color}")
                 if rgb_color:
                     hex_color = '#{:02x}{:02x}{:02x}'.format(*rgb_color)
                     command = {"command": f"{self._light_id}:execute(6, '{hex_color}')"}
@@ -127,15 +125,20 @@ class GrentonLight(LightEntity):
 
     def update(self):
         try:
+            command = {"status": f"{self._light_id}:get(0)"}
+            if self._light_id.split('->')[1].startswith("LED"):
+                command.update({"status_2": f"{self._light_id}:get(6)"})
             response = requests.get(
                 f"{self._api_endpoint}",
-                json = {"status": f"{self._light_id}:get(0)"}
+                json = command
             )
             response.raise_for_status()
             data = response.json()
             self._state = STATE_OFF if data.get("object_value") == 0 else STATE_ON
-            if (self._light_id.split('->')[1].startswith("LED")):
+            if self._light_id.split('->')[1].startswith(("DIM", "LED")):
                 self._brightness = int(data.get("object_value") * 255)
+            if self._light_id.split('->')[1].startswith("LED"):
+                self._rgb_color = color_util.rgb_hex_to_rgb_list(data.get("object_value_2").strip("#"))
         except requests.RequestException as ex:
             _LOGGER.error(f"Failed to update the light state: {ex}")
             self._state = None
