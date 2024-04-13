@@ -104,9 +104,9 @@ where:
 ```yaml
 light:
   - platform: grenton_objects
-    name: "Bedroom Lamp"
     api_endpoint: http://192.168.0.4/HAlistener
     grenton_id: CLU221001090->DOU8272
+    name: "Bedroom Lamp"
 ```
 
 ### Light (Dimmer)
@@ -118,21 +118,21 @@ light:
 ```yaml
 light:
   - platform: grenton_objects
-    name: "Bedroom Dimmer"
     api_endpoint: http://192.168.0.4/HAlistener
     grenton_id: CLU221001090->DIM8272
+    name: "Bedroom Dimmer"
 ```
 
 #### For:
-* LED RGBW Z-WAVE (SINGLE LED OBJECT)
+* LED RGBW Z-WAVE (SINGLE ZWAVE_LED OBJECT)
   
 ```yaml
 light:
   - platform: grenton_objects
-    name: "Bedroom Dimmer"
     api_endpoint: http://192.168.0.4/HAlistener
     grenton_id: CLU221001090->ZWA8272
     grenton_type: DIMMER
+    name: "Bedroom Dimmer"
 ```
 
 ### Light (RGB)
@@ -144,9 +144,9 @@ light:
 ```yaml
 light:
   - platform: grenton_objects
-    name: "Bedroom Led"
     api_endpoint: http://192.168.0.4/HAlistener
     grenton_id: CLU221001090->LED8272
+    name: "Bedroom Led"
 ```
 
 #### For:
@@ -155,8 +155,9 @@ light:
 ```yaml
 light:
   - platform: grenton_objects
-    name: "Bedroom Led"
     api_endpoint: http://192.168.0.4/HAlistener
     grenton_id: CLU221001090->ZWA8272
     grenton_type: RGB
+    name: "Bedroom Led"
 ```
+
