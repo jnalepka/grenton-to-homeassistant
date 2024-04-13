@@ -95,3 +95,18 @@ light:
 * RELAY X4
 * RELAY Z-WAVE
 * RELAY WI-FI
+
+### Light (Dimmer)
+
+```yaml
+light:
+  - platform: grenton_objects
+    name: "Livingroom Lamp"
+    api_endpoint: http://192.168.0.4/HAlistener
+    grenton_id: CLU221001090->DIM7452
+```
+
+#### Work with:
+* Dimmer DIN
+* Dimmer FM
+  
