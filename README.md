@@ -19,27 +19,40 @@ This is an unofficial integration of the Grenton system with the Home Assistant.
 
 ```lua
 local reqJson = GATE_HTTP->HA_Listener_Integration->RequestBody
-local code, resp
+local code = 400
+local resp = { g_status = "Grenton script error" }
 
-if reqJson.command then
-	local s = reqJson.command
-	local p1, p2 = string.match(s, "(.-)->(.+)")
-	local g_command = p1 .. ':execute(0, "' .. p2 .. '")'   
-	logDebug("HA integration command >> " .. g_command)
-	load(g_command)()
-	resp = { g_status = "ok" }
-	code = 200
-elseif reqJson.status then
-	local s = reqJson.status
-	local p1, p2 = string.match(s, "(.-)->(.+)") 
-	local g_command = 'return ' .. p1 .. ':execute(0, "' .. p2 .. '")'
-	logDebug("HA integration status command>> " .. g_command)
-	local g_object_value = load(g_command)()
-	resp = { object_value = g_object_value }
-	code = 200
-else
-	resp = { g_status = "Grenton script error" }
-	code = 400
+if reqJson.command or reqJson.status then
+	local g_command, g_command_2, g_result, g_result_2
+    local s = reqJson.command or reqJson.status
+    local p1, p2 = string.match(s, "(.-)->(.+)")
+    g_command = p1 .. ':execute(0, "' .. p2 .. '")'
+    if reqJson.status then
+        g_command = 'return ' .. g_command
+        if reqJson.status_2 then
+        	local s_2 = reqJson.status_2
+        	local p1_2, p2_2 = string.match(s_2, "(.-)->(.+)")
+        	g_command_2 = 'return ' .. p1_2 .. ':execute(0, "' .. p2_2 .. '")'
+        end
+    end
+    logDebug("HA integration command >> " .. g_command)
+    g_result = load(g_command)()
+    if reqJson.status_2 then
+    	logDebug("HA integration command_2 >> " .. g_command_2)
+    	g_result_2 = load(g_command_2)()
+    end
+    
+    if reqJson.command then
+        resp = { g_status = "ok" }
+    else
+    	if reqJson.status_2 then
+    		resp = { object_value = g_result, object_value_2 = g_result_2 }
+    	else
+       		resp = { object_value = g_result }
+       	end
+    end
+    
+    code = 200
 end
 
 GATE_HTTP->HA_Listener_Integration->SetStatusCode(code)
