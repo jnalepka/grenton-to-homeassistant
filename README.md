@@ -160,4 +160,3 @@ light:
     grenton_id: CLU221001090->ZWA8272
     grenton_type: RGB
 ```
-
