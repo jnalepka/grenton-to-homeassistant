@@ -93,18 +93,71 @@ where:
 
 ### Light (On_Off)
 
+#### For:
+* IO MODULE 8/8 DIN
+* IO MODULE 2/2 FM
+* RELAY X2 DIN
+* RELAY X4 DIN
+* RELAY Z-WAVE
+* RELAY WI-FI
+
 ```yaml
 light:
   - platform: grenton_objects
     name: "Bedroom Lamp"
     api_endpoint: http://192.168.0.4/HAlistener
-    grenton_id: CLU221001090->ZWA8272
+    grenton_id: CLU221001090->DOU8272
 ```
 
-#### Work with:
-* IO MODULE 8/8
-* IO MODULE 2/2 FM
-* RELAY X2
-* RELAY X4
-* RELAY Z-WAVE
-* RELAY WI-FI
+### Light (Dimmer)
+
+#### For:
+* DIMMER DIN
+* DIMMER FM
+  
+```yaml
+light:
+  - platform: grenton_objects
+    name: "Bedroom Dimmer"
+    api_endpoint: http://192.168.0.4/HAlistener
+    grenton_id: CLU221001090->DIM8272
+```
+
+#### For:
+* LED RGBW Z-WAVE (SINGLE LED OBJECT)
+  
+```yaml
+light:
+  - platform: grenton_objects
+    name: "Bedroom Dimmer"
+    api_endpoint: http://192.168.0.4/HAlistener
+    grenton_id: CLU221001090->ZWA8272
+    grenton_type: DIMMER
+```
+
+### Light (RGB)
+
+#### For:
+* LED RGBW DIN
+* LED RGBW FM
+
+```yaml
+light:
+  - platform: grenton_objects
+    name: "Bedroom Led"
+    api_endpoint: http://192.168.0.4/HAlistener
+    grenton_id: CLU221001090->LED8272
+```
+
+#### For:
+* LED RGBW Z-WAVE
+
+```yaml
+light:
+  - platform: grenton_objects
+    name: "Bedroom Led"
+    api_endpoint: http://192.168.0.4/HAlistener
+    grenton_id: CLU221001090->ZWA8272
+    grenton_type: RGB
+```
+
