@@ -94,14 +94,20 @@ class GrentonLight(LightEntity):
             command = {"command": f"{self._grenton_id}:set(0, 1)"}
             if self._grenton_type == "DIMMER":
                 brightness = kwargs.get("brightness", 255)
-                scaled_brightness = brightness / 255
-                command = {"command": f"{self._grenton_id}:set(0, {scaled_brightness})"}
+                if self._grenton_id.split('->')[1].startswith("ZWA"):
+                    command = {"command": f"{self._grenton_id}:execute(0, {brightness})"}
+                else:
+                    scaled_brightness = brightness / 255
+                    command = {"command": f"{self._grenton_id}:set(0, {scaled_brightness})"}
                 self._brightness = brightness
             elif self._grenton_type == "RGB":
                 rgb_color = kwargs.get("rgb_color")
                 if rgb_color:
                     hex_color = '#{:02x}{:02x}{:02x}'.format(*rgb_color)
-                    command = {"command": f"{self._grenton_id}:execute(6, '{hex_color}')"}
+                    if self._grenton_id.split('->')[1].startswith("ZWA"):
+                        command = {"command": f"{self._grenton_id}:execute(3, '{hex_color}')"}
+                    else:
+                        command = {"command": f"{self._grenton_id}:execute(6, '{hex_color}')"}
                     self._rgb_color = rgb_color
                 else:
                     brightness = kwargs.get("brightness", 255)
@@ -121,7 +127,7 @@ class GrentonLight(LightEntity):
     def turn_off(self, **kwargs):
         try:
             command = {"command": f"{self._grenton_id}:set(0, 0)"}
-            if self._grenton_type == "RGB":
+            if self._grenton_type == "RGB" or (self._grenton_type == "DIMMER" and self._grenton_id.split('->')[1].startswith("ZWA")):
                 command = {"command": f"{self._grenton_id}:execute(0, 0)"}
             response = requests.post(
                 f"{self._api_endpoint}",
@@ -148,7 +154,10 @@ class GrentonLight(LightEntity):
             data = response.json()
             self._state = STATE_OFF if data.get("object_value") == 0 else STATE_ON
             if self._grenton_type == "RGB" or self._grenton_type == "DIMMER":
-                self._brightness = int(data.get("object_value") * 255)
+                if self._grenton_type == "DIMMER" and self._grenton_id.split('->')[1].startswith("ZWA"):
+                    self._brightness = int(data.get("object_value"))
+                else:
+                    self._brightness = int(data.get("object_value") * 255)
             if self._grenton_type == "RGB":
                 self._rgb_color = color_util.rgb_hex_to_rgb_list(data.get("object_value_2").strip("#"))
         except requests.RequestException as ex:
