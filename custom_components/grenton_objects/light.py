@@ -136,7 +136,10 @@ class GrentonLight(LightEntity):
         try:
             command = {"status": f"{self._grenton_id}:get(0)"}
             if self._grenton_type == "RGB":
-                command.update({"status_2": f"{self._grenton_id}:get(6)"})
+                if self._grenton_id.split('->')[1].startswith("ZWA"):
+                    command.update({"status_2": f"{self._grenton_id}:get(3)"})
+                else:
+                    command.update({"status_2": f"{self._grenton_id}:get(6)"})
             response = requests.get(
                 f"{self._api_endpoint}",
                 json = command
