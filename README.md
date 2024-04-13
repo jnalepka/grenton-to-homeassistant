@@ -89,9 +89,7 @@ where:
 
 > The data update in Home Assistant occurs automatically every 30 seconds.
 
-## Grenton objects
-
-### Light (On_Off)
+## Grenton object - Light (On_Off)
 
 #### For:
 * IO MODULE 8/8 DIN
@@ -104,12 +102,12 @@ where:
 ```yaml
 light:
   - platform: grenton_objects
-    name: "Bedroom Lamp"
     api_endpoint: http://192.168.0.4/HAlistener
     grenton_id: CLU221001090->DOU8272
+    name: "Bedroom Lamp"
 ```
 
-### Light (Dimmer)
+## Grenton object - Light (Dimmer)
 
 #### For:
 * DIMMER DIN
@@ -118,24 +116,24 @@ light:
 ```yaml
 light:
   - platform: grenton_objects
-    name: "Bedroom Dimmer"
     api_endpoint: http://192.168.0.4/HAlistener
     grenton_id: CLU221001090->DIM8272
+    name: "Bedroom Dimmer"
 ```
 
 #### For:
-* LED RGBW Z-WAVE (SINGLE LED OBJECT)
+* LED RGBW Z-WAVE (SINGLE ZWAVE_LED OBJECT)
   
 ```yaml
 light:
   - platform: grenton_objects
-    name: "Bedroom Dimmer"
     api_endpoint: http://192.168.0.4/HAlistener
     grenton_id: CLU221001090->ZWA8272
     grenton_type: DIMMER
+    name: "Bedroom Dimmer"
 ```
 
-### Light (RGB)
+## Grenton object - Light (RGB)
 
 #### For:
 * LED RGBW DIN
@@ -144,9 +142,9 @@ light:
 ```yaml
 light:
   - platform: grenton_objects
-    name: "Bedroom Led"
     api_endpoint: http://192.168.0.4/HAlistener
     grenton_id: CLU221001090->LED8272
+    name: "Bedroom Led"
 ```
 
 #### For:
@@ -155,8 +153,9 @@ light:
 ```yaml
 light:
   - platform: grenton_objects
-    name: "Bedroom Led"
     api_endpoint: http://192.168.0.4/HAlistener
     grenton_id: CLU221001090->ZWA8272
     grenton_type: RGB
+    name: "Bedroom Led"
 ```
+
