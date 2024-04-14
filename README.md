@@ -28,7 +28,7 @@ local code = 400
 local resp = { g_status = "Grenton script error" }
 
 if reqJson.command or reqJson.status then
-	local g_command, g_command_2, g_result, g_result_2
+    local g_command, g_command_2, g_result, g_result_2
     local s = reqJson.command or reqJson.status
     local p1, p2 = string.match(s, "(.-)->(.+)")
     g_command = p1 .. ':execute(0, "' .. p2 .. '")'
