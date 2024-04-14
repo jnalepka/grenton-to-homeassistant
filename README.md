@@ -2,6 +2,11 @@
 
 This is an unofficial integration of the Grenton system with the Home Assistant.
 
+If you like what I do, buy me a `coffee`!
+
+[![](https://img.shields.io/static/v1?label=Donate&message=%E2%9D%A4&logo=GitHub&color=%23fe8e86)](https://tipply.pl/@jnalepka)
+
+
 ## Installation
 
 1. Copy the folder `grenton_objects` to the `custom_components` folder in your Home Assistant. Create the folder if you don't have it. You can use the Visual Studio Code add-on to create the folder and copy the files.
