@@ -164,3 +164,15 @@ light:
     name: "Bedroom Led"
 ```
 
+## Grenton object - Cover (Roller_Shutter)
+
+#### For:
+* ROLLER SHUTTER DIN
+
+```yaml
+cover:
+  - platform: grenton_objects
+    api_endpoint: http://192.168.0.4/HAlistener
+    grenton_id: CLU221001090->ROL5664
+    name: "Kichen Blinds"
+```
