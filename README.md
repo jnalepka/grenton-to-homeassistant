@@ -181,6 +181,9 @@ light:
 
 #### For:
 * ROLLER SHUTTER DIN
+* ROLLER SHUTTER X3 DIN
+* ROLLER SHUTTER FM
+* ROLLER SHUTTER Z-WAVE
 
 ```yaml
 cover:
@@ -189,3 +192,15 @@ cover:
     grenton_id: CLU221001090->ROL5664
     name: "Kichen Blinds"
 ```
+
+If `ReversePosition` is set to `Yes`:
+
+```yaml
+cover:
+  - platform: grenton_objects
+    api_endpoint: http://192.168.0.4/HAlistener
+    grenton_id: CLU221001090->ROL5664
+    reversed: True
+    name: "Kichen Blinds"
+```
+
