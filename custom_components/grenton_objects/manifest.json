@@ -1,11 +1,11 @@
 {
     "domain": "grenton_objects",
     "name": "Grenton Objects",
-    "documentation": "https://link.do/dokumentacji",
+    "documentation": "https://github.com/jnalepka/GrentonObjects_HomeAssistant",
     "dependencies": [],
     "codeowners": [],
     "requirements": [],
-    "version": "0.1",
-    "issue_tracker": "https://link.do/issuetracker",
+    "version": "0.2",
+    "issue_tracker": "https://github.com/jnalepka/GrentonObjects_HomeAssistant/issues",
     "autoload": true
 }
