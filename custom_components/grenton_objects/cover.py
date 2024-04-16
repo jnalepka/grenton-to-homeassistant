@@ -43,6 +43,7 @@ class GrentonCover(CoverEntity):
         self._object_name = object_name
         self._state = None
         self._current_cover_position = None
+        self._current_cover_tilt_position = None
         self._unique_id = f"grenton_{grenton_id.split('->')[1]}"
 
     @property
@@ -64,6 +65,10 @@ class GrentonCover(CoverEntity):
     @property
     def current_cover_position(self):
         return self._current_cover_position
+    
+    @property
+    def current_cover_tilt_position(self):
+        return self._current_cover_tilt_position
 
     def open_cover(self, **kwargs):
         try:
@@ -87,7 +92,7 @@ class GrentonCover(CoverEntity):
             response.raise_for_status()
             self._state = STATE_CLOSING
         except requests.RequestException as ex:
-            _LOGGER.error(f"Failed to open the cover: {ex}")
+            _LOGGER.error(f"Failed to close the cover: {ex}")
 
     def stop_cover(self, **kwargs):
         try:
@@ -99,7 +104,7 @@ class GrentonCover(CoverEntity):
             response.raise_for_status()
             self._state = STATE_OPEN
         except requests.RequestException as ex:
-            _LOGGER.error(f"Failed to open the cover: {ex}")
+            _LOGGER.error(f"Failed to stop the cover: {ex}")
 
     def set_cover_position(self, **kwargs):
         try:
@@ -115,12 +120,47 @@ class GrentonCover(CoverEntity):
             else:
                 self._state = STATE_CLOSING
         except requests.RequestException as ex:
-            _LOGGER.error(f"Failed to open the cover: {ex}")
+            _LOGGER.error(f"Failed to set the cover position: {ex}")
+
+    def set_cover_tilt_position(self, **kwargs):
+        try:
+            tilt_position = kwargs.get("tilt_position", 90) * 90 / 100
+            command = {"command": f"{self._grenton_id}:execute(9, {tilt_position})"}
+            response = requests.post(
+                f"{self._api_endpoint}",
+                json = command
+            )
+            response.raise_for_status()
+        except requests.RequestException as ex:
+            _LOGGER.error(f"Failed to set the cover tilt position: {ex}")
+
+    def open_cover_tilt(self, **kwargs):
+        try:
+            command = {"command": f"{self._grenton_id}:execute(9, 90)"}
+            response = requests.post(
+                f"{self._api_endpoint}",
+                json = command
+            )
+            response.raise_for_status()
+        except requests.RequestException as ex:
+            _LOGGER.error(f"Failed to open the cover tilt: {ex}")
+
+    def close_cover_tilt(self, **kwargs):
+        try:
+            command = {"command": f"{self._grenton_id}:execute(9, 0)"}
+            response = requests.post(
+                f"{self._api_endpoint}",
+                json = command
+            )
+            response.raise_for_status()
+        except requests.RequestException as ex:
+            _LOGGER.error(f"Failed to close the cover tilt: {ex}")
 
     def update(self):
         try:
             command = {"status": f"{self._grenton_id}:get(0)"} # state
             command.update({"status_2": f"{self._grenton_id}:get(7)"}) # position
+            command.update({"status_3": f"{self._grenton_id}:get(8)"}) # lamel position
             response = requests.get(
                 f"{self._api_endpoint}",
                 json = command
@@ -133,6 +173,7 @@ class GrentonCover(CoverEntity):
             elif data.get("object_value") == 2:
                 self._state = STATE_CLOSING
             self._current_cover_position = data.get("object_value_2")
+            self._current_cover_tilt_position = data.get("object_value_3") * 100 / 90
         except requests.RequestException as ex:
-            _LOGGER.error(f"Failed to update the light state: {ex}")
+            _LOGGER.error(f"Failed to update the cover state: {ex}")
             self._state = None
