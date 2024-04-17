@@ -7,7 +7,7 @@ If you like what I do, buy me a `coffee`!
 [![](https://img.shields.io/static/v1?label=Donate&message=%E2%9D%A4&logo=GitHub&color=%23fe8e86)](https://tipply.pl/@jnalepka)
 
 
-## Installation
+# Installation
 
 1. Copy the folder `grenton_objects` to the `custom_components` folder in your Home Assistant. Create the folder if you don't have it. You can use the Visual Studio Code add-on to create the folder and copy the files.
 
@@ -107,7 +107,11 @@ where:
 
 > The data update in Home Assistant occurs automatically every 30 seconds.
 
-## Grenton object - Light (On_Off)
+# Configure Grenton objects
+
+Add your objects to the `configuration.yaml` file.
+
+## Light (On_Off)
 
 #### For:
 * IO MODULE 8/8 DIN
@@ -125,7 +129,7 @@ light:
     name: "Bedroom Lamp"
 ```
 
-## Grenton object - Light (Dimmer)
+## Light (Dimmer)
 
 #### For:
 * DIMMER DIN
@@ -151,7 +155,7 @@ light:
     name: "Bedroom Dimmer"
 ```
 
-## Grenton object - Light (RGB)
+## Light (RGB)
 
 #### For:
 * LED RGBW DIN
@@ -177,7 +181,7 @@ light:
     name: "Bedroom Led"
 ```
 
-## Grenton object - Cover (Roller_Shutter)
+## Cover (Roller_Shutter)
 
 #### For:
 * ROLLER SHUTTER DIN
@@ -203,4 +207,21 @@ cover:
     reversed: True
     name: "Kichen Blinds"
 ```
+
+
+# Forced faster state update
+
+By default, Home Assistant automatically refreshes entities every 30 seconds. If you want to accelerate the object update, go to the `Settings->Automations & Scenes` and set up the automation:
+
+1. `Trigger` -> `Time and location` -> `Time pattern` -> e.g. `/10` (every 10 seconds)
+
+![Przechwytywanie1](https://github.com/jnalepka/GrentonObjects_HomeAssistant/assets/70645322/305b7f35-63a8-4341-83e6-ac3a85006dfd)
+
+2. `Action` -> `Other action` -> `Call service` -> `Home Assistant Core Integration: Update entity`
+3. Select objects (`+Choose entity`) to be updated at specified intervals.
+
+![Przechwytywanie2](https://github.com/jnalepka/GrentonObjects_HomeAssistant/assets/70645322/47d19f37-decb-4c7d-a5ed-c06bc66058a6)
+
+4. Save and restart Home Assistant.
+
 
