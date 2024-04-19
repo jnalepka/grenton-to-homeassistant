@@ -74,6 +74,10 @@ class GrentonCover(CoverEntity):
     def current_cover_tilt_position(self):
         return self._current_cover_tilt_position
 
+    @property
+    def unique_id(self):
+        return self._unique_id
+
     def open_cover(self, **kwargs):
         try:
             command = {"command": f"{self._grenton_id}:execute(0, 0)"}
