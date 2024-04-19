@@ -111,6 +111,24 @@ where:
 
 Add your objects to the `configuration.yaml` file.
 
+## Switch (On_Off)
+
+#### For:
+* IO MODULE 8/8 DIN
+* IO MODULE 2/2 FM
+* RELAY X2 DIN
+* RELAY X4 DIN
+* RELAY Z-WAVE
+* RELAY WI-FI
+
+```yaml
+switch:
+  - platform: grenton_objects
+    api_endpoint: http://192.168.0.4/HAlistener
+    grenton_id: CLU221001090->DOU8272
+    name: "Kitchen Radio Switch"
+```
+
 ## Light (On_Off)
 
 #### For:
