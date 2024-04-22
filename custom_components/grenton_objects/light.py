@@ -2,7 +2,11 @@ import requests
 import logging
 import json
 import voluptuous as vol
-from homeassistant.components.light import LightEntity, PLATFORM_SCHEMA, ColorMode
+from homeassistant.components.light import (
+    LightEntity, 
+    PLATFORM_SCHEMA, 
+    ColorMode
+)
 from homeassistant.const import (STATE_ON, STATE_OFF)
 from homeassistant.util import color as color_util
 
@@ -91,28 +95,28 @@ class GrentonLight(LightEntity):
 
     def turn_on(self, **kwargs):
         try:
-            command = {"command": f"{self._grenton_id}:set(0, 1)"}
+            command = {"command": f"{self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:set(0, 1)')"}
             if self._grenton_type == "DIMMER":
                 brightness = kwargs.get("brightness", 255)
                 if self._grenton_id.split('->')[1].startswith("ZWA"):
-                    command = {"command": f"{self._grenton_id}:execute(0, {brightness})"}
+                    command = {"command": f"{self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:execute(0, {brightness})')"}
                 else:
                     scaled_brightness = brightness / 255
-                    command = {"command": f"{self._grenton_id}:set(0, {scaled_brightness})"}
+                    command = {"command": f"{self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:set(0, {scaled_brightness})')"}
                 self._brightness = brightness
             elif self._grenton_type == "RGB":
                 rgb_color = kwargs.get("rgb_color")
                 if rgb_color:
                     hex_color = '#{:02x}{:02x}{:02x}'.format(*rgb_color)
                     if self._grenton_id.split('->')[1].startswith("ZWA"):
-                        command = {"command": f"{self._grenton_id}:execute(3, '{hex_color}')"}
+                        command = {"command": f"{self._grenton_id.split('->')[0]}:execute(3, '{self._grenton_id.split('->')[1]}:execute(0, {hex_color})')"}
                     else:
-                        command = {"command": f"{self._grenton_id}:execute(6, '{hex_color}')"}
+                        command = {"command": f"{self._grenton_id.split('->')[0]}:execute(6, '{self._grenton_id.split('->')[1]}:execute(0, {hex_color})')"}
                     self._rgb_color = rgb_color
                 else:
                     brightness = kwargs.get("brightness", 255)
                     scaled_brightness = brightness / 255
-                    command = {"command": f"{self._grenton_id}:execute(0, {scaled_brightness})"}
+                    command = {"command": f"{self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:execute(0, {scaled_brightness})')"}
                     self._brightness = brightness
             response = requests.post(
                 f"{self._api_endpoint}",
@@ -126,9 +130,9 @@ class GrentonLight(LightEntity):
 
     def turn_off(self, **kwargs):
         try:
-            command = {"command": f"{self._grenton_id}:set(0, 0)"}
+            command = {"command": f"{self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:set(0, 0)')"}
             if self._grenton_type == "RGB" or (self._grenton_type == "DIMMER" and self._grenton_id.split('->')[1].startswith("ZWA")):
-                command = {"command": f"{self._grenton_id}:execute(0, 0)"}
+                command = {"command": f"{self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:execute(0, 0)')"}
             response = requests.post(
                 f"{self._api_endpoint}",
                 json = command
@@ -140,26 +144,26 @@ class GrentonLight(LightEntity):
 
     def update(self):
         try:
-            command = {"status": f"{self._grenton_id}:get(0)"}
+            command = {"status": f"return {self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:get(0)')"}
             if self._grenton_type == "RGB":
                 if self._grenton_id.split('->')[1].startswith("ZWA"):
-                    command.update({"status_2": f"{self._grenton_id}:get(3)"})
+                    command.update({"status_2": f"return {self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:get(3)')"})
                 else:
-                    command.update({"status_2": f"{self._grenton_id}:get(6)"})
+                    command.update({"status_2": f"return {self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:get(6)')"})
             response = requests.get(
                 f"{self._api_endpoint}",
                 json = command
             )
             response.raise_for_status()
             data = response.json()
-            self._state = STATE_OFF if data.get("object_value") == 0 else STATE_ON
+            self._state = STATE_OFF if data.get("status") == 0 else STATE_ON
             if self._grenton_type == "RGB" or self._grenton_type == "DIMMER":
                 if self._grenton_type == "DIMMER" and self._grenton_id.split('->')[1].startswith("ZWA"):
-                    self._brightness = int(data.get("object_value"))
+                    self._brightness = data.get("status")
                 else:
-                    self._brightness = int(data.get("object_value") * 255)
+                    self._brightness = data.get("status") * 255
             if self._grenton_type == "RGB":
-                self._rgb_color = color_util.rgb_hex_to_rgb_list(data.get("object_value_2").strip("#"))
+                self._rgb_color = color_util.rgb_hex_to_rgb_list(data.get("status_2").strip("#"))
         except requests.RequestException as ex:
             _LOGGER.error(f"Failed to update the light state: {ex}")
             self._state = None
