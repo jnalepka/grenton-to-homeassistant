@@ -25,65 +25,21 @@ If you like what I do, buy me a `coffee`!
 ```lua
 local reqJson = GATE_HTTP->HA_Listener_Integration->RequestBody
 local code = 400
-local resp = { g_status = "Grenton script error" }
+local resp = { g_status = "Grenton script ERROR" }
 
 if reqJson.command or reqJson.status then
-	local g_command, g_command_2, g_command_3, g_command_4, g_result, g_result_2, g_result_3, g_result_4
-    local s = reqJson.command or reqJson.status
-    local p1, p2 = string.match(s, "(.-)->(.+)")
-    g_command = p1 .. ':execute(0, "' .. p2 .. '")'
-    if reqJson.status then
-        g_command = 'return ' .. g_command
-        if reqJson.status_2 then
-        	local s_2 = reqJson.status_2
-        	local p1_2, p2_2 = string.match(s_2, "(.-)->(.+)")
-        	g_command_2 = 'return ' .. p1_2 .. ':execute(0, "' .. p2_2 .. '")'
-        	
-        	if reqJson.status_3 then
-	        	local s_3 = reqJson.status_3
-	        	local p1_3, p2_3 = string.match(s_3, "(.-)->(.+)")
-	        	g_command_3 = 'return ' .. p1_3 .. ':execute(0, "' .. p2_3 .. '")'
-	        end
-	        
-	        if reqJson.status_4 then
-	        	local s_4 = reqJson.status_4
-	        	local p1_4, p2_4 = string.match(s_4, "(.-)->(.+)")
-	        	g_command_4 = 'return ' .. p1_4 .. ':execute(0, "' .. p2_4 .. '")'
-	        end
-        end
+    local results = {}
+
+    for key, value in pairs(reqJson) do
+        logDebug("HA integration command >> " .. value)
+        results[key] = load(value)()
     end
-    logDebug("HA integration command >> " .. g_command)
-    g_result = load(g_command)()
-    if reqJson.status_2 then
-    	logDebug("HA integration command_2 >> " .. g_command_2)
-    	g_result_2 = load(g_command_2)()
-    	
-    	if reqJson.status_3 then
-	    	logDebug("HA integration command_3 >> " .. g_command_3)
-	    	g_result_3 = load(g_command_3)()
-	    end
-	    
-	    if reqJson.status_4 then
-	    	logDebug("HA integration command_3 >> " .. g_command_4)
-	    	g_result_4 = load(g_command_4)()
-	    end
+
+    resp = { g_status = "OK" }
+    for key, result in pairs(results) do
+        resp[key] = result
     end
-    
-    if reqJson.command then
-        resp = { g_status = "ok" }
-    else
-    	resp = { object_value = g_result }
-		if reqJson.status_2 then
-		    resp.object_value_2 = g_result_2
-		end
-		if reqJson.status_3 then
-		    resp.object_value_3 = g_result_3
-		end
-		if reqJson.status_4 then
-		    resp.object_value_4 = g_result_4
-		end
-    end
-    
+
     code = 200
 end
 
