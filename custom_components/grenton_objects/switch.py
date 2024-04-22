@@ -52,7 +52,7 @@ class GrentonSwitch(SwitchEntity):
 
     def turn_on(self, **kwargs):
         try:
-            command = {"command": f"{self._grenton_id}:set(0, 1)"}
+            command = {"command": f"{self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:set(0, 1)')"}
             response = requests.post(
                 f"{self._api_endpoint}",
                 json=command
@@ -64,7 +64,7 @@ class GrentonSwitch(SwitchEntity):
 
     def turn_off(self, **kwargs):
         try:
-            command = {"command": f"{self._grenton_id}:set(0, 0)"}
+            command = {"command": f"{self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:set(0, 0)')"}
             response = requests.post(
                 f"{self._api_endpoint}",
                 json = command
@@ -76,14 +76,14 @@ class GrentonSwitch(SwitchEntity):
 
     def update(self):
         try:
-            command = {"status": f"{self._grenton_id}:get(0)"}
+            command = {"status": f"return {self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:get(0)')"}
             response = requests.get(
                 f"{self._api_endpoint}",
                 json = command
             )
             response.raise_for_status()
             data = response.json()
-            self._state = STATE_OFF if data.get("object_value") == 0 else STATE_ON
+            self._state = STATE_OFF if data.get("status") == 0 else STATE_ON
         except requests.RequestException as ex:
             _LOGGER.error(f"Failed to update the switch state: {ex}")
             self._state = None
