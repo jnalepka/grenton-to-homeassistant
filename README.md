@@ -28,7 +28,7 @@ local code = 400
 local resp = { g_status = "Grenton script error" }
 
 if reqJson.command or reqJson.status then
-    local g_command, g_command_2, g_command_3, g_result, g_result_2, g_result_3
+	local g_command, g_command_2, g_command_3, g_command_4, g_result, g_result_2, g_result_3, g_result_4
     local s = reqJson.command or reqJson.status
     local p1, p2 = string.match(s, "(.-)->(.+)")
     g_command = p1 .. ':execute(0, "' .. p2 .. '")'
@@ -44,6 +44,12 @@ if reqJson.command or reqJson.status then
 	        	local p1_3, p2_3 = string.match(s_3, "(.-)->(.+)")
 	        	g_command_3 = 'return ' .. p1_3 .. ':execute(0, "' .. p2_3 .. '")'
 	        end
+	        
+	        if reqJson.status_4 then
+	        	local s_4 = reqJson.status_4
+	        	local p1_4, p2_4 = string.match(s_4, "(.-)->(.+)")
+	        	g_command_4 = 'return ' .. p1_4 .. ':execute(0, "' .. p2_4 .. '")'
+	        end
         end
     end
     logDebug("HA integration command >> " .. g_command)
@@ -56,6 +62,11 @@ if reqJson.command or reqJson.status then
 	    	logDebug("HA integration command_3 >> " .. g_command_3)
 	    	g_result_3 = load(g_command_3)()
 	    end
+	    
+	    if reqJson.status_4 then
+	    	logDebug("HA integration command_3 >> " .. g_command_4)
+	    	g_result_4 = load(g_command_4)()
+	    end
     end
     
     if reqJson.command then
@@ -67,6 +78,9 @@ if reqJson.command or reqJson.status then
 		end
 		if reqJson.status_3 then
 		    resp.object_value_3 = g_result_3
+		end
+		if reqJson.status_4 then
+		    resp.object_value_4 = g_result_4
 		end
     end
     
