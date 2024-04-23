@@ -80,7 +80,7 @@ class GrentonCover(CoverEntity):
 
     def open_cover(self, **kwargs):
         try:
-            command = {"command": f"{self._grenton_id}:execute(0, 0)"}
+            command = {"command": f"{self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:execute(0, 0)')"}
             response = requests.post(
                 f"{self._api_endpoint}",
                 json = command
@@ -92,7 +92,7 @@ class GrentonCover(CoverEntity):
 
     def close_cover(self, **kwargs):
         try:
-            command = {"command": f"{self._grenton_id}:execute(1, 0)"}
+            command = {"command": f"{self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:execute(1, 0)')"}
             response = requests.post(
                 f"{self._api_endpoint}",
                 json = command
@@ -104,7 +104,7 @@ class GrentonCover(CoverEntity):
 
     def stop_cover(self, **kwargs):
         try:
-            command = {"command": f"{self._grenton_id}:execute(3, 0)"}
+            command = {"command": f"{self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:execute(3, 0)')"}
             response = requests.post(
                 f"{self._api_endpoint}",
                 json = command
@@ -117,11 +117,12 @@ class GrentonCover(CoverEntity):
     def set_cover_position(self, **kwargs):
         try:
             position = kwargs.get("position", 100)
+            self._current_cover_position = position
             if self._reversed == True:
                 position = 100 - position
-            command = {"command": f"{self._grenton_id}:execute(10, {position})"}
+            command = {"command": f"{self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:execute(10, {position})')"}
             if self._grenton_id.split('->')[1].startswith("ZWA"):
-                command = {"command": f"{self._grenton_id}:execute(7, {position})"}
+                command = {"command": f"{self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:execute(7, {position})')"}
             response = requests.post(
                 f"{self._api_endpoint}",
                 json = command
@@ -142,8 +143,10 @@ class GrentonCover(CoverEntity):
 
     def set_cover_tilt_position(self, **kwargs):
         try:
-            tilt_position = kwargs.get("tilt_position", 90) * 90 / 100
-            command = {"command": f"{self._grenton_id}:execute(9, {tilt_position})"}
+            tilt_position = kwargs.get("tilt_position", 90)
+            self._current_cover_tilt_position = tilt_position
+            tilt_position = tilt_position * 90 / 100
+            command = {"command": f"{self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:execute(9, {tilt_position})')"}
             response = requests.post(
                 f"{self._api_endpoint}",
                 json = command
@@ -154,7 +157,7 @@ class GrentonCover(CoverEntity):
 
     def open_cover_tilt(self, **kwargs):
         try:
-            command = {"command": f"{self._grenton_id}:execute(9, 90)"}
+            command = {"command": f"{self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:execute(9, 90)')"}
             response = requests.post(
                 f"{self._api_endpoint}",
                 json = command
@@ -165,7 +168,7 @@ class GrentonCover(CoverEntity):
 
     def close_cover_tilt(self, **kwargs):
         try:
-            command = {"command": f"{self._grenton_id}:execute(9, 0)"}
+            command = {"command": f"{self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:execute(9, 0)')"}
             response = requests.post(
                 f"{self._api_endpoint}",
                 json = command
@@ -177,39 +180,39 @@ class GrentonCover(CoverEntity):
     def update(self):
         try:
             if self._grenton_id.split('->')[1].startswith("ZWA"):
-                command = {"status": f"{self._grenton_id}:get(2)"} # state zwave
+                command = {"status": f"return {self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:get(2)')"}
             else:
-                command = {"status": f"{self._grenton_id}:get(0)"} # state
+                command = {"status": f"return {self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:get(0)')"}
             if self._grenton_id.split('->')[1].startswith("ZWA"):
-                command.update({"status_2": f"{self._grenton_id}:get(4)"}) # position zwave
+                command.update({"status_2": f"return {self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:get(4)')"})
             else:
-                command.update({"status_2": f"{self._grenton_id}:get(7)"}) # position
+                command.update({"status_2": f"return {self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:get(7)')"})
             if self._grenton_id.split('->')[1].startswith("ZWA"):
-                command.update({"status_3": f"{self._grenton_id}:get(6)"}) # lamel position zwave
+                command.update({"status_3": f"return {self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:get(6)')"})
             else:
-                command.update({"status_3": f"{self._grenton_id}:get(8)"}) # lamel position
+                command.update({"status_3": f"return {self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:get(8)')"})
             response = requests.get(
                 f"{self._api_endpoint}",
                 json = command
             )
             response.raise_for_status()
             data = response.json()
-            self._state = STATE_CLOSED if data.get("object_value_2") == 0 else STATE_OPEN
-            if data.get("object_value") == 1:
+            self._state = STATE_CLOSED if data.get("status_2") == 0 else STATE_OPEN
+            if data.get("status") == 1:
                 if self._reversed == True:
                     self._state = STATE_CLOSING
                 else:
                     self._state = STATE_OPENING
-            elif data.get("object_value") == 2:
+            elif data.get("status") == 2:
                 if self._reversed == True:
                     self._state = STATE_OPENING
                 else:
                     self._state = STATE_CLOSING
-            temp_position = data.get("object_value_2")
+            temp_position = data.get("status_2")
             if self._reversed == True:
                 temp_position = 100 - temp_position
             self._current_cover_position = temp_position
-            self._current_cover_tilt_position = data.get("object_value_3") * 100 / 90
+            self._current_cover_tilt_position = data.get("status_3") * 100 / 90
         except requests.RequestException as ex:
             _LOGGER.error(f"Failed to update the cover state: {ex}")
             self._state = None
