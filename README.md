@@ -209,6 +209,21 @@ climate:
     name: "Bedroom Thermostat"
 ```
 
+## Sensor (OneWire / Temperature)
+
+#### For:
+* ONE_WIRE
+* TEMPERATURE_SENSOR (MULTISENSOR)
+* PANELSENSTEMP (SMART PANEL / TOUCH PANEL)
+
+```yaml
+sensor:
+  - platform: grenton_objects
+    api_endpoint: http://192.168.0.4/HAlistener
+    grenton_id: CLU221001090->TEM5469
+    name: "Bedroom Thermostat"
+```
+
 # Forced faster state update
 
 By default, Home Assistant automatically refreshes entities every 30 seconds. If you want to accelerate the object update, go to the `Settings->Automations & Scenes` and set up the automation:
