@@ -7,7 +7,6 @@ from homeassistant.components.switch import (
     PLATFORM_SCHEMA
 )
 from homeassistant.const import (STATE_ON, STATE_OFF)
-from homeassistant.util import color as color_util
 
 _LOGGER = logging.getLogger(__name__)
 
