@@ -109,9 +109,9 @@ class GrentonLight(LightEntity):
                 if rgb_color:
                     hex_color = '#{:02x}{:02x}{:02x}'.format(*rgb_color)
                     if self._grenton_id.split('->')[1].startswith("ZWA"):
-                        command = {"command": f"{self._grenton_id.split('->')[0]}:execute(3, '{self._grenton_id.split('->')[1]}:execute(0, {hex_color})')"}
+                        command = {"command": f"{self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:execute(3, \"{hex_color}\")')"}
                     else:
-                        command = {"command": f"{self._grenton_id.split('->')[0]}:execute(6, '{self._grenton_id.split('->')[1]}:execute(0, {hex_color})')"}
+                        command = {"command": f"{self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:execute(6, \"{hex_color}\")')"}
                     self._rgb_color = rgb_color
                 else:
                     brightness = kwargs.get("brightness", 255)
