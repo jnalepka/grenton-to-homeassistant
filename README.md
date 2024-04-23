@@ -62,7 +62,7 @@ light:
     grenton_id: CLU221001090->ZWA8272
   - platform: grenton_objects
     name: "Kitchen Lamp"
-    api_endpoint: [http://192.168.0.4](http://192.168.0.4/HAlistener)
+    api_endpoint: http://192.168.0.4/HAlistener
     grenton_id: CLU221001090->ZWA8272
 ```
 
@@ -206,6 +206,21 @@ climate:
   - platform: grenton_objects
     api_endpoint: http://192.168.0.4/HAlistener
     grenton_id: CLU221001090->THE9334
+    name: "Bedroom Thermostat"
+```
+
+## Sensor (OneWire / Temperature)
+
+#### For:
+* ONE_WIRE
+* TEMPERATURE_SENSOR (MULTISENSOR)
+* PANELSENSTEMP (SMART PANEL / TOUCH PANEL)
+
+```yaml
+sensor:
+  - platform: grenton_objects
+    api_endpoint: http://192.168.0.4/HAlistener
+    grenton_id: CLU221001090->TEM5469
     name: "Bedroom Thermostat"
 ```
 
