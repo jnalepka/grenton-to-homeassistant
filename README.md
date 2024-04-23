@@ -196,6 +196,18 @@ cover:
     name: "Kichen Blinds"
 ```
 
+## Climate (Thermostat)
+
+#### For:
+* THERMOSTAT - Virtual Object
+
+```yaml
+climate:
+  - platform: grenton_objects
+    api_endpoint: http://192.168.0.4/HAlistener
+    grenton_id: CLU221001090->THE9334
+    name: "Bedroom Thermostat"
+```
 
 # Forced faster state update
 
