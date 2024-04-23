@@ -62,7 +62,7 @@ light:
     grenton_id: CLU221001090->ZWA8272
   - platform: grenton_objects
     name: "Kitchen Lamp"
-    api_endpoint: [http://192.168.0.4](http://192.168.0.4/HAlistener)
+    api_endpoint: http://192.168.0.4/HAlistener
     grenton_id: CLU221001090->ZWA8272
 ```
 
