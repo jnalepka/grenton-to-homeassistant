@@ -139,7 +139,7 @@ light:
   - platform: grenton_objects
     api_endpoint: http://192.168.0.4/HAlistener
     grenton_id: CLU221001090->ZWA8272
-    grenton_type: DIMMER
+    grenton_type: "DIMMER"
     name: "Bedroom Dimmer"
 ```
 
@@ -165,7 +165,7 @@ light:
   - platform: grenton_objects
     api_endpoint: http://192.168.0.4/HAlistener
     grenton_id: CLU221001090->ZWA8272
-    grenton_type: RGB
+    grenton_type: "RGB"
     name: "Bedroom Led"
 ```
 
@@ -209,7 +209,7 @@ climate:
     name: "Bedroom Thermostat"
 ```
 
-## Sensor (OneWire / Temperature)
+## Sensor (Analog Value, e.g. OneWire / Temperature)
 
 #### For:
 * ONE_WIRE
@@ -221,7 +221,45 @@ sensor:
   - platform: grenton_objects
     api_endpoint: http://192.168.0.4/HAlistener
     grenton_id: CLU221001090->TEM5469
-    name: "Bedroom Thermostat"
+    name: "Bedroom Temperature"
+```
+
+#### For:
+* ANALOG IN/OUT DIN
+
+```yaml
+sensor:
+  - platform: grenton_objects
+    api_endpoint: http://192.168.0.4/HAlistener
+    grenton_id: CLU221001090->TEM5469
+    unit_of_measurement: "%" # your unit
+    name: "Power Measurement"
+```
+
+#### For:
+* MODBUS, MODBUS_VALUE, MODBUS_RTU, MODBUS_CLIENT, MODBUS_SERVER, MODBUS_SLAVE_RTU
+
+```yaml
+sensor:
+  - platform: grenton_objects
+    api_endpoint: http://192.168.0.4/HAlistener
+    grenton_id: CLU221001090->TEM5469
+    grenton_type: "MODBUS_RTU" # MODBUS, MODBUS_VALUE, MODBUS_RTU, MODBUS_CLIENT, MODBUS_SERVER, MODBUS_SLAVE_RTU
+    unit_of_measurement: "W" # your unit
+    name: "Power Measurement"
+```
+
+## Binary Sensor (Digital Value)
+
+#### For:
+* Any Digital Value (e.g. DIN, ZWAVE_DIN)
+
+```yaml
+binary_sensor:
+  - platform: grenton_objects
+    api_endpoint: http://192.168.0.4/HAlistener
+    grenton_id: CLU221001090->TEM5469
+    name: "Kitchen Window Sensor"
 ```
 
 # Forced faster state update
