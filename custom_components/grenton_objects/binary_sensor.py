@@ -4,8 +4,7 @@ import json
 import voluptuous as vol
 from homeassistant.components.binary_sensor import (
     BinarySensorEntity,
-    PLATFORM_SCHEMA,
-    BinarySensorDeviceClass
+    PLATFORM_SCHEMA
 )
 from homeassistant.const import (STATE_ON, STATE_OFF)
 
