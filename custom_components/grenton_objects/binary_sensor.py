@@ -15,62 +15,27 @@ DOMAIN = 'grenton_objects'
 CONF_API_ENDPOINT = 'api_endpoint'
 CONF_GRENTON_ID = 'grenton_id'
 CONF_OBJECT_NAME = 'name'
-CONF_SENSOR_TYPE = 'sensor_type'
 
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Required(CONF_API_ENDPOINT): str,
     vol.Required(CONF_GRENTON_ID): str,
-    vol.Optional(CONF_OBJECT_NAME, default='Grenton Binary Sensor'): str,
-    vol.Required(CONF_SENSOR_TYPE, default='LOCK'): str, #all from BinarySensorDeviceClass
+    vol.Optional(CONF_OBJECT_NAME, default='Grenton Binary Sensor'): str
 })
 
 def setup_platform(hass, config, add_entities, discovery_info=None):
     api_endpoint = config.get(CONF_API_ENDPOINT)
     grenton_id = config.get(CONF_GRENTON_ID)
     object_name = config.get(CONF_OBJECT_NAME)
-    sensor_type = config.get(CONF_SENSOR_TYPE)
 
-    add_entities([GrentonBinarySensor(api_endpoint, grenton_id, object_name, sensor_type)], True)
+    add_entities([GrentonBinarySensor(api_endpoint, grenton_id, object_name)], True)
 
 class GrentonBinarySensor(BinarySensorEntity):
-    def __init__(self, api_endpoint, grenton_id, object_name, sensor_type):
+    def __init__(self, api_endpoint, grenton_id, object_name):
         self._api_endpoint = api_endpoint
         self._grenton_id = grenton_id
         self._object_name = object_name
         self._unique_id = f"grenton_{grenton_id.split('->')[1]}"
         self._state = None
-
-        device_class_mapping = {
-            "BATTERY": BinarySensorDeviceClass.BATTERY,
-            "BATTERY_CHARGING": BinarySensorDeviceClass.BATTERY_CHARGING,
-            "CO": BinarySensorDeviceClass.CO,
-            "COLD": BinarySensorDeviceClass.COLD,
-            "CONNECTIVITY": BinarySensorDeviceClass.CONNECTIVITY,
-            "DOOR": BinarySensorDeviceClass.DOOR,
-            "GARAGE_DOOR": BinarySensorDeviceClass.GARAGE_DOOR,
-            "GAS": BinarySensorDeviceClass.GAS,
-            "HEAT": BinarySensorDeviceClass.HEAT,
-            "LIGHT": BinarySensorDeviceClass.LIGHT,
-            "LOCK": BinarySensorDeviceClass.LOCK,
-            "MOISTURE": BinarySensorDeviceClass.MOISTURE,
-            "MOTION": BinarySensorDeviceClass.MOTION,
-            "MOVING": BinarySensorDeviceClass.MOVING,
-            "OCCUPANCY": BinarySensorDeviceClass.OCCUPANCY,
-            "OPENING": BinarySensorDeviceClass.OPENING,
-            "PLUG": BinarySensorDeviceClass.PLUG,
-            "POWER": BinarySensorDeviceClass.POWER,
-            "PRESENCE": BinarySensorDeviceClass.PRESENCE,
-            "PROBLEM": BinarySensorDeviceClass.PROBLEM,
-            "RUNNING": BinarySensorDeviceClass.RUNNING,
-            "SAFETY": BinarySensorDeviceClass.SAFETY,
-            "SMOKE": BinarySensorDeviceClass.SMOKE,
-            "SOUND": BinarySensorDeviceClass.SOUND,
-            "TAMPER": BinarySensorDeviceClass.TAMPER,
-            "UPDATE": BinarySensorDeviceClass.UPDATE,
-            "VIBRATION": BinarySensorDeviceClass.VIBRATION,
-            "WINDOW": BinarySensorDeviceClass.WINDOW
-        }
-        self._device_class = device_class_mapping.get(sensor_type.upper(), BinarySensorDeviceClass.LOCK)
 
     @property
     def name(self):
