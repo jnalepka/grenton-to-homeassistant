@@ -237,6 +237,18 @@ sensor:
 ```
 
 #### For:
+* CLU User Feature
+
+ ```yaml
+sensor:
+  - platform: grenton_objects
+    api_endpoint: http://192.168.0.4/HAlistener
+    grenton_id: CLU221001090->my_weather_station_wind_power
+    unit_of_measurement: "m/s" # your unit
+    name: "Wind Power"
+```
+
+#### For:
 * MODBUS, MODBUS_VALUE, MODBUS_RTU, MODBUS_CLIENT, MODBUS_SERVER, MODBUS_SLAVE_RTU
 
 ```yaml
