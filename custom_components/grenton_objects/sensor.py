@@ -62,17 +62,19 @@ class GrentonSensor(SensorEntity):
 
     def update(self):
         try:
-            grenton_type_mapping = {
-                "MODBUS": 14,
-                "MODBUS_VALUE": 20,
-                "MODBUS_RTU": 22,
-                "MODBUS_CLIENT": 19,
-                "MODBUS_SERVER": 10,
-                "MODBUS_SLAVE_RTU": 10,
-            }
-            index = grenton_type_mapping.get(self._grenton_type, 0)
-            command = {"status": f"return {self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:get({index})')"}
-            
+            if self._grenton_id.split('->')[1].isupper():
+                grenton_type_mapping = {
+                    "MODBUS": 14,
+                    "MODBUS_VALUE": 20,
+                    "MODBUS_RTU": 22,
+                    "MODBUS_CLIENT": 19,
+                    "MODBUS_SERVER": 10,
+                    "MODBUS_SLAVE_RTU": 10,
+                }
+                index = grenton_type_mapping.get(self._grenton_type, 0)
+                command = {"status": f"return {self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:get({index})')"}
+            else:
+                command = {"status": f"return {self._grenton_id.split('->')[0]}:execute(0, 'getVar(\"{self._grenton_id.split('->')[1]}\")')"}
             response = requests.get(
                 f"{self._api_endpoint}",
                 json = command
