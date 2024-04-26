@@ -40,7 +40,10 @@ class GrentonSensor(SensorEntity):
         self._grenton_id = grenton_id
         self._grenton_type = grenton_type
         self._object_name = object_name
-        self._unique_id = f"grenton_{grenton_id.split('->')[1]}"
+        if len(self._grenton_id.split('->')) == 1:
+            self._unique_id = f"grenton_{grenton_id}"
+        else:
+            self._unique_id = f"grenton_{grenton_id.split('->')[1]}"
         self._native_value = None
         self._native_unit_of_measurement = unit_of_measurement
 
@@ -62,7 +65,9 @@ class GrentonSensor(SensorEntity):
 
     def update(self):
         try:
-            if self._grenton_id.split('->')[1].isupper():
+            if len(self._grenton_id.split('->')) == 1:
+                command = {"status": f"return getVar(\"{self._grenton_id}\")"}
+            elif self._grenton_id.split('->')[1].isupper():
                 grenton_type_mapping = {
                     "MODBUS": 14,
                     "MODBUS_VALUE": 20,

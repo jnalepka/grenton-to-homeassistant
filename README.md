@@ -243,7 +243,7 @@ sensor:
 sensor:
   - platform: grenton_objects
     api_endpoint: http://192.168.0.4/HAlistener
-    grenton_id: CLU221001090->my_weather_station_wind_power
+    grenton_id: CLU221001090->my_user_feature # NOTE! if your user feature is on this GATE HTTP, just type "my_user_feature"
     unit_of_measurement: "m/s" # your unit
     name: "Wind Power"
 ```
