@@ -1,3 +1,12 @@
+"""
+==================================================
+Author: Jan Nalepka
+Version: 1.1
+Date: 2024-05-17
+Repository: https://github.com/jnalepka/GrentonObjects_HomeAssistant
+==================================================
+"""
+
 import requests
 import logging
 import json

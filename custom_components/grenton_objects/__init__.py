@@ -1,1 +1,1 @@
-"""Grenton objects integration."""
+"""Grenton objects integration by Jan Nalepka."""

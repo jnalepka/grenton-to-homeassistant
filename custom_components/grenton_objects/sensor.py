@@ -1,3 +1,12 @@
+"""
+==================================================
+Author: Jan Nalepka
+Version: 1.1
+Date: 2024-05-17
+Repository: https://github.com/jnalepka/GrentonObjects_HomeAssistant
+==================================================
+"""
+
 import requests
 import logging
 import json
@@ -7,6 +16,8 @@ from homeassistant.components.sensor import (
     PLATFORM_SCHEMA
 )
 
+from homeassistant.const import UnitOfTemperature
+
 _LOGGER = logging.getLogger(__name__)
 
 DOMAIN = 'grenton_objects'
@@ -15,14 +26,18 @@ CONF_API_ENDPOINT = 'api_endpoint'
 CONF_GRENTON_ID = 'grenton_id'
 CONF_GRENTON_TYPE = 'grenton_type'
 CONF_OBJECT_NAME = 'name'
+CONF_DEVICE_CLASS = 'device_class'
+CONF_STATE_CLASS = 'state_class'
 CONF_UNIT_OF_MEASUREMENT = 'unit_of_measurement'
 
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Required(CONF_API_ENDPOINT): str,
     vol.Required(CONF_GRENTON_ID): str,
     vol.Required(CONF_GRENTON_TYPE, default='UNKNOWN'): str, #MODBUS_RTU, MODBUS_VALUE, MODBUS, MODBUS_CLIENT, MODBUS_SLAVE_RTU
-    vol.Required(CONF_UNIT_OF_MEASUREMENT, default='°C'): str,
-    vol.Optional(CONF_OBJECT_NAME, default='Grenton Sensor'): str
+    vol.Required(CONF_UNIT_OF_MEASUREMENT, default=UnitOfTemperature.CELSIUS): str,
+    vol.Optional(CONF_OBJECT_NAME, default='Grenton Sensor'): str,
+    vol.Optional(CONF_DEVICE_CLASS, default=''): str,
+    vol.Optional(CONF_STATE_CLASS, default=''): str
 })
 
 def setup_platform(hass, config, add_entities, discovery_info=None):
@@ -31,11 +46,13 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
     grenton_type = config.get(CONF_GRENTON_TYPE)
     object_name = config.get(CONF_OBJECT_NAME)
     unit_of_measurement = config.get(CONF_UNIT_OF_MEASUREMENT)
+    device_class = config.get(CONF_DEVICE_CLASS)
+    state_class = config.get(CONF_STATE_CLASS)
 
-    add_entities([GrentonSensor(api_endpoint, grenton_id, grenton_type, object_name, unit_of_measurement)], True)
+    add_entities([GrentonSensor(api_endpoint, grenton_id, grenton_type, object_name, unit_of_measurement, device_class, state_class)], True)
 
 class GrentonSensor(SensorEntity):
-    def __init__(self, api_endpoint, grenton_id, grenton_type, object_name, unit_of_measurement):
+    def __init__(self, api_endpoint, grenton_id, grenton_type, object_name, unit_of_measurement, device_class, state_class):
         self._api_endpoint = api_endpoint
         self._grenton_id = grenton_id
         self._grenton_type = grenton_type
@@ -46,6 +63,8 @@ class GrentonSensor(SensorEntity):
             self._unique_id = f"grenton_{grenton_id.split('->')[1]}"
         self._native_value = None
         self._native_unit_of_measurement = unit_of_measurement
+        self._device_class = device_class
+        self._state_class = state_class
 
     @property
     def name(self):
@@ -62,6 +81,14 @@ class GrentonSensor(SensorEntity):
     @property
     def native_unit_of_measurement(self):
         return self._native_unit_of_measurement
+
+    @property
+    def device_class(self):
+        return self._device_class
+    
+    @property
+    def state_class(self):
+        return self._state_class
 
     def update(self):
         try:
