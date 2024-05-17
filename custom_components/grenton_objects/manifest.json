@@ -5,7 +5,7 @@
     "dependencies": [],
     "codeowners": [],
     "requirements": [],
-    "version": "0.2",
+    "version": "1.0",
     "issue_tracker": "https://github.com/jnalepka/GrentonObjects_HomeAssistant/issues",
     "autoload": true
 }
