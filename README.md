@@ -221,6 +221,7 @@ sensor:
   - platform: grenton_objects
     api_endpoint: http://192.168.0.4/HAlistener
     grenton_id: CLU221001090->TEM5469
+    device_class: "temperature"
     name: "Bedroom Temperature"
 ```
 
@@ -232,8 +233,8 @@ sensor:
   - platform: grenton_objects
     api_endpoint: http://192.168.0.4/HAlistener
     grenton_id: CLU221001090->TEM5469
-    unit_of_measurement: "%" # your unit
-    name: "Power Measurement"
+    unit_of_measurement: "%" # your custom unit
+    name: "Humidity"
 ```
 
 #### For:
@@ -260,6 +261,77 @@ sensor:
     unit_of_measurement: "W" # your unit
     name: "Power Measurement"
 ```
+
+#### Optional sensor parameters:
+
+- `device_class`, `unit_of_measurement`, `state_class` - More information https://developers.home-assistant.io/docs/core/entity/sensor
+  
+```yaml
+sensor:
+  - platform: grenton_objects
+    api_endpoint: http://192.168.0.4/HAlistener
+    grenton_id: CLU221001090->TEM5469
+    device_class: "energy"
+    unit_of_measurement: "kWh" # must be a valid unit for the device class!
+    state_class: "total"
+    name: "Power Measurement"
+```
+
+| device_class                            | unit_of_measurement         |
+|----------------------------------------|--------------------------|
+| `app_usage`                            | apps                     |
+| `aqi`                                  | None                     |
+| `apparent_power`                       | VA                       |
+| `atmospheric_pressure`                 | cbar, bar, hPa, mmHg, inHg, kPa, mbar, Pa, psi |
+| `battery`                              | %                        |
+| `carbon_dioxide`                       | ppm                      |
+| `carbon_monoxide`                      | ppm                      |
+| `current`                              | A, mA                    |
+| `data_rate`                            | bit/s, kbit/s, Mbit/s, Gbit/s, B/s, kB/s, MB/s, GB/s, KiB/s, MiB/s, GiB/s |
+| `data_size`                            | bit, kbit, Mbit, Gbit, B, kB, MB, GB, TB, PB, EB, ZB, YB, KiB, MiB, GiB, TiB |
+| `date`                                 | None                     |
+| `distance`                             | km, m, cm, mm, mi, yd, in |
+| `duration`                             | d, h, min, s, ms         |
+| `energy`                               | Wh, kWh, MWh, MJ, GJ     |
+| `energy_storage`                       | Wh, kWh, MWh, MJ, GJ     |
+| `enum`                                 | None                     |
+| `frequency`                            | Hz, kHz, MHz, GHz        |
+| `gas`                                  | m³, ft³, CCF             |
+| `humidity`                             | %                        |
+| `illuminance`                          | lx                       |
+| `irradiance`                           | W/m², BTU/(h⋅ft²)        |
+| `moisture`                             | %                        |
+| `monetary`                             | ISO 4217                 |
+| `nitrogen_dioxide`                     | µg/m³                    |
+| `nitrogen_monoxide`                    | µg/m³                    |
+| `nitrous_oxide`                        | µg/m³                    |
+| `ozone`                                | µg/m³                    |
+| `ph`                                   | None                     |
+| `pm1`                                  | µg/m³                    |
+| `pm10`                                 | µg/m³                    |
+| `pm25`                                 | µg/m³                    |
+| `power`                                | W, kW                    |
+| `power_factor`                         | %, None                  |
+| `precipitation`                        | cm, in, mm               |
+| `precipitation_intensity`              | in/d, in/h, mm/d, mm/h   |
+| `pressure`                             | cbar, bar, hPa, mmHg, inHg, kPa, mbar, Pa, psi |
+| `reactive_power`                       | var                      |
+| `signal_strength`                      | dB, dBm                  |
+| `sound_pressure`                       | dB, dBA                  |
+| `speed`                                | ft/s, in/d, in/h, km/h, kn, m/s, mph, mm/d |
+| `sulphur_dioxide`                      | µg/m³                    |
+| `temperature`                          | °C, °F, K                |
+| `timestamp`                            | None                     |
+| `volatile_organic_compounds`           | µg/m³                    |
+| `volatile_organic_compounds_parts`     | ppm, ppb                 |
+| `voltage`                              | V, mV                    |
+| `volume`                               | L, mL, gal, fl. oz., m³, ft³, CCF |
+| `volume_flow_rate`                     | m³/h, ft³/min, L/min, gal/min |
+| `volume_storage`                       | L, mL, gal, fl. oz., m³, ft³, CCF |
+| `water`                                | L, gal, m³, ft³, CCF     |
+| `weight`                               | kg, g, mg, µg, oz, lb, st |
+| `wind_speed`                           | ft/s, km/h, kn, m/s, mph |
+
 
 ## Binary Sensor (Digital Value)
 
