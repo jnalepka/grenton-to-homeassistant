@@ -1,4 +1,7 @@
-# GrentonObjects_HomeAssistant
+<img src="https://github.com/user-attachments/assets/662a0a84-06b1-41c8-b944-f6bea44608cb" alt="Group 1" width="200" />
+
+# ![Grenton to Home Assistant](https://github.com/user-attachments/assets/6bf9cfdf-7211-4f6d-9555-cc2a13b1053d)
+
 
 This is an unofficial integration of the Grenton system with the Home Assistant.
 
