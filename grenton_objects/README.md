@@ -3,8 +3,6 @@
 
 # ![Grenton to Home Assistant](https://github.com/user-attachments/assets/6bf9cfdf-7211-4f6d-9555-cc2a13b1053d)
 
-![image](https://github.com/user-attachments/assets/4cab82f8-548c-4b96-ae29-daaea8c5c11e)
-
 This is an unofficial integration of the Grenton system with the Home Assistant.
 
 If you like what I do, buy me a `coffee`!
