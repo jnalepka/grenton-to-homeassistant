@@ -12,20 +12,16 @@ If you like what I do, buy me a `coffee`!
 [![](https://img.shields.io/static/v1?label=Donate&message=%E2%9D%A4&logo=GitHub&color=%23fe8e86)](https://tipply.pl/@jnalepka)
 
 
-# Installation
+# How to use
 
-1. Copy the folder `grenton_objects` to the `custom_components` folder in your Home Assistant. Create the folder if you don't have it. You can use the Visual Studio Code add-on to create the folder and copy the files.
-
-![image](https://github.com/jnalepka/GrentonHomeAssistantIntegration/assets/70645322/110e00e8-a3ff-4be1-8b1e-c33639b87ea2)
-
-2. Create a `HTTPListener` virtual object on GateHTTP named `HA_Listener_Integration` and configure it as follows:
+1. Create a `HTTPListener` virtual object on GateHTTP named `HA_Listener_Integration` and configure it as follows:
 
 * Path - `/HAlistener` (You can edit it if you want)
 * ResponseType - `JSON`
 
   ![image](https://github.com/jnalepka/GrentonHomeAssistantIntegration/assets/70645322/1d69d9fc-95f3-4f89-90e3-588b8637ffad)
 
-3. Create a script named `HA_Integration_Script` and attach it to the OnRequest event of the virtual object.
+2. Create a script named `HA_Integration_Script` and attach it to the OnRequest event of the virtual object.
 
 ```lua
 -- ╔═══════════════════════════════════════════════════════════════════════╗
@@ -79,7 +75,7 @@ GATE_HTTP->HA_Listener_Integration->SendResponse()
 
 ![image](https://github.com/jnalepka/GrentonHomeAssistantIntegration/assets/70645322/25a94dee-a43a-4b32-a3f2-83c455652688)
 
-4. Add your Grenton objects to the Home Assistant. Example:
+3. Add your Grenton objects to the Home Assistant. Example:
 
 ```yaml
 light:
@@ -100,7 +96,7 @@ where:
   ![image](https://github.com/jnalepka/GrentonHomeAssistantIntegration/assets/70645322/0e4ede98-20fb-4a80-a759-b550633ae418)
 
 
-5. Send configuration to the Grenton Gate HTTP, restart HomeAssistant, and test your new objects in your Dashboard!
+4. Send configuration to the Grenton Gate HTTP, restart HomeAssistant, and test your new objects in your Dashboard!
 
 > The data update in Home Assistant occurs automatically every 30 seconds.
 
