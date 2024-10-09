@@ -26,6 +26,28 @@ If you like what I do, buy me a `coffee`!
 3. Create a script named `HA_Integration_Script` and attach it to the OnRequest event of the virtual object.
 
 ```lua
+-- ╔═══════════════════════════════════════════════════════════════════════╗
+-- ║                        Author: Jan Nalepka                            ║
+-- ║                                                                       ║
+-- ║ Script: HA_Integration_Script                                         ║
+-- ║ Description: Display and control Grenton objects in Home Assistant.   ║
+-- ║                                                                       ║
+-- ║ License: MIT License                                                  ║
+-- ║ Github: https://github.com/jnalepka/grenton-to-homeassistant          ║
+-- ║                                                                       ║
+-- ║ Version: 1.0.0                                                        ║
+-- ║                                                                       ║
+-- ║ Requirements:                                                         ║
+-- ║    Gate Http:                                                         ║
+-- ║          1.  Gate Http NAME: "GATE_HTTP" <or change it in this script>║
+-- ║                                                                       ║
+-- ║    HttpListener virtual object:                                       ║
+-- ║          Name: HA_Listener_Integration                                ║
+-- ║          Path: /HAlistener                                            ║
+-- ║          ResponseType: JSON                                           ║
+-- ║                                                                       ║
+-- ╚═══════════════════════════════════════════════════════════════════════╝
+
 local reqJson = GATE_HTTP->HA_Listener_Integration->RequestBody
 local code = 400
 local resp = { g_status = "Grenton script ERROR" }
