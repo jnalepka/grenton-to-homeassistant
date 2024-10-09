@@ -1,0 +1,8 @@
+{
+    "name": "Grenton Objects",
+    "content_in_root": false,
+    "domains": ["grenton_objects"],
+    "country": "PL",
+    "homeassistant": "2021.12.0",
+    "render_readme": true
+  }

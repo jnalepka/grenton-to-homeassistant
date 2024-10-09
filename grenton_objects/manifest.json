@@ -1,0 +1,11 @@
+{
+    "domain": "grenton_objects",
+    "name": "Grenton Objects",
+    "documentation": "https://github.com/jnalepka/grenton-to-homeassistant",
+    "dependencies": [],
+    "codeowners": [],
+    "requirements": [],
+    "version": "1.0.0",
+    "issue_tracker": "https://github.com/jnalepka/grenton-to-homeassistant/issues",
+    "autoload": true
+}
