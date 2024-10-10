@@ -1,11 +1,11 @@
 {
-    "domain": "grenton_objects",
-    "name": "Grenton Objects",
-    "documentation": "https://github.com/jnalepka/grenton-to-homeassistant",
-    "dependencies": [],
-    "codeowners": [],
-    "requirements": [],
-    "version": "1.0.0",
-    "issue_tracker": "https://github.com/jnalepka/grenton-to-homeassistant/issues",
-    "autoload": true
+  "domain": "your_domain_name",
+  "name": "Your Integration",
+  "codeowners": ["@jnalepka"],
+  "dependencies": [],
+  "documentation": "https://www.example.com",
+  "integration_type": "hub",
+  "iot_class": "local_polling",
+  "requirements": [],
+  "issue_tracker": "https://github.com/jnalepka/grenton-to-homeassistant/issues"
 }
