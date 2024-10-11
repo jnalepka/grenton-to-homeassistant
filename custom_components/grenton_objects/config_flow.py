@@ -69,41 +69,106 @@ class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         if self.device_type == "light":
             return vol.Schema({
                 vol.Required("name"): str,
-                vol.Required("api_endpoint"): str,
+                vol.Required("api_endpoint", default="http://192.168.0.4/HAlistener"): str,
                 vol.Required("grenton_id"): str,
-                vol.Optional("grenton_type", default="DIMMER"): vol.In(["DIMMER", "RGB"]),
+                vol.Required("grenton_type", default="UNKNOWN"): vol.In(["DOUT","DIMMER", "RGB"]),
             })
         elif self.device_type == "switch":
             return vol.Schema({
                 vol.Required("name"): str,
-                vol.Required("api_endpoint"): str,
+                vol.Required("api_endpoint", default="http://192.168.0.4/HAlistener"): str,
                 vol.Required("grenton_id"): str,
             })
         elif self.device_type == "cover":
             return vol.Schema({
                 vol.Required("name"): str,
-                vol.Required("api_endpoint"): str,
+                vol.Required("api_endpoint", default="http://192.168.0.4/HAlistener"): str,
                 vol.Required("grenton_id"): str,
                 vol.Optional("reversed", default=False): bool,
             })
         elif self.device_type == "climate":
             return vol.Schema({
                 vol.Required("name"): str,
-                vol.Required("api_endpoint"): str,
+                vol.Required("api_endpoint", default="http://192.168.0.4/HAlistener"): str,
                 vol.Required("grenton_id"): str,
             })
         elif self.device_type == "sensor":
             return vol.Schema({
                 vol.Required("name"): str,
-                vol.Required("api_endpoint"): str,
+                vol.Required("api_endpoint", default="http://192.168.0.4/HAlistener"): str,
                 vol.Required("grenton_id"): str,
-                vol.Optional("device_class", default="temperature"): vol.In(["temperature", "energy"]),
-                vol.Optional("unit_of_measurement"): str,
-                vol.Optional("state_class"): vol.In(["total"]),
+                vol.Optional("grenton_type", default="UNKNOWN"): vol.In(["MODBUS_RTU", "MODBUS_VALUE", "MODBUS", "MODBUS_CLIENT", "MODBUS_SLAVE_RTU"]),
+                vol.Optional("device_class", default="temperature"): vol.In([
+                    "app_usage",
+                    "aqi",
+                    "apparent_power",
+                    "atmospheric_pressure",
+                    "battery",
+                    "carbon_dioxide",
+                    "carbon_monoxide",
+                    "current",
+                    "data_rate",
+                    "data_size",
+                    "date",
+                    "distance",
+                    "duration",
+                    "energy",
+                    "energy_storage",
+                    "enum",
+                    "frequency",
+                    "gas",
+                    "humidity",
+                    "illuminance",
+                    "irradiance",
+                    "moisture",
+                    "monetary",
+                    "nitrogen_dioxide",
+                    "nitrogen_monoxide",
+                    "nitrous_oxide",
+                    "ozone",
+                    "ph",
+                    "pm1",
+                    "pm10",
+                    "pm25",
+                    "power",
+                    "power_factor",
+                    "precipitation",
+                    "precipitation_intensity",
+                    "pressure",
+                    "reactive_power",
+                    "signal_strength",
+                    "sound_pressure",
+                    "speed",
+                    "sulphur_dioxide",
+                    "temperature",
+                    "timestamp",
+                    "volatile_organic_compounds",
+                    "volatile_organic_compounds_parts",
+                    "voltage",
+                    "volume",
+                    "volume_flow_rate",
+                    "volume_storage",
+                    "water",
+                    "weight",
+                    "wind_speed"
+                ]),
+                vol.Optional("unit_of_measurement"): vol.In([
+                    "apps", "VA", "cbar", "bar", "hPa", "mmHg", "inHg", "kPa", "mbar", "Pa", "psi", "%",
+                    "ppm", "A", "mA", "bit/s", "kbit/s", "Mbit/s", "Gbit/s", "B/s", "kB/s", "MB/s",
+                    "GB/s", "KiB/s", "MiB/s", "GiB/s", "bit", "kbit", "Mbit", "Gbit", "B", "kB",
+                    "MB", "GB", "TB", "PB", "EB", "ZB", "YB", "KiB", "MiB", "GiB", "TiB", "km", "m",
+                    "cm", "mm", "mi", "yd", "in", "d", "h", "min", "s", "ms", "Wh", "kWh", "MWh",
+                    "MJ", "GJ", "Hz", "kHz", "MHz", "GHz", "m³", "ft³", "CCF", "lx", "W/m²",
+                    "BTU/(h⋅ft²)", "µg/m³", "kW", "W", "cm", "in", "mm", "in/d", "in/h", "mm/d",
+                    "mm/h", "var", "dB", "dBm", "dBA", "ft/s", "km/h", "kn", "m/s", "mph", "°C",
+                    "°F", "K", "ppb", "ppb", "V", "mV", "L", "mL", "gal", "fl. oz.", "m³", "ft³",
+                    "kg", "g", "mg", "µg", "oz", "lb", "st"
+                ])
+                vol.Optional("state_class"): vol.In(["total", "total_increasing", "measurement"]),
             })
         elif self.device_type == "binary_sensor":
             return vol.Schema({
                 vol.Required("name"): str,
-                vol.Required("api_endpoint"): str,
+                vol.Required("api_endpoint", default="http://192.168.0.4/HAlistener"): str,
                 vol.Required("grenton_id"): str
             })
