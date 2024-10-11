@@ -153,18 +153,9 @@ class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     "wind_speed"
                 ]),
                 vol.Optional("unit_of_measurement"): vol.In([
-                    "apps", "VA", "cbar", "bar", "hPa", "mmHg", "inHg", "kPa", "mbar", "Pa", "psi", "%",
-                    "ppm", "A", "mA", "bit/s", "kbit/s", "Mbit/s", "Gbit/s", "B/s", "kB/s", "MB/s",
-                    "GB/s", "KiB/s", "MiB/s", "GiB/s", "bit", "kbit", "Mbit", "Gbit", "B", "kB",
-                    "MB", "GB", "TB", "PB", "EB", "ZB", "YB", "KiB", "MiB", "GiB", "TiB", "km", "m",
-                    "cm", "mm", "mi", "yd", "in", "d", "h", "min", "s", "ms", "Wh", "kWh", "MWh",
-                    "MJ", "GJ", "Hz", "kHz", "MHz", "GHz", "m³", "ft³", "CCF", "lx", "W/m²",
-                    "BTU/(h⋅ft²)", "µg/m³", "kW", "W", "cm", "in", "mm", "in/d", "in/h", "mm/d",
-                    "mm/h", "var", "dB", "dBm", "dBA", "ft/s", "km/h", "kn", "m/s", "mph", "°C",
-                    "°F", "K", "ppb", "ppb", "V", "mV", "L", "mL", "gal", "fl. oz.", "m³", "ft³",
-                    "kg", "g", "mg", "µg", "oz", "lb", "st"
-                ])
-                vol.Optional("state_class"): vol.In(["total", "total_increasing", "measurement"]),
+                    "apps", "VA"
+                ]),
+                vol.Optional("state_class"): vol.In(["total", "total_increasing", "measurement"])
             })
         elif self.device_type == "binary_sensor":
             return vol.Schema({
