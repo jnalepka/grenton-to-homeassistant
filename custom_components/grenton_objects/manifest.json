@@ -8,5 +8,8 @@
   "iot_class": "local_polling",
   "requirements": [],
   "issue_tracker": "https://github.com/jnalepka/grenton-to-homeassistant/issues",
-  "version": "v1.0.0"
+  "version": "v1.0.0",
+  "config_flow": true,
+  "homeassistant": "2021.6.0",
+  "platforms": ["light", "switch", "cover", "climate", "sensor", "binary_sensor"]
 }
