@@ -3,7 +3,7 @@
   "name": "Your Integration",
   "codeowners": ["@jnalepka"],
   "dependencies": [],
-  "documentation": "https://www.example.com",
+  "documentation": "https://github.com/jnalepka/grenton-to-homeassistant",
   "integration_type": "hub",
   "iot_class": "local_polling",
   "requirements": [],
