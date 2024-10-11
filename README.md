@@ -13,7 +13,7 @@ If you like what I do, buy me a `coffee`!
 
 # Installation
 
-The easiest way, if you are using HACS, is to install Grenton Objects through HACS.
+The easiest way, if you are using [HACS](https://hacs.xyz/), is to install Grenton Objects through HACS.
 
 For manual installation, copy the grenton_objects folder and all of its contents into your Home Assistant's custom_components folder. This folder is usually inside your /config folder. If you are running Hass.io, use SAMBA to copy the folder over. If you are running Home Assistant Supervised, the custom_components folder might be located at /usr/share/hassio/homeassistant. You may need to create the custom_components folder and then copy the localtuya folder and all of its contents into it.
 
