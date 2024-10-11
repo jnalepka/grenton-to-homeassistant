@@ -1,11 +1,10 @@
-<img src="https://github.com/user-attachments/assets/d7a5344b-2d6d-4380-bf78-c50c219efc17" alt="Group 1" width="200" />
-
-
-# ![Grenton to Home Assistant](https://github.com/user-attachments/assets/6bf9cfdf-7211-4f6d-9555-cc2a13b1053d)
+# ![logo@2x](https://github.com/user-attachments/assets/1dd6d412-01f7-4ae8-ba4e-d00b91a60a5c)
 
 ![image](https://github.com/user-attachments/assets/4cab82f8-548c-4b96-ae29-daaea8c5c11e)
 
-This is an unofficial integration of the Grenton system with the Home Assistant.
+A Home Assistant custom integration for presenting and controlling Grenton objects.
+
+This integration creates objects in Home Assistant based on selected objects from Grenton. The HTTP Gate module is required, as well as the creation of a virtual HttpListener object and a script, according to the instructions. After providing the identifiers of Grenton objects, they will appear in Home Assistant. It is possible to display statuses and control Grenton devices.
 
 If you like what I do, buy me a `coffee`!
 
@@ -14,18 +13,21 @@ If you like what I do, buy me a `coffee`!
 
 # Installation
 
-1. Copy the folder `grenton_objects` to the `custom_components` folder in your Home Assistant. Create the folder if you don't have it. You can use the Visual Studio Code add-on to create the folder and copy the files.
+The easiest way, if you are using HACS, is to install Grenton Objects through HACS.
 
-![image](https://github.com/jnalepka/GrentonHomeAssistantIntegration/assets/70645322/110e00e8-a3ff-4be1-8b1e-c33639b87ea2)
+For manual installation, copy the grenton_objects folder and all of its contents into your Home Assistant's custom_components folder. This folder is usually inside your /config folder. If you are running Hass.io, use SAMBA to copy the folder over. If you are running Home Assistant Supervised, the custom_components folder might be located at /usr/share/hassio/homeassistant. You may need to create the custom_components folder and then copy the localtuya folder and all of its contents into it.
 
-2. Create a `HTTPListener` virtual object on GateHTTP named `HA_Listener_Integration` and configure it as follows:
+
+# Configuration
+
+1. Create a `HTTPListener` virtual object on GateHTTP named `HA_Listener_Integration` and configure it as follows:
 
 * Path - `/HAlistener` (You can edit it if you want)
 * ResponseType - `JSON`
 
   ![image](https://github.com/jnalepka/GrentonHomeAssistantIntegration/assets/70645322/1d69d9fc-95f3-4f89-90e3-588b8637ffad)
 
-3. Create a script named `HA_Integration_Script` and attach it to the OnRequest event of the virtual object.
+2. Create a script named `HA_Integration_Script` and attach it to the OnRequest event of the virtual object.
 
 ```lua
 -- ╔═══════════════════════════════════════════════════════════════════════╗
@@ -79,7 +81,7 @@ GATE_HTTP->HA_Listener_Integration->SendResponse()
 
 ![image](https://github.com/jnalepka/GrentonHomeAssistantIntegration/assets/70645322/25a94dee-a43a-4b32-a3f2-83c455652688)
 
-4. Add your Grenton objects to the Home Assistant. Example:
+3. Add your Grenton objects to the Home Assistant. Example:
 
 ```yaml
 light:
@@ -100,7 +102,7 @@ where:
   ![image](https://github.com/jnalepka/GrentonHomeAssistantIntegration/assets/70645322/0e4ede98-20fb-4a80-a759-b550633ae418)
 
 
-5. Send configuration to the Grenton Gate HTTP, restart HomeAssistant, and test your new objects in your Dashboard!
+4. Send configuration to the Grenton Gate HTTP, restart HomeAssistant, and test your new objects in your Dashboard!
 
 > The data update in Home Assistant occurs automatically every 30 seconds.
 
