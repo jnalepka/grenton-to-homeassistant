@@ -1,9 +1,19 @@
 """Grenton objects integration by Jan Nalepka."""
+from homeassistant.config_entries import ConfigEntry
+from homeassistant.core import HomeAssistant
+from homeassistant.helpers.typing import ConfigType
 
-async def async_setup_entry(hass, config_entry):
-    """Set up Grenton from a config entry."""
+DOMAIN = "grenton_objects"
+
+async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
+    """Set up Grenton objects from yaml configuration."""
+    # This method is used for setting up the integration via YAML.
+    return True
+
+async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> bool:
+    """Set up Grenton objects from a config entry."""
     
-    devices = config_entry.data["devices"]
+    devices = config_entry.data.get("devices", [])
 
     for device in devices:
         if device["device_type"] == "light":
@@ -32,3 +42,10 @@ async def async_setup_entry(hass, config_entry):
             )
 
     return True
+
+async def async_unload_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> bool:
+    """Unload a config entry."""
+    unload_ok = await hass.config_entries.async_unload_platforms(
+        config_entry, ["light", "switch", "climate", "cover", "sensor", "binary_sensor"]
+    )
+    return unload_ok
