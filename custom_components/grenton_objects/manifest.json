@@ -1,6 +1,6 @@
 {
-  "domain": "your_domain_name",
-  "name": "Your Integration",
+  "domain": "grenton_objects",
+  "name": "Grenton Objects",
   "codeowners": ["@jnalepka"],
   "dependencies": [],
   "documentation": "https://github.com/jnalepka/grenton-to-homeassistant",
