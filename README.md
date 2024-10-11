@@ -1,6 +1,11 @@
-# ![logo@2x](https://github.com/user-attachments/assets/1dd6d412-01f7-4ae8-ba4e-d00b91a60a5c)
+
+![logo@2x](https://github.com/user-attachments/assets/08571ca3-a9b2-404b-820f-dccc688f62e8)
+
+# Grenton to Home Assistant
+
 
 ![image](https://github.com/user-attachments/assets/4cab82f8-548c-4b96-ae29-daaea8c5c11e)
+
 
 A Home Assistant custom integration for presenting and controlling Grenton objects.
 
