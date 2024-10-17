@@ -14,38 +14,23 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
     """Set up Grenton objects from a config entry."""
     
     devices = config_entry.data.get("devices", [])
+    platforms = {device["device_type"] for device in devices}
 
-    for device in devices:
-        if device["device_type"] == "light":
-            hass.async_create_task(
-                hass.config_entries.async_forward_entry_setup(config_entry, "light")
-            )
-        elif device["device_type"] == "switch":
-            hass.async_create_task(
-                hass.config_entries.async_forward_entry_setup(config_entry, "switch")
-            )
-        elif device["device_type"] == "climate":
-            hass.async_create_task(
-                hass.config_entries.async_forward_entry_setup(config_entry, "climate")
-            )
-        elif device["device_type"] == "cover":
-            hass.async_create_task(
-                hass.config_entries.async_forward_entry_setup(config_entry, "cover")
-            )
-        elif device["device_type"] == "sensor":
-            hass.async_create_task(
-                hass.config_entries.async_forward_entry_setup(config_entry, "sensor")
-            )
-        elif device["device_type"] == "binary_sensor":
-            hass.async_create_task(
-                hass.config_entries.async_forward_entry_setup(config_entry, "binary_sensor")
-            )
+    # Forward setup to the correct platforms
+    await hass.config_entries.async_forward_entry_setups(config_entry, platforms)
 
     return True
 
 async def async_unload_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> bool:
     """Unload a config entry."""
+    
+    # Unload the platforms related to the config entry
     unload_ok = await hass.config_entries.async_unload_platforms(
         config_entry, ["light", "switch", "climate", "cover", "sensor", "binary_sensor"]
     )
+    
+    if unload_ok:
+        # If the platforms are successfully unloaded, perform additional cleanup if necessary
+        hass.data[DOMAIN].pop(config_entry.entry_id, None)
+    
     return unload_ok
