@@ -2,6 +2,9 @@ import voluptuous as vol
 from homeassistant import config_entries
 from homeassistant.core import callback
 from .const import DOMAIN
+import logging
+
+_LOGGER = logging.getLogger(__name__)
 
 DEVICE_TYPES = {
     "light": "Light",
@@ -39,6 +42,9 @@ class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 step_id="device_config",
                 data_schema=self._get_device_schema()
             )
+            
+        # Dodaj logowanie, aby sprawdzić wartości
+        _LOGGER.debug(f"User input: {user_input}")
 
         self._devices.append({
             "device_type": self.device_type,
@@ -47,6 +53,8 @@ class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             "name": user_input["name"],
             "additional_params": user_input.get("additional_params", None)
         })
+        
+        _LOGGER.debug(f"Device added: {self._devices[-1]}")
 
         return self.async_show_form(
             step_id="add_another",
