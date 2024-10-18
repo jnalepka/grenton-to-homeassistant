@@ -8,6 +8,7 @@ Repository: https://github.com/jnalepka/GrentonObjects_HomeAssistant
 """
 
 import aiohttp
+from .const import DOMAIN
 import logging
 import json
 import voluptuous as vol
@@ -20,8 +21,6 @@ from homeassistant.const import UnitOfTemperature
 
 _LOGGER = logging.getLogger(__name__)
 
-DOMAIN = 'grenton_objects'
-
 CONF_API_ENDPOINT = 'api_endpoint'
 CONF_GRENTON_ID = 'grenton_id'
 CONF_GRENTON_TYPE = 'grenton_type'
@@ -33,33 +32,29 @@ CONF_UNIT_OF_MEASUREMENT = 'unit_of_measurement'
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Required(CONF_API_ENDPOINT): str,
     vol.Required(CONF_GRENTON_ID): str,
-    vol.Required(CONF_GRENTON_TYPE, default='UNKNOWN'): str, #MODBUS_RTU, MODBUS_VALUE, MODBUS, MODBUS_CLIENT, MODBUS_SLAVE_RTU
+    vol.Required(CONF_GRENTON_TYPE, default='DEFAULT_SENSOR'): str, #DEFAULT_SENSOR, MODBUS_RTU, MODBUS_VALUE, MODBUS, MODBUS_CLIENT, MODBUS_SLAVE_RTU
     vol.Required(CONF_UNIT_OF_MEASUREMENT, default=UnitOfTemperature.CELSIUS): str,
     vol.Optional(CONF_OBJECT_NAME, default='Grenton Sensor'): str,
     vol.Optional(CONF_DEVICE_CLASS, default=''): str,
     vol.Optional(CONF_STATE_CLASS, default=''): str
 })
-
+    
 async def async_setup_entry(hass, config_entry, async_add_entities):
-    devices = config_entry.data.get("devices", [])
+    """Set up Grenton sensor from a config entry."""
+    device = config_entry.data
 
-    if not devices:
-        _LOGGER.error("No devices found in config entry.")
-        return
+    api_endpoint = device.get(CONF_API_ENDPOINT)
+    grenton_id = device.get(CONF_GRENTON_ID)
+    grenton_type = device.get(CONF_GRENTON_TYPE)
+    object_name = device.get(CONF_OBJECT_NAME)
+    unit_of_measurement = device.get(CONF_UNIT_OF_MEASUREMENT)
+    device_class = device.get(CONF_DEVICE_CLASS)
+    state_class = device.get(CONF_STATE_CLASS)
+    
+    _LOGGER.debug(f"Setting up Grenton Sensor with id: {grenton_id}, endpoint: {api_endpoint}, type: {grenton_type}, name: {object_name}, device_class: {device_class}, state_class: {state_class}, unit_of_measurement: {unit_of_measurement}")
 
-    entities = []
-
-    for device in devices:
-        api_endpoint = device.get(CONF_API_ENDPOINT)
-        grenton_id = device.get(CONF_GRENTON_ID)
-        grenton_type = device.get(CONF_GRENTON_TYPE)
-        object_name = device.get(CONF_OBJECT_NAME)
-        unit_of_measurement = device.get(CONF_UNIT_OF_MEASUREMENT)
-        device_class = device.get(CONF_DEVICE_CLASS)
-        state_class = device.get(CONF_STATE_CLASS)
-        
-    entities.append(GrentonLight(api_endpoint, grenton_id, grenton_type, object_name))
-    async_add_entities(entities, True)
+    async_add_entities([GrentonSensor(api_endpoint, grenton_id, grenton_type, object_name, unit_of_measurement, device_class, state_class)], True)
+    
     
 class GrentonSensor(SensorEntity):
     def __init__(self, api_endpoint, grenton_id, grenton_type, object_name, unit_of_measurement, device_class, state_class):
