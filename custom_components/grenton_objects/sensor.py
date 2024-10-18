@@ -3,7 +3,7 @@
 Author: Jan Nalepka
 Version: 2.0
 Date: 2024-10-19
-Repository: https://github.com/jnalepka/GrentonObjects_HomeAssistant
+Repository: https://github.com/jnalepka/grenton-to-homeassistant
 ==================================================
 """
 
