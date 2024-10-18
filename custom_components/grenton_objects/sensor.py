@@ -1,8 +1,8 @@
 """
 ==================================================
 Author: Jan Nalepka
-Version: 1.1
-Date: 2024-05-17
+Version: 2.0
+Date: 2024-10-19
 Repository: https://github.com/jnalepka/GrentonObjects_HomeAssistant
 ==================================================
 """
@@ -87,7 +87,6 @@ DEFAULT_UNITS = {
 }
     
 async def async_setup_entry(hass, config_entry, async_add_entities):
-    """Set up Grenton sensor from a config entry."""
     device = config_entry.data
 
     api_endpoint = device.get(CONF_API_ENDPOINT)
@@ -98,8 +97,6 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
     unit_of_measurement = DEFAULT_UNITS.get(device_class, None)
     state_class = device.get(CONF_STATE_CLASS)
     
-    _LOGGER.debug(f"Setting up Grenton Sensor with id: {grenton_id}, endpoint: {api_endpoint}, type: {grenton_type}, name: {object_name}, device_class: {device_class}, state_class: {state_class}, unit_of_measurement: {unit_of_measurement}")
-
     async_add_entities([GrentonSensor(api_endpoint, grenton_id, grenton_type, object_name, unit_of_measurement, device_class, state_class)], True)
     
     
