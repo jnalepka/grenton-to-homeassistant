@@ -43,34 +43,18 @@ class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 data_schema=self._get_device_schema()
             )
             
-        # Dodaj logowanie, aby sprawdzić wartości
         _LOGGER.debug(f"User input: {user_input}")
 
-        self._devices.append({
+        return self.async_create_entry(title=user_input["name"], data={
             "device_type": self.device_type,
             "api_endpoint": user_input["api_endpoint"],
             "grenton_id": user_input["grenton_id"],
             "name": user_input["name"],
-            "additional_params": user_input.get("additional_params", None)
+            "grenton_type": user_input.get("grenton_type", None),
+            "device_class": user_input.get("device_class", None),
+            "state_class": user_input.get("state_class", None),
+            "reversed": user_input.get("reversed", None)
         })
-        
-        _LOGGER.debug(f"Device added: {self._devices[-1]}")
-
-        return self.async_show_form(
-            step_id="add_another",
-            data_schema=vol.Schema({
-                vol.Required("add_another", default=False): bool
-            })
-        )
-
-    async def async_step_add_another(self, user_input=None):
-        """Ask if the user wants to add another device."""
-        if user_input["add_another"]:
-            return await self.async_step_user()
-        else:
-            return self.async_create_entry(title="Grenton Objects", data={
-                "devices": self._devices
-            })
 
     def _get_device_schema(self):
         """Return a schema based on the selected device type."""
@@ -79,7 +63,7 @@ class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 vol.Required("name"): str,
                 vol.Required("api_endpoint", default="http://192.168.0.4/HAlistener"): str,
                 vol.Required("grenton_id"): str,
-                vol.Required("grenton_type", default="UNKNOWN"): vol.In(["DOUT","DIMMER", "RGB"]),
+                vol.Required("grenton_type", default="DOUT"): vol.In(["DOUT","DIMMER", "RGB"]),
             })
         elif self.device_type == "switch":
             return vol.Schema({
@@ -105,7 +89,7 @@ class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 vol.Required("name"): str,
                 vol.Required("api_endpoint", default="http://192.168.0.4/HAlistener"): str,
                 vol.Required("grenton_id"): str,
-                vol.Optional("grenton_type", default="UNKNOWN"): vol.In(["MODBUS_RTU", "MODBUS_VALUE", "MODBUS", "MODBUS_CLIENT", "MODBUS_SLAVE_RTU"]),
+                vol.Optional("grenton_type", default="DEFAULT_SENSOR"): vol.In(["DEFAULT_SENSOR", "MODBUS_RTU", "MODBUS_VALUE", "MODBUS", "MODBUS_CLIENT", "MODBUS_SLAVE_RTU"]),
                 vol.Optional("device_class", default="temperature"): vol.In([
                     "app_usage",
                     "aqi",
@@ -160,10 +144,7 @@ class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     "weight",
                     "wind_speed"
                 ]),
-                vol.Optional("unit_of_measurement"): vol.In([
-                    "apps", "VA"
-                ]),
-                vol.Optional("state_class"): vol.In(["total", "total_increasing", "measurement"])
+                vol.Optional("state_class", default="measurement"): vol.In(["total", "total_increasing", "measurement"])
             })
         elif self.device_type == "binary_sensor":
             return vol.Schema({
