@@ -12,22 +12,21 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
 
 async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> bool:
     """Set up Grenton objects from a config entry."""
-    
-    devices = config_entry.data.get("devices", [])
-    platforms = {device["device_type"] for device in devices}
+    device = config_entry.data
 
-    # Forward setup to the correct platforms
-    await hass.config_entries.async_forward_entry_setups(config_entry, platforms)
+    platform = device["device_type"]
+    await hass.config_entries.async_forward_entry_setups(config_entry, {platform})
 
     return True
 
 async def async_unload_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> bool:
     """Unload a config entry."""
     
-    # Unload the platforms related to the config entry
-    unload_ok = await hass.config_entries.async_unload_platforms(
-        config_entry, ["light", "switch", "climate", "cover", "sensor", "binary_sensor"]
-    )
+    # Uzyskaj typ urządzenia
+    device_type = config_entry.data.get("device_type")
+
+    # Unload the platform related to the config entry
+    unload_ok = await hass.config_entries.async_unload_platforms(config_entry, [device_type])
     
     if unload_ok:
         # If the platforms are successfully unloaded, perform additional cleanup if necessary
