@@ -38,6 +38,53 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Optional(CONF_DEVICE_CLASS, default=''): str,
     vol.Optional(CONF_STATE_CLASS, default=''): str
 })
+
+DEFAULT_UNITS = {
+    'apparent_power': 'VA',
+    'atmospheric_pressure': 'hPa',
+    'battery': '%',
+    'carbon_dioxide': 'ppm',
+    'carbon_monoxide': 'ppm',
+    'current': 'mA',
+    'distance': 'm',
+    'duration': 'ms',
+    'energy': 'kWh',
+    'energy_storage': 'kWh',
+    'frequency': 'Hz',
+    'gas': 'm³',
+    'humidity': '%',
+    'illuminance': 'lx',
+    'irradiance': 'W/m²',
+    'moisture': '%',
+    'nitrogen_dioxide': 'µg/m³',
+    'nitrogen_monoxide': 'µg/m³',
+    'nitrous_oxide': 'µg/m³',
+    'ozone': 'µg/m³',
+    'ph': None,
+    'pm1': 'µg/m³',
+    'pm10': 'µg/m³',
+    'm25': 'µg/m³',
+    'power': 'W',
+    'power_factor': '%',
+    'precipitation': 'cm',
+    'precipitation_intensity': 'in/d',
+    'pressure': 'hPa',
+    'reactive_power': 'var',
+    'signal_strength': 'dB',
+    'sound_pressure': 'dB',
+    'speed': 'm/s',
+    'sulphur_dioxide': 'µg/m³',
+    'temperature': '°C',
+    'volatile_organic_compounds': 'µg/m³',
+    'volatile_organic_compounds_parts': 'ppb',
+    'voltage': 'V',
+    'volume': 'L',
+    'volume_flow_rate': 'm³/h',
+    'volume_storage': 'L',
+    'water': 'L',
+    'weight': 'kg',
+    'wind_speed': 'km/h'
+}
     
 async def async_setup_entry(hass, config_entry, async_add_entities):
     """Set up Grenton sensor from a config entry."""
@@ -47,8 +94,8 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
     grenton_id = device.get(CONF_GRENTON_ID)
     grenton_type = device.get(CONF_GRENTON_TYPE)
     object_name = device.get(CONF_OBJECT_NAME)
-    unit_of_measurement = device.get(CONF_UNIT_OF_MEASUREMENT)
     device_class = device.get(CONF_DEVICE_CLASS)
+    unit_of_measurement = DEFAULT_UNITS.get(device_class, None)
     state_class = device.get(CONF_STATE_CLASS)
     
     _LOGGER.debug(f"Setting up Grenton Sensor with id: {grenton_id}, endpoint: {api_endpoint}, type: {grenton_type}, name: {object_name}, device_class: {device_class}, state_class: {state_class}, unit_of_measurement: {unit_of_measurement}")
