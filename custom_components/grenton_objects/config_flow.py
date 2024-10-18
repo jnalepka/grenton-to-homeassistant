@@ -20,7 +20,8 @@ class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
     VERSION = 1
     def __init__(self):
-        self._devices = []
+        self.device_type = None
+        self.device_class = None
 
     async def async_step_user(self, user_input=None):
         """First step - choose device type."""
@@ -55,7 +56,7 @@ class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             "state_class": user_input.get("state_class", None),
             "reversed": user_input.get("reversed", None)
         })
-
+        
     def _get_device_schema(self):
         """Return a schema based on the selected device type."""
         if self.device_type == "light":
@@ -91,29 +92,22 @@ class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 vol.Required("grenton_id"): str,
                 vol.Optional("grenton_type", default="DEFAULT_SENSOR"): vol.In(["DEFAULT_SENSOR", "MODBUS_RTU", "MODBUS_VALUE", "MODBUS", "MODBUS_CLIENT", "MODBUS_SLAVE_RTU"]),
                 vol.Optional("device_class", default="temperature"): vol.In([
-                    "app_usage",
-                    "aqi",
                     "apparent_power",
                     "atmospheric_pressure",
                     "battery",
                     "carbon_dioxide",
                     "carbon_monoxide",
                     "current",
-                    "data_rate",
-                    "data_size",
-                    "date",
                     "distance",
                     "duration",
                     "energy",
                     "energy_storage",
-                    "enum",
                     "frequency",
                     "gas",
                     "humidity",
                     "illuminance",
                     "irradiance",
                     "moisture",
-                    "monetary",
                     "nitrogen_dioxide",
                     "nitrogen_monoxide",
                     "nitrous_oxide",
@@ -133,7 +127,6 @@ class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     "speed",
                     "sulphur_dioxide",
                     "temperature",
-                    "timestamp",
                     "volatile_organic_compounds",
                     "volatile_organic_compounds_parts",
                     "voltage",
@@ -144,7 +137,7 @@ class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     "weight",
                     "wind_speed"
                 ]),
-                vol.Optional("state_class", default="measurement"): vol.In(["total", "total_increasing", "measurement"])
+                vol.Optional("state_class", default="measurement"): vol.In(["measurement", "total", "total_increasing"])
             })
         elif self.device_type == "binary_sensor":
             return vol.Schema({
