@@ -7,7 +7,7 @@ Repository: https://github.com/jnalepka/GrentonObjects_HomeAssistant
 ==================================================
 """
 
-import requests
+import aiohttp
 import logging
 import json
 import voluptuous as vol
@@ -40,17 +40,27 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Optional(CONF_STATE_CLASS, default=''): str
 })
 
-def setup_platform(hass, config, add_entities, discovery_info=None):
-    api_endpoint = config.get(CONF_API_ENDPOINT)
-    grenton_id = config.get(CONF_GRENTON_ID)
-    grenton_type = config.get(CONF_GRENTON_TYPE)
-    object_name = config.get(CONF_OBJECT_NAME)
-    unit_of_measurement = config.get(CONF_UNIT_OF_MEASUREMENT)
-    device_class = config.get(CONF_DEVICE_CLASS)
-    state_class = config.get(CONF_STATE_CLASS)
+async def async_setup_entry(hass, config_entry, async_add_entities):
+    devices = config_entry.data.get("devices", [])
 
-    add_entities([GrentonSensor(api_endpoint, grenton_id, grenton_type, object_name, unit_of_measurement, device_class, state_class)], True)
+    if not devices:
+        _LOGGER.error("No devices found in config entry.")
+        return
 
+    entities = []
+
+    for device in devices:
+        api_endpoint = device.get(CONF_API_ENDPOINT)
+        grenton_id = device.get(CONF_GRENTON_ID)
+        grenton_type = device.get(CONF_GRENTON_TYPE)
+        object_name = device.get(CONF_OBJECT_NAME)
+        unit_of_measurement = device.get(CONF_UNIT_OF_MEASUREMENT)
+        device_class = device.get(CONF_DEVICE_CLASS)
+        state_class = device.get(CONF_STATE_CLASS)
+        
+    entities.append(GrentonLight(api_endpoint, grenton_id, grenton_type, object_name))
+    async_add_entities(entities, True)
+    
 class GrentonSensor(SensorEntity):
     def __init__(self, api_endpoint, grenton_id, grenton_type, object_name, unit_of_measurement, device_class, state_class):
         self._api_endpoint = api_endpoint
@@ -90,7 +100,7 @@ class GrentonSensor(SensorEntity):
     def state_class(self):
         return self._state_class
 
-    def update(self):
+    async def async_update(self):
         try:
             if len(self._grenton_id.split('->')) == 1:
                 command = {"status": f"return getVar(\"{self._grenton_id}\")"}
@@ -107,13 +117,12 @@ class GrentonSensor(SensorEntity):
                 command = {"status": f"return {self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:get({index})')"}
             else:
                 command = {"status": f"return {self._grenton_id.split('->')[0]}:execute(0, 'getVar(\"{self._grenton_id.split('->')[1]}\")')"}
-            response = requests.get(
-                f"{self._api_endpoint}",
-                json = command
-            )
-            response.raise_for_status()
-            data = response.json()
-            self._native_value = data.get("status")
-        except requests.RequestException as ex:
+            
+            async with aiohttp.ClientSession() as session:
+                async with session.get(f"{self._api_endpoint}", json=command) as response:
+                    response.raise_for_status()
+                    data = await response.json()
+                    self._native_value = data.get("status")
+        except aiohttp.ClientError as ex:
             _LOGGER.error(f"Failed to update the switch state: {ex}")
             self._state = None
