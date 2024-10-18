@@ -1,3 +1,12 @@
+"""
+==================================================
+Author: Jan Nalepka
+Version: 2.0
+Date: 2024-10-19
+Repository: https://github.com/jnalepka/grenton-to-homeassistant
+==================================================
+"""
+
 import voluptuous as vol
 from homeassistant import config_entries
 from homeassistant.core import callback
@@ -16,7 +25,6 @@ DEVICE_TYPES = {
 }
 
 class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
-    """Handle a config flow for Grenton integration."""
 
     VERSION = 1
     def __init__(self):
@@ -24,7 +32,6 @@ class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         self.device_class = None
 
     async def async_step_user(self, user_input=None):
-        """First step - choose device type."""
         if user_input is None:
             return self.async_show_form(
                 step_id="user",
@@ -37,14 +44,11 @@ class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         return await self.async_step_device_config()
 
     async def async_step_device_config(self, user_input=None):
-        """Step to configure each device."""
         if user_input is None:
             return self.async_show_form(
                 step_id="device_config",
                 data_schema=self._get_device_schema()
             )
-            
-        _LOGGER.debug(f"User input: {user_input}")
 
         return self.async_create_entry(title=user_input["name"], data={
             "device_type": self.device_type,
@@ -58,38 +62,37 @@ class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         })
         
     def _get_device_schema(self):
-        """Return a schema based on the selected device type."""
         if self.device_type == "light":
             return vol.Schema({
                 vol.Required("name"): str,
                 vol.Required("api_endpoint", default="http://192.168.0.4/HAlistener"): str,
-                vol.Required("grenton_id"): str,
+                vol.Required("grenton_id", default="CLU220000000->DOU0000"): str,
                 vol.Required("grenton_type", default="DOUT"): vol.In(["DOUT","DIMMER", "RGB"]),
             })
         elif self.device_type == "switch":
             return vol.Schema({
                 vol.Required("name"): str,
                 vol.Required("api_endpoint", default="http://192.168.0.4/HAlistener"): str,
-                vol.Required("grenton_id"): str,
+                vol.Required("grenton_id", default="CLU220000000->DOU0000"): str,
             })
         elif self.device_type == "cover":
             return vol.Schema({
                 vol.Required("name"): str,
                 vol.Required("api_endpoint", default="http://192.168.0.4/HAlistener"): str,
-                vol.Required("grenton_id"): str,
+                vol.Required("grenton_id", default="CLU220000000->ROL0000"): str,
                 vol.Optional("reversed", default=False): bool,
             })
         elif self.device_type == "climate":
             return vol.Schema({
                 vol.Required("name"): str,
                 vol.Required("api_endpoint", default="http://192.168.0.4/HAlistener"): str,
-                vol.Required("grenton_id"): str,
+                vol.Required("grenton_id", default="CLU220000000->THE0000"): str,
             })
         elif self.device_type == "sensor":
             return vol.Schema({
                 vol.Required("name"): str,
                 vol.Required("api_endpoint", default="http://192.168.0.4/HAlistener"): str,
-                vol.Required("grenton_id"): str,
+                vol.Required("grenton_id", default="CLU220000000->PAN0000"): str,
                 vol.Optional("grenton_type", default="DEFAULT_SENSOR"): vol.In(["DEFAULT_SENSOR", "MODBUS_RTU", "MODBUS_VALUE", "MODBUS", "MODBUS_CLIENT", "MODBUS_SLAVE_RTU"]),
                 vol.Optional("device_class", default="temperature"): vol.In([
                     "apparent_power",
@@ -143,5 +146,5 @@ class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             return vol.Schema({
                 vol.Required("name"): str,
                 vol.Required("api_endpoint", default="http://192.168.0.4/HAlistener"): str,
-                vol.Required("grenton_id"): str
+                vol.Required("grenton_id", default="CLU220000000->DIN0000"): str
             })
