@@ -1,13 +1,14 @@
 """
 ==================================================
 Author: Jan Nalepka
-Version: 1.1
-Date: 2024-05-17
-Repository: https://github.com/jnalepka/GrentonObjects_HomeAssistant
+Version: 2.0
+Date: 2024-10-19
+Repository: https://github.com/jnalepka/grenton-to-homeassistant
 ==================================================
 """
 
 import aiohttp
+from .const import DOMAIN
 import logging
 import json
 import voluptuous as vol
@@ -20,8 +21,6 @@ from homeassistant.const import (STATE_ON, STATE_OFF)
 from homeassistant.util import color as color_util
 
 _LOGGER = logging.getLogger(__name__)
-
-DOMAIN = 'grenton_objects'
 
 CONF_API_ENDPOINT = 'api_endpoint'
 CONF_GRENTON_ID = 'grenton_id'
@@ -36,27 +35,14 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
 })
 
 async def async_setup_entry(hass, config_entry, async_add_entities):
-    devices = config_entry.data.get("devices", [])
+    device = config_entry.data
     
-    if not devices:
-        _LOGGER.error("No devices found in config entry.")
-        return
-
-    entities = []
+    api_endpoint = device.get(CONF_API_ENDPOINT)
+    grenton_id = device.get(CONF_GRENTON_ID)
+    grenton_type = device.get(CONF_GRENTON_TYPE, "UNKNOWN")
+    object_name = device.get(CONF_OBJECT_NAME, "Grenton Light")
     
-    for device in devices:
-        api_endpoint = device.get(CONF_API_ENDPOINT)
-        grenton_id = device.get(CONF_GRENTON_ID)
-        grenton_type = device.get(CONF_GRENTON_TYPE, "UNKNOWN")
-        object_name = device.get(CONF_OBJECT_NAME, "Grenton Light")
-        
-        _LOGGER.debug(f"Setting up Grenton Light with id: {grenton_id}, endpoint: {api_endpoint}, type: {grenton_type}, name: {object_name}")
-        
-        # Tworzenie encji dla każdego urządzenia
-        entities.append(GrentonLight(api_endpoint, grenton_id, grenton_type, object_name))
-
-    # Dodanie wszystkich encji do Home Assistant
-    async_add_entities(entities, True)
+    async_add_entities([GrentonSensor(api_endpoint, grenton_id, grenton_type, object_name)], True)
 
 class GrentonLight(LightEntity):
     def __init__(self, api_endpoint, grenton_id, grenton_type, object_name):
