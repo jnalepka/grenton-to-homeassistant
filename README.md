@@ -13,14 +13,16 @@ This integration creates objects in Home Assistant based on selected objects fro
 
 If you like what I do, buy me a `coffee`!
 
-[![](https://img.shields.io/static/v1?label=Donate&message=%E2%9D%A4&logo=GitHub&color=%23fe8e86)](https://tipply.pl/@jnalepka)
+<a href="https://tipply.pl/@jnalepka">
+    <img src="https://img.shields.io/static/v1?label=Donate&message=%E2%9D%A4&logo=GitHub&color=%23fe8e86" alt="Donate" width="130" height="30">
+</a>
 
 
 # Installation
 
-The easiest way, if you are using [HACS](https://hacs.xyz/), is to install Grenton Objects through HACS.
+If you're using [HACS](https://hacs.xyz/), is to the easiest way is to install Grenton Objects through it.
 
-For manual installation, copy the grenton_objects folder and all of its contents into your Home Assistant's custom_components folder. This folder is usually inside your /config folder. If you are running Hass.io, use SAMBA to copy the folder over. If you are running Home Assistant Supervised, the custom_components folder might be located at /usr/share/hassio/homeassistant. You may need to create the custom_components folder and then copy the localtuya folder and all of its contents into it.
+To install manually, copy the grenton_objects folder along with all its contents into the custom_components folder of your Home Assistant setup. This folder is typically found within the /config directory.
 
 
 # Requirement on the Grenton side
