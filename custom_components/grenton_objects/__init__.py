@@ -13,7 +13,7 @@ from homeassistant.helpers.typing import ConfigType
 from .const import DOMAIN
 
 async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
-    return False
+    return True
 
 async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> bool:
     device = config_entry.data
