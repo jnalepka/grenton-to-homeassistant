@@ -10,6 +10,5 @@
     "issue_tracker": "https://github.com/jnalepka/grenton-to-homeassistant/issues",
     "version": "v2.0.0",
     "config_flow": true,
-    "single_config_entry": false,
-    "platforms": ["light", "switch", "cover", "climate", "sensor", "binary_sensor"]
+    "single_config_entry": false
 }
