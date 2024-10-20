@@ -23,7 +23,7 @@ The easiest way, if you are using [HACS](https://hacs.xyz/), is to install Grent
 For manual installation, copy the grenton_objects folder and all of its contents into your Home Assistant's custom_components folder. This folder is usually inside your /config folder. If you are running Hass.io, use SAMBA to copy the folder over. If you are running Home Assistant Supervised, the custom_components folder might be located at /usr/share/hassio/homeassistant. You may need to create the custom_components folder and then copy the localtuya folder and all of its contents into it.
 
 
-# Configuration
+# Requirement on the Grenton side
 
 1. Create a `HTTPListener` virtual object on GateHTTP named `HA_Listener_Integration` and configure it as follows:
 
@@ -86,56 +86,24 @@ GATE_HTTP->HA_Listener_Integration->SendResponse()
 
 ![image](https://github.com/jnalepka/GrentonHomeAssistantIntegration/assets/70645322/25a94dee-a43a-4b32-a3f2-83c455652688)
 
-3. Add your Grenton objects to the Home Assistant. Example:
 
-```yaml
-light:
-  - platform: grenton_objects
-    name: "Bedroom Lamp"
-    api_endpoint: http://192.168.0.4/HAlistener
-    grenton_id: CLU221001090->ZWA8272
-  - platform: grenton_objects
-    name: "Kitchen Lamp"
-    api_endpoint: http://192.168.0.4/HAlistener
-    grenton_id: CLU221001090->ZWA8272
-```
+# Adding Grenton objects to Home Assistant
 
-where:
-* `api_endpoint` - is your GateHTTP IP and HTTPListener patch
-* `grenton_id` is copied from the Id section in the Grenton object properties window
+1. Open `Settings` -> `Devices & services` -> `+Add integration`.
+2. Type and select "Grenton Objects".
+3. Add your Grenton object.
 
-  ![image](https://github.com/jnalepka/GrentonHomeAssistantIntegration/assets/70645322/0e4ede98-20fb-4a80-a759-b550633ae418)
-
-
-4. Send configuration to the Grenton Gate HTTP, restart HomeAssistant, and test your new objects in your Dashboard!
-
-> The data update in Home Assistant occurs automatically every 30 seconds.
-
-# Configure Grenton objects
-
-Add your objects to the `configuration.yaml` file.
+# Supported objects
 
 ## Switch (On_Off)
-
-#### For:
 * IO MODULE 8/8 DIN
 * IO MODULE 2/2 FM
 * RELAY X2 DIN
 * RELAY X4 DIN
 * RELAY Z-WAVE
 * RELAY WI-FI
-
-```yaml
-switch:
-  - platform: grenton_objects
-    api_endpoint: http://192.168.0.4/HAlistener
-    grenton_id: CLU221001090->DOU8272
-    name: "Kitchen Radio Switch"
-```
 
 ## Light (On_Off)
-
-#### For:
 * IO MODULE 8/8 DIN
 * IO MODULE 2/2 FM
 * RELAY X2 DIN
@@ -143,199 +111,58 @@ switch:
 * RELAY Z-WAVE
 * RELAY WI-FI
 
-```yaml
-light:
-  - platform: grenton_objects
-    api_endpoint: http://192.168.0.4/HAlistener
-    grenton_id: CLU221001090->DOU8272
-    name: "Bedroom Lamp"
-```
-
 ## Light (Dimmer)
-
-#### For:
 * DIMMER DIN
 * DIMMER FM
-  
-```yaml
-light:
-  - platform: grenton_objects
-    api_endpoint: http://192.168.0.4/HAlistener
-    grenton_id: CLU221001090->DIM8272
-    name: "Bedroom Dimmer"
-```
-
-#### For:
 * LED RGBW Z-WAVE (SINGLE ZWAVE_LED OBJECT)
-  
-```yaml
-light:
-  - platform: grenton_objects
-    api_endpoint: http://192.168.0.4/HAlistener
-    grenton_id: CLU221001090->ZWA8272
-    grenton_type: "DIMMER"
-    name: "Bedroom Dimmer"
-```
 
 ## Light (RGB)
-
-#### For:
 * LED RGBW DIN
 * LED RGBW FM
-
-```yaml
-light:
-  - platform: grenton_objects
-    api_endpoint: http://192.168.0.4/HAlistener
-    grenton_id: CLU221001090->LED8272
-    name: "Bedroom Led"
-```
-
-#### For:
 * LED RGBW Z-WAVE
 
-```yaml
-light:
-  - platform: grenton_objects
-    api_endpoint: http://192.168.0.4/HAlistener
-    grenton_id: CLU221001090->ZWA8272
-    grenton_type: "RGB"
-    name: "Bedroom Led"
-```
-
 ## Cover (Roller_Shutter)
-
-#### For:
 * ROLLER SHUTTER DIN
 * ROLLER SHUTTER X3 DIN
 * ROLLER SHUTTER FM
 * ROLLER SHUTTER Z-WAVE
 
-```yaml
-cover:
-  - platform: grenton_objects
-    api_endpoint: http://192.168.0.4/HAlistener
-    grenton_id: CLU221001090->ROL5664
-    name: "Kichen Blinds"
-```
-
-If `ReversePosition` is set to `Yes`:
-
-```yaml
-cover:
-  - platform: grenton_objects
-    api_endpoint: http://192.168.0.4/HAlistener
-    grenton_id: CLU221001090->ROL5664
-    reversed: True
-    name: "Kichen Blinds"
-```
-
 ## Climate (Thermostat)
-
-#### For:
 * THERMOSTAT - Virtual Object
 
-```yaml
-climate:
-  - platform: grenton_objects
-    api_endpoint: http://192.168.0.4/HAlistener
-    grenton_id: CLU221001090->THE9334
-    name: "Bedroom Thermostat"
-```
+## Binary Sensor (Digital Value)
+* Any Digital Value (e.g. DIN, ZWAVE_DIN)
 
 ## Sensor (Analog Value, e.g. OneWire / Temperature)
-
-#### For:
 * ONE_WIRE
 * TEMPERATURE_SENSOR (MULTISENSOR)
 * PANELSENSTEMP (SMART PANEL / TOUCH PANEL)
-
-```yaml
-sensor:
-  - platform: grenton_objects
-    api_endpoint: http://192.168.0.4/HAlistener
-    grenton_id: CLU221001090->TEM5469
-    device_class: "temperature"
-    name: "Bedroom Temperature"
-```
-
-#### For:
 * ANALOG IN/OUT DIN
-
-```yaml
-sensor:
-  - platform: grenton_objects
-    api_endpoint: http://192.168.0.4/HAlistener
-    grenton_id: CLU221001090->TEM5469
-    unit_of_measurement: "%" # your custom unit
-    name: "Humidity"
-```
-
-#### For:
 * CLU User Feature
-
- ```yaml
-sensor:
-  - platform: grenton_objects
-    api_endpoint: http://192.168.0.4/HAlistener
-    grenton_id: CLU221001090->my_user_feature # NOTE! if your user feature is on this GATE HTTP, just type "my_user_feature"
-    unit_of_measurement: "m/s" # your unit
-    name: "Wind Power"
-```
-
-#### For:
 * MODBUS, MODBUS_VALUE, MODBUS_RTU, MODBUS_CLIENT, MODBUS_SERVER, MODBUS_SLAVE_RTU
 
-```yaml
-sensor:
-  - platform: grenton_objects
-    api_endpoint: http://192.168.0.4/HAlistener
-    grenton_id: CLU221001090->TEM5469
-    grenton_type: "MODBUS_RTU" # MODBUS, MODBUS_VALUE, MODBUS_RTU, MODBUS_CLIENT, MODBUS_SERVER, MODBUS_SLAVE_RTU
-    unit_of_measurement: "W" # your unit
-    name: "Power Measurement"
-```
-
-#### Optional sensor parameters:
+#### Supported sensor device class:
 
 - `device_class`, `unit_of_measurement`, `state_class` - More information https://developers.home-assistant.io/docs/core/entity/sensor
-  
-```yaml
-sensor:
-  - platform: grenton_objects
-    api_endpoint: http://192.168.0.4/HAlistener
-    grenton_id: CLU221001090->TEM5469
-    device_class: "energy"
-    unit_of_measurement: "kWh" # must be a valid unit for the device class!
-    state_class: "total"
-    name: "Power Measurement"
-```
 
 | device_class                            | unit_of_measurement         |
 |----------------------------------------|--------------------------|
-| `app_usage`                            | apps                     |
-| `aqi`                                  | None                     |
 | `apparent_power`                       | VA                       |
 | `atmospheric_pressure`                 | cbar, bar, hPa, mmHg, inHg, kPa, mbar, Pa, psi |
 | `battery`                              | %                        |
 | `carbon_dioxide`                       | ppm                      |
 | `carbon_monoxide`                      | ppm                      |
 | `current`                              | A, mA                    |
-| `data_rate`                            | bit/s, kbit/s, Mbit/s, Gbit/s, B/s, kB/s, MB/s, GB/s, KiB/s, MiB/s, GiB/s |
-| `data_size`                            | bit, kbit, Mbit, Gbit, B, kB, MB, GB, TB, PB, EB, ZB, YB, KiB, MiB, GiB, TiB |
-| `date`                                 | None                     |
 | `distance`                             | km, m, cm, mm, mi, yd, in |
 | `duration`                             | d, h, min, s, ms         |
 | `energy`                               | Wh, kWh, MWh, MJ, GJ     |
 | `energy_storage`                       | Wh, kWh, MWh, MJ, GJ     |
-| `enum`                                 | None                     |
 | `frequency`                            | Hz, kHz, MHz, GHz        |
 | `gas`                                  | m³, ft³, CCF             |
 | `humidity`                             | %                        |
 | `illuminance`                          | lx                       |
 | `irradiance`                           | W/m², BTU/(h⋅ft²)        |
 | `moisture`                             | %                        |
-| `monetary`                             | ISO 4217                 |
 | `nitrogen_dioxide`                     | µg/m³                    |
 | `nitrogen_monoxide`                    | µg/m³                    |
 | `nitrous_oxide`                        | µg/m³                    |
@@ -367,18 +194,6 @@ sensor:
 | `wind_speed`                           | ft/s, km/h, kn, m/s, mph |
 
 
-## Binary Sensor (Digital Value)
-
-#### For:
-* Any Digital Value (e.g. DIN, ZWAVE_DIN)
-
-```yaml
-binary_sensor:
-  - platform: grenton_objects
-    api_endpoint: http://192.168.0.4/HAlistener
-    grenton_id: CLU221001090->TEM5469
-    name: "Kitchen Window Sensor"
-```
 
 # Forced faster state update
 
