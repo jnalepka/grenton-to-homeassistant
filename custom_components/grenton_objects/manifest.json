@@ -11,6 +11,5 @@
     "version": "v2.0.0",
     "config_flow": true,
     "single_config_entry": false,
-    "homeassistant": "2021.6.0",
     "platforms": ["light", "switch", "cover", "climate", "sensor", "binary_sensor"]
 }
