@@ -26,9 +26,8 @@ For manual installation, copy the grenton_objects folder and all of its contents
 # Requirement on the Grenton side
 
 1. Create a `HTTPListener` virtual object on GateHTTP named `HA_Listener_Integration` and configure it as follows:
-
-* Path - `/HAlistener` (You can edit it if you want)
-* ResponseType - `JSON`
+   * Path - `/HAlistener` (You can edit it if you want)
+   * ResponseType - `JSON`
 
   ![image](https://github.com/jnalepka/GrentonHomeAssistantIntegration/assets/70645322/1d69d9fc-95f3-4f89-90e3-588b8637ffad)
 
@@ -95,7 +94,7 @@ GATE_HTTP->HA_Listener_Integration->SendResponse()
 
 # Supported objects
 
-## Switch (On_Off)
+### Switch (On_Off)
 * IO MODULE 8/8 DIN
 * IO MODULE 2/2 FM
 * RELAY X2 DIN
@@ -103,7 +102,7 @@ GATE_HTTP->HA_Listener_Integration->SendResponse()
 * RELAY Z-WAVE
 * RELAY WI-FI
 
-## Light (On_Off)
+### Light (On_Off)
 * IO MODULE 8/8 DIN
 * IO MODULE 2/2 FM
 * RELAY X2 DIN
@@ -111,29 +110,29 @@ GATE_HTTP->HA_Listener_Integration->SendResponse()
 * RELAY Z-WAVE
 * RELAY WI-FI
 
-## Light (Dimmer)
+### Light (Dimmer)
 * DIMMER DIN
 * DIMMER FM
 * LED RGBW Z-WAVE (SINGLE ZWAVE_LED OBJECT)
 
-## Light (RGB)
+### Light (RGB)
 * LED RGBW DIN
 * LED RGBW FM
 * LED RGBW Z-WAVE
 
-## Cover (Roller_Shutter)
+### Cover (Roller_Shutter)
 * ROLLER SHUTTER DIN
 * ROLLER SHUTTER X3 DIN
 * ROLLER SHUTTER FM
 * ROLLER SHUTTER Z-WAVE
 
-## Climate (Thermostat)
+### Climate (Thermostat)
 * THERMOSTAT - Virtual Object
 
-## Binary Sensor (Digital Value)
+### Binary Sensor (Digital Value)
 * Any Digital Value (e.g. DIN, ZWAVE_DIN)
 
-## Sensor (Analog Value, e.g. OneWire / Temperature)
+### Sensor (Analog Value, e.g. OneWire / Temperature)
 * ONE_WIRE
 * TEMPERATURE_SENSOR (MULTISENSOR)
 * PANELSENSTEMP (SMART PANEL / TOUCH PANEL)
