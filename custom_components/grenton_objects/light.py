@@ -1,13 +1,14 @@
 """
 ==================================================
 Author: Jan Nalepka
-Version: 1.1
-Date: 2024-05-17
-Repository: https://github.com/jnalepka/GrentonObjects_HomeAssistant
+Version: 2.0
+Date: 2024-10-19
+Repository: https://github.com/jnalepka/grenton-to-homeassistant
 ==================================================
 """
 
-import requests
+import aiohttp
+from .const import DOMAIN
 import logging
 import json
 import voluptuous as vol
@@ -21,8 +22,6 @@ from homeassistant.util import color as color_util
 
 _LOGGER = logging.getLogger(__name__)
 
-DOMAIN = 'grenton_objects'
-
 CONF_API_ENDPOINT = 'api_endpoint'
 CONF_GRENTON_ID = 'grenton_id'
 CONF_GRENTON_TYPE = 'grenton_type'
@@ -35,13 +34,15 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Optional(CONF_OBJECT_NAME, default='Grenton Light'): str
 })
 
-def setup_platform(hass, config, add_entities, discovery_info=None):
-    api_endpoint = config.get(CONF_API_ENDPOINT)
-    grenton_id = config.get(CONF_GRENTON_ID)
-    grenton_type = config.get(CONF_GRENTON_TYPE)
-    object_name = config.get(CONF_OBJECT_NAME)
-
-    add_entities([GrentonLight(api_endpoint, grenton_id, grenton_type, object_name)], True)
+async def async_setup_entry(hass, config_entry, async_add_entities):
+    device = config_entry.data
+    
+    api_endpoint = device.get(CONF_API_ENDPOINT)
+    grenton_id = device.get(CONF_GRENTON_ID)
+    grenton_type = device.get(CONF_GRENTON_TYPE, "UNKNOWN")
+    object_name = device.get(CONF_OBJECT_NAME, "Grenton Light")
+    
+    async_add_entities([GrentonLight(api_endpoint, grenton_id, grenton_type, object_name)], True)
 
 class GrentonLight(LightEntity):
     def __init__(self, api_endpoint, grenton_id, grenton_type, object_name):
@@ -102,7 +103,7 @@ class GrentonLight(LightEntity):
     def rgb_color(self):
         return self._rgb_color
 
-    def turn_on(self, **kwargs):
+    async def async_turn_on(self, **kwargs):
         try:
             command = {"command": f"{self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:set(0, 1)')"}
             if self._grenton_type == "DIMMER":
@@ -127,31 +128,29 @@ class GrentonLight(LightEntity):
                     scaled_brightness = brightness / 255
                     command = {"command": f"{self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:execute(0, {scaled_brightness})')"}
                     self._brightness = brightness
-            response = requests.post(
-                f"{self._api_endpoint}",
-                json=command
-            ) 
-            response.raise_for_status()
-            self._state = STATE_ON
-            self._brightness = None
-        except requests.RequestException as ex:
+            
+            async with aiohttp.ClientSession() as session:
+                async with session.post(f"{self._api_endpoint}", json=command) as response:
+                    response.raise_for_status()
+                    self._state = STATE_ON
+                    self._brightness = None
+        except aiohttp.ClientError as ex:
             _LOGGER.error(f"Failed to turn on the light: {ex}")
-
-    def turn_off(self, **kwargs):
+            
+    async def async_turn_off(self, **kwargs):
         try:
             command = {"command": f"{self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:set(0, 0)')"}
             if self._grenton_type == "RGB" or (self._grenton_type == "DIMMER" and self._grenton_id.split('->')[1].startswith("ZWA")):
                 command = {"command": f"{self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:execute(0, 0)')"}
-            response = requests.post(
-                f"{self._api_endpoint}",
-                json = command
-            )
-            response.raise_for_status()
-            self._state = STATE_OFF
-        except requests.RequestException as ex:
+            
+            async with aiohttp.ClientSession() as session:
+                async with session.post(f"{self._api_endpoint}", json=command) as response:
+                    response.raise_for_status()
+                    self._state = STATE_OFF
+        except aiohttp.ClientError as ex:
             _LOGGER.error(f"Failed to turn off the light: {ex}")
 
-    def update(self):
+    async def async_update(self):
         try:
             command = {"status": f"return {self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:get(0)')"}
             if self._grenton_type == "RGB":
@@ -159,20 +158,19 @@ class GrentonLight(LightEntity):
                     command.update({"status_2": f"return {self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:get(3)')"})
                 else:
                     command.update({"status_2": f"return {self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:get(6)')"})
-            response = requests.get(
-                f"{self._api_endpoint}",
-                json = command
-            )
-            response.raise_for_status()
-            data = response.json()
-            self._state = STATE_OFF if data.get("status") == 0 else STATE_ON
-            if self._grenton_type == "RGB" or self._grenton_type == "DIMMER":
-                if self._grenton_type == "DIMMER" and self._grenton_id.split('->')[1].startswith("ZWA"):
-                    self._brightness = data.get("status")
-                else:
-                    self._brightness = data.get("status") * 255
-            if self._grenton_type == "RGB":
-                self._rgb_color = color_util.rgb_hex_to_rgb_list(data.get("status_2").strip("#"))
-        except requests.RequestException as ex:
+            
+            async with aiohttp.ClientSession() as session:
+                async with session.get(f"{self._api_endpoint}", json=command) as response:
+                    response.raise_for_status()
+                    data = await response.json()
+                    self._state = STATE_OFF if data.get("status") == 0 else STATE_ON
+                    if self._grenton_type == "RGB" or self._grenton_type == "DIMMER":
+                        if self._grenton_type == "DIMMER" and self._grenton_id.split('->')[1].startswith("ZWA"):
+                            self._brightness = data.get("status")
+                        else:
+                            self._brightness = data.get("status") * 255
+                    if self._grenton_type == "RGB":
+                        self._rgb_color = color_util.rgb_hex_to_rgb_list(data.get("status_2").strip("#"))
+        except aiohttp.ClientError as ex:
             _LOGGER.error(f"Failed to update the light state: {ex}")
             self._state = None
