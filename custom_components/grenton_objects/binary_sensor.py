@@ -31,6 +31,8 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
 })
 
 async def async_setup_entry(hass, config_entry, async_add_entities):
+    device = config_entry.data
+    
     api_endpoint = device.get(CONF_API_ENDPOINT)
     grenton_id = device.get(CONF_GRENTON_ID)
     object_name = device.get(CONF_OBJECT_NAME)
