@@ -13,8 +13,7 @@ from homeassistant.helpers.typing import ConfigType
 from .const import DOMAIN
 
 async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
-    # This method is used for setting up the integration via YAML.
-    return True
+    return False
 
 async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> bool:
     device = config_entry.data
