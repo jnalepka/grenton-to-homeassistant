@@ -42,7 +42,7 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
     grenton_type = device.get(CONF_GRENTON_TYPE, "UNKNOWN")
     object_name = device.get(CONF_OBJECT_NAME, "Grenton Light")
     
-    async_add_entities([GrentonSensor(api_endpoint, grenton_id, grenton_type, object_name)], True)
+    async_add_entities([GrentonLight(api_endpoint, grenton_id, grenton_type, object_name)], True)
 
 class GrentonLight(LightEntity):
     def __init__(self, api_endpoint, grenton_id, grenton_type, object_name):
