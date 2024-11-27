@@ -55,7 +55,6 @@ class GrentonLight(LightEntity):
             self._unique_id = f"grenton_{grenton_id.split('->')[1]}" 
         self._object_name = object_name
         self._state = None
-        self._unique_id = f"grenton_{grenton_id.split('->')[1]}"
         self._supported_color_modes: set[ColorMode | str] = set()
         self._brightness = None
         self._rgb_color = None
