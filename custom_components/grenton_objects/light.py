@@ -48,8 +48,8 @@ class GrentonLight(LightEntity):
     def __init__(self, api_endpoint, grenton_id, grenton_type, object_name):
         self._api_endpoint = api_endpoint
         self._grenton_id = grenton_id
-        if self._grenton_type == "DIMMER" or self._grenton_type == "LED_R" or self._grenton_type == "LED_G" or self._grenton_type == "LED_B" or self._grenton_type == "LED_W":
-            self._unique_id = f"grenton_{grenton_id.split('->')[1]}_{self._grenton_type}"
+        if grenton_type == "DIMMER" or grenton_type == "LED_R" or grenton_type == "LED_G" or grenton_type == "LED_B" or grenton_type == "LED_W":
+            self._unique_id = f"grenton_{grenton_id.split('->')[1]}_{grenton_type}"
         else:
             self._unique_id = f"grenton_{grenton_id.split('->')[1]}" 
         self._object_name = object_name
