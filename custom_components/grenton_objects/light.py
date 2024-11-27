@@ -49,7 +49,7 @@ class GrentonLight(LightEntity):
         self._api_endpoint = api_endpoint
         self._grenton_id = grenton_id
         if grenton_type == "DIMMER" or grenton_type == "LED_R" or grenton_type == "LED_G" or grenton_type == "LED_B" or grenton_type == "LED_W":
-            self._unique_id = f"grenton_{grenton_id.split('->')[1]}_{grenton_type}"
+            self._unique_id = f"grenton_{grenton_id.split('->')[1]}{grenton_type}"
         else:
             self._unique_id = f"grenton_{grenton_id.split('->')[1]}" 
         self._object_name = object_name
