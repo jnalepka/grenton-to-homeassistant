@@ -225,7 +225,7 @@ class GrentonLight(LightEntity):
                             self._brightness = data.get("status")
                         else:
                             self._brightness = data.get("status") * 255
-                    elif self._grenton_type == "LED_R" or self._grenton_type == "LED_G" or self._grenton_type == "LED_B" or self._grenton_type == "LED_W"
+                    elif self._grenton_type == "LED_R" or self._grenton_type == "LED_G" or self._grenton_type == "LED_B" or self._grenton_type == "LED_W":
                         self._brightness = data.get("status")
                     
                     if self._grenton_type == "RGB":
