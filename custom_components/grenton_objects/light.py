@@ -144,11 +144,12 @@ class GrentonLight(LightEntity):
         
     def _generate_command(self, command_type, grenton_id_part_0, grenton_id_part_1, action, xml_index, param):
         return {
-            command = f"{grenton_id_part_0}:execute(0, '{grenton_id_part_1}:{action}({xml_index}, {param})')"
+            command_type: f"{grenton_id_part_0}:execute(0, '{grenton_id_part_1}:{action}({xml_index}, {param})')"
         }
+        
     def _generate_get_command(self, command_type, grenton_id_part_0, grenton_id_part_1, action, xml_index):
         return {
-            command = f"return {grenton_id_part_0}:execute(0, '{grenton_id_part_1}:{action}({xml_index})')"
+            command_type: f"return {grenton_id_part_0}:execute(0, '{grenton_id_part_1}:{action}({xml_index})')"
         }
         
     async def async_turn_on(self, **kwargs):
