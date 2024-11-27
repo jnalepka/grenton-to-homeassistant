@@ -8,7 +8,21 @@ Repository: https://github.com/jnalepka/grenton-to-homeassistant
 """
 
 import aiohttp
-from .const import DOMAIN
+from .const import (
+    DOMAIN,
+    CONF_API_ENDPOINT,
+    CONF_GRENTON_ID,
+    CONF_OBJECT_NAME,
+    CONF_GRENTON_TYPE,
+    CONF_GRENTON_TYPE_UNKNOWN,
+    CONF_GRENTON_TYPE_DIMMER,
+    CONF_GRENTON_TYPE_RGB,
+    CONF_GRENTON_TYPE_DOUT,
+    CONF_GRENTON_TYPE_LED_R,
+    CONF_GRENTON_TYPE_LED_G,
+    CONF_GRENTON_TYPE_LED_B,
+    CONF_GRENTON_TYPE_LED_W
+)
 import logging
 import json
 import voluptuous as vol
@@ -22,15 +36,10 @@ from homeassistant.util import color as color_util
 
 _LOGGER = logging.getLogger(__name__)
 
-CONF_API_ENDPOINT = 'api_endpoint'
-CONF_GRENTON_ID = 'grenton_id'
-CONF_GRENTON_TYPE = 'grenton_type'
-CONF_OBJECT_NAME = 'name'
-
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Required(CONF_API_ENDPOINT): str,
     vol.Required(CONF_GRENTON_ID): str,
-    vol.Required(CONF_GRENTON_TYPE, default='UNKNOWN'): str, #DOUT, DIMMER, RGB, LED_R, LED_G, LED_B, LED_W
+    vol.Required(CONF_GRENTON_TYPE, default=CONF_GRENTON_TYPE_UNKNOWN): str, #DOUT, DIMMER, RGB, LED_R, LED_G, LED_B, LED_W
     vol.Optional(CONF_OBJECT_NAME, default='Grenton Light'): str
 })
 
@@ -39,36 +48,55 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
     
     api_endpoint = device.get(CONF_API_ENDPOINT)
     grenton_id = device.get(CONF_GRENTON_ID)
-    grenton_type = device.get(CONF_GRENTON_TYPE, "UNKNOWN")
+    grenton_type = device.get(CONF_GRENTON_TYPE, CONF_GRENTON_TYPE_UNKNOWN)
     object_name = device.get(CONF_OBJECT_NAME, "Grenton Light")
     
     async_add_entities([GrentonLight(api_endpoint, grenton_id, grenton_type, object_name)], True)
 
 class GrentonLight(LightEntity):
     def __init__(self, api_endpoint, grenton_id, grenton_type, object_name):
+        grenton_id_part_0, grenton_id_part_1 = self._grenton_id.split('->')
         self._api_endpoint = api_endpoint
         self._grenton_id = grenton_id
         self._grenton_type = grenton_type
-        if self._grenton_type == "LED_R" or self._grenton_type == "LED_G" or self._grenton_type == "LED_B" or self._grenton_type == "LED_W":
-            self._unique_id = f"grenton_{grenton_id.split('->')[1]}_{grenton_type}"
-        else:
-            self._unique_id = f"grenton_{grenton_id.split('->')[1]}" 
         self._object_name = object_name
         self._state = None
         self._supported_color_modes: set[ColorMode | str] = set()
         self._brightness = None
         self._rgb_color = None
-
-        if grenton_id.split('->')[1].startswith("DIM"):
-            if grenton_type == "UNKNOWN": self._grenton_type = "DIMMER"
-        elif grenton_id.split('->')[1].startswith("LED"):
-            if grenton_type == "UNKNOWN": self._grenton_type = "RGB"
+        
+        led_types = {
+            CONF_GRENTON_TYPE_LED_R,
+            CONF_GRENTON_TYPE_LED_G,
+            CONF_GRENTON_TYPE_LED_B,
+            CONF_GRENTON_TYPE_LED_W
+        }
+        
+        if self._grenton_type in led_types:
+            self._unique_id = f"grenton_{grenton_id_part_1}_{grenton_type}"
         else:
-            if grenton_type == "UNKNOWN": self._grenton_type = "DOUT"
+            self._unique_id = f"grenton_{grenton_id_part_1}"
+    
+        
+        if grenton_type == CONF_GRENTON_TYPE_UNKNOWN:
+            if grenton_id_part_1.startswith("DIM"):
+                self._grenton_type = CONF_GRENTON_TYPE_DIMMER
+            elif grenton_id_part_1.startswith("LED"):
+                self._grenton_type = CONF_GRENTON_TYPE_RGB
+            else:
+                self._grenton_type = CONF_GRENTON_TYPE_DOUT
 
-        if self._grenton_type == "DIMMER" or self._grenton_type == "LED_R" or self._grenton_type == "LED_G" or self._grenton_type == "LED_B" or self._grenton_type == "LED_W":
+        brightness_types = {
+            CONF_GRENTON_TYPE_DIMMER,
+            CONF_GRENTON_TYPE_LED_R,
+            CONF_GRENTON_TYPE_LED_G,
+            CONF_GRENTON_TYPE_LED_B,
+            CONF_GRENTON_TYPE_LED_W
+        }
+        
+        if self._grenton_type in brightness_types:
             self._supported_color_modes.add(ColorMode.BRIGHTNESS)
-        elif self._grenton_type == "RGB":
+        elif self._grenton_type == CONF_GRENTON_TYPE_RGB:
             self._supported_color_modes.add(ColorMode.RGB)
         else:
             self._supported_color_modes.add(ColorMode.ONOFF)
@@ -87,9 +115,17 @@ class GrentonLight(LightEntity):
     
     @property
     def color_mode(self) -> ColorMode:
-        if self._grenton_type == "DIMMER" or self._grenton_type == "LED_R" or self._grenton_type == "LED_G" or self._grenton_type == "LED_B" or self._grenton_type == "LED_W":
+        brightness_types = {
+            CONF_GRENTON_TYPE_DIMMER,
+            CONF_GRENTON_TYPE_LED_R,
+            CONF_GRENTON_TYPE_LED_G,
+            CONF_GRENTON_TYPE_LED_B,
+            CONF_GRENTON_TYPE_LED_W
+        }
+        
+        if self._grenton_type in brightness_types:
             return ColorMode.BRIGHTNESS
-        elif self._grenton_type == "RGB":
+        elif self._grenton_type == CONF_GRENTON_TYPE_RGB:
             return ColorMode.RGB
         else:
             return ColorMode.ONOFF
@@ -105,60 +141,51 @@ class GrentonLight(LightEntity):
     @property
     def rgb_color(self):
         return self._rgb_color
-
+        
+    def _generate_command(self, command_type, grenton_id_part_0, grenton_id_part_1, action, xml_index, param):
+        return {
+            command = f"{grenton_id_part_0}:execute(0, '{grenton_id_part_1}:{action}({xml_index}, {param})')"
+        }
+    def _generate_get_command(self, command_type, grenton_id_part_0, grenton_id_part_1, action, xml_index):
+        return {
+            command = f"return {grenton_id_part_0}:execute(0, '{grenton_id_part_1}:{action}({xml_index})')"
+        }
+        
     async def async_turn_on(self, **kwargs):
         try:
-            command = {"command": f"{self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:set(0, 1)')"}
-            if self._grenton_type == "DIMMER":
-                brightness = kwargs.get("brightness", 255)
-                if self._grenton_id.split('->')[1].startswith("ZWA"):
-                    command = {"command": f"{self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:execute(0, {brightness})')"}
+            grenton_id_part_0, grenton_id_part_1 = self._grenton_id.split('->')
+            brightness = kwargs.get("brightness", 255)
+            scaled_brightness = brightness / 255
+            rgb_color = kwargs.get("rgb_color")
+            command_brightness_mapping = {
+                CONF_GRENTON_TYPE_DIMMER: {"action": "set", "index": 0, "param": scaled_brightness},
+                CONF_GRENTON_TYPE_LED_R: {"action": "execute", "index": 3, "param": brightness},
+                CONF_GRENTON_TYPE_LED_G: {"action": "execute", "index": 4, "param": brightness},
+                CONF_GRENTON_TYPE_LED_B: {"action": "execute", "index": 5, "param": brightness},
+                CONF_GRENTON_TYPE_LED_W: {"action": "execute", "index": 12, "param": brightness},
+            }
+            
+            if self._grenton_type in command_brightness_mapping:
+                if grenton_id_part_1.startswith("ZWA"):
+                    command = self._generate_command("command", grenton_id_part_0, grenton_id_part_1, "execute", 0, brightness)
                 else:
-                    scaled_brightness = brightness / 255
-                    command = {"command": f"{self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:set(0, {scaled_brightness})')"}
+                    config = command_brightness_mapping[self._grenton_type]
+                    command = self._generate_command("command", grenton_id_part_0, grenton_id_part_1, config["action"], config["index"], config["param"])
                 self._brightness = brightness
-            elif self._grenton_type == "LED_R":
-                brightness = kwargs.get("brightness", 255)
-                if self._grenton_id.split('->')[1].startswith("ZWA"):
-                    command = {"command": f"{self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:execute(0, {brightness})')"}
-                else:
-                    command = {"command": f"{self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:execute(3, {brightness})')"}
-                self._brightness = brightness
-            elif self._grenton_type == "LED_G":
-                brightness = kwargs.get("brightness", 255)
-                if self._grenton_id.split('->')[1].startswith("ZWA"):
-                    command = {"command": f"{self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:execute(0, {brightness})')"}
-                else:
-                    command = {"command": f"{self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:execute(4, {brightness})')"}
-                self._brightness = brightness
-            elif self._grenton_type == "LED_B":
-                brightness = kwargs.get("brightness", 255)
-                if self._grenton_id.split('->')[1].startswith("ZWA"):
-                    command = {"command": f"{self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:execute(0, {brightness})')"}
-                else:
-                    command = {"command": f"{self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:execute(5, {brightness})')"}
-                self._brightness = brightness
-            elif self._grenton_type == "LED_W":
-                brightness = kwargs.get("brightness", 255)
-                if self._grenton_id.split('->')[1].startswith("ZWA"):
-                    command = {"command": f"{self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:execute(0, {brightness})')"}
-                else:
-                    command = {"command": f"{self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:execute(12, {brightness})')"}
-                self._brightness = brightness
-            elif self._grenton_type == "RGB":
-                rgb_color = kwargs.get("rgb_color")
+            elif self._grenton_type == CONF_GRENTON_TYPE_RGB:
                 if rgb_color:
                     hex_color = '#{:02x}{:02x}{:02x}'.format(*rgb_color)
-                    if self._grenton_id.split('->')[1].startswith("ZWA"):
-                        command = {"command": f"{self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:execute(3, \"{hex_color}\")')"}
+                    hex_color = f'\\"{hex_color}\\"'
+                    if grenton_id_part_1.startswith("ZWA"):
+                        command = self._generate_command("command", grenton_id_part_0, grenton_id_part_1, "execute", 3, hex_color)
                     else:
-                        command = {"command": f"{self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:execute(6, \"{hex_color}\")')"}
+                        command = self._generate_command("command", grenton_id_part_0, grenton_id_part_1, "execute", 6, hex_color)
                     self._rgb_color = rgb_color
                 else:
-                    brightness = kwargs.get("brightness", 255)
-                    scaled_brightness = brightness / 255
-                    command = {"command": f"{self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:execute(0, {scaled_brightness})')"}
+                    command = self._generate_command("command", grenton_id_part_0, grenton_id_part_1, "execute", 0, scaled_brightness)
                     self._brightness = brightness
+            else:
+                command = self._generate_command("command", grenton_id_part_0, grenton_id_part_1, "set", 0, 1)
             
             async with aiohttp.ClientSession() as session:
                 async with session.post(f"{self._api_endpoint}", json=command) as response:
@@ -170,18 +197,24 @@ class GrentonLight(LightEntity):
             
     async def async_turn_off(self, **kwargs):
         try:
-            command = {"command": f"{self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:set(0, 0)')"}
-            if self._grenton_type == "RGB" or (self._grenton_type == "DIMMER" and self._grenton_id.split('->')[1].startswith("ZWA")):
-                command = {"command": f"{self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:execute(0, 0)')"}
-            elif self._grenton_type == "LED_R":
-                command = {"command": f"{self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:execute(3, 0)')"}
-            elif self._grenton_type == "LED_G":
-                command = {"command": f"{self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:execute(4, 0)')"}
-            elif self._grenton_type == "LED_B":
-                command = {"command": f"{self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:execute(5, 0)')"}
-            elif self._grenton_type == "LED_W":
-                command = {"command": f"{self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:execute(12, 0)')"}
-                
+            grenton_id_part_0, grenton_id_part_1 = self._grenton_id.split('->')
+            command_mapping = {
+                CONF_GRENTON_TYPE_RGB: {"action": "execute", "index": 0},
+                CONF_GRENTON_TYPE_DIMMER: {"action": "set", "index": 0},
+                CONF_GRENTON_TYPE_DOUT: {"action": "set", "index": 0},
+                CONF_GRENTON_TYPE_LED_R: {"action": "execute", "index": 3},
+                CONF_GRENTON_TYPE_LED_G: {"action": "execute", "index": 4},
+                CONF_GRENTON_TYPE_LED_B: {"action": "execute", "index": 5},
+                CONF_GRENTON_TYPE_LED_W: {"action": "execute", "index": 12},
+            }
+            
+            if self._grenton_type == CONF_GRENTON_TYPE_DIMMER and grenton_id_part.startswith("ZWA"):
+                config = {"action": "execute", "index": 0}
+            else:
+                config = command_mapping.get(self._grenton_type, {"action": "set", "index": 0})
+            
+            command = self._generate_command("command", grenton_id_part_0, grenton_id_part_1, config["action"], config["index"], 0)
+            
             async with aiohttp.ClientSession() as session:
                 async with session.post(f"{self._api_endpoint}", json=command) as response:
                     response.raise_for_status()
@@ -191,47 +224,43 @@ class GrentonLight(LightEntity):
 
     async def async_update(self):
         try:
-            command = {"status": f"return {self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:get(0)')"}
-            if self._grenton_type == "RGB":
-                if self._grenton_id.split('->')[1].startswith("ZWA"):
-                    command.update({"status_2": f"return {self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:get(3)')"})
-                else:
-                    command.update({"status_2": f"return {self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:get(6)')"})
-            elif self._grenton_type == "LED_R":
-                if self._grenton_id.split('->')[1].startswith("ZWA"):
-                    command = {"status": f"return {self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:get(0)')"}
-                else:
-                    command = {"status": f"return {self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:get(3)')"}
-            elif self._grenton_type == "LED_G":
-                if self._grenton_id.split('->')[1].startswith("ZWA"):
-                    command = {"status": f"return {self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:get(0)')"}
-                else:
-                    command = {"status": f"return {self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:get(4)')"}
-            elif self._grenton_type == "LED_B":
-                if self._grenton_id.split('->')[1].startswith("ZWA"):
-                    command = {"status": f"return {self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:get(0)')"}
-                else:
-                    command = {"status": f"return {self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:get(5)')"}
-            elif self._grenton_type == "LED_W":
-                if self._grenton_id.split('->')[1].startswith("ZWA"):
-                    command = {"status": f"return {self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:get(0)')"}
-                else:
-                    command = {"status": f"return {self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:get(15)')"}
+            grenton_id_part_0, grenton_id_part_1 = self._grenton_id.split('->')
+            xml_index__mapping = {
+                CONF_GRENTON_TYPE_RGB: 0,
+                CONF_GRENTON_TYPE_DOUT: 0,
+                CONF_GRENTON_TYPE_DIMMER: 0,
+                CONF_GRENTON_TYPE_LED_R: 3,
+                CONF_GRENTON_TYPE_LED_G: 4,
+                CONF_GRENTON_TYPE_LED_B: 5,
+                CONF_GRENTON_TYPE_LED_W: 15,
+            }
             
+            if self._grenton_type in xml_index__mapping:
+                command = self._generate_get_command("status", grenton_id_part_0, grenton_id_part_1, "get", xml_index__mapping[self._grenton_type])
+            else:
+                command = self._generate_command("status", grenton_id_part_0, grenton_id_part_1, "get", 0)
+            
+            if self._grenton_type == CONF_GRENTON_TYPE_RGB:
+                if grenton_id_part.startswith("ZWA"):
+                    command.update(self._generate_command("status_2", grenton_id_part_0, grenton_id_part_1, "get", 3))
+                else:
+                    command.update(self._generate_command("status_2", grenton_id_part_0, grenton_id_part_1, "get", 6))
+
             async with aiohttp.ClientSession() as session:
                 async with session.get(f"{self._api_endpoint}", json=command) as response:
+                    grenton_id_part = self._grenton_id.split('->')[1]
                     response.raise_for_status()
                     data = await response.json()
                     self._state = STATE_OFF if data.get("status") == 0 else STATE_ON
-                    if self._grenton_type == "RGB" or self._grenton_type == "DIMMER":
-                        if self._grenton_type == "DIMMER" and self._grenton_id.split('->')[1].startswith("ZWA"):
+                    if self._grenton_type == CONF_GRENTON_TYPE_RGB or self._grenton_type == CONF_GRENTON_TYPE_DIMMER:
+                        if self._grenton_type == CONF_GRENTON_TYPE_DIMMER and grenton_id_part.startswith("ZWA"):
                             self._brightness = data.get("status")
                         else:
                             self._brightness = data.get("status") * 255
-                    elif self._grenton_type == "LED_R" or self._grenton_type == "LED_G" or self._grenton_type == "LED_B" or self._grenton_type == "LED_W":
+                    elif self._grenton_type == CONF_GRENTON_TYPE_LED_R or self._grenton_type == CONF_GRENTON_TYPE_LED_G or self._grenton_type == CONF_GRENTON_TYPE_LED_B or self._grenton_type == CONF_GRENTON_TYPE_LED_W:
                         self._brightness = data.get("status")
                     
-                    if self._grenton_type == "RGB":
+                    if self._grenton_type == CONF_GRENTON_TYPE_RGB:
                         self._rgb_color = color_util.rgb_hex_to_rgb_list(data.get("status_2").strip("#"))
         except aiohttp.ClientError as ex:
             _LOGGER.error(f"Failed to update the light state: {ex}")
