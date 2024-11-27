@@ -50,7 +50,7 @@ class GrentonLight(LightEntity):
         self._grenton_id = grenton_id
         if self._grenton_type == "DIMMER" or self._grenton_type == "LED_R" or self._grenton_type == "LED_G" or self._grenton_type == "LED_B" or self._grenton_type == "LED_W":
             self._unique_id = f"grenton_{grenton_id.split('->')[1]}_{self._grenton_type}"
-        else
+        else:
             self._unique_id = f"grenton_{grenton_id.split('->')[1]}" 
         self._object_name = object_name
         self._state = None
