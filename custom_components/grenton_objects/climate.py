@@ -1,14 +1,19 @@
 """
 ==================================================
 Author: Jan Nalepka
-Version: 2.0
-Date: 2024-10-19
+Version: 2.1.0
+Date: 2024-11-27
 Repository: https://github.com/jnalepka/grenton-to-homeassistant
 ==================================================
 """
 
 import aiohttp
-from .const import DOMAIN
+from .const import (
+    DOMAIN,
+    CONF_API_ENDPOINT,
+    CONF_GRENTON_ID,
+    CONF_OBJECT_NAME
+)
 import logging
 import json
 import voluptuous as vol
@@ -21,10 +26,6 @@ from homeassistant.components.climate import (
 from homeassistant.const import UnitOfTemperature
 
 _LOGGER = logging.getLogger(__name__)
-
-CONF_API_ENDPOINT = 'api_endpoint'
-CONF_GRENTON_ID = 'grenton_id'
-CONF_OBJECT_NAME = 'name'
 
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Required(CONF_API_ENDPOINT): str,
@@ -98,10 +99,11 @@ class GrentonClimate(ClimateEntity):
 
     async def async_set_temperature(self, **kwargs):
         try:
+            grenton_id_part_0, grenton_id_part_1 = self._grenton_id.split('->')
             temperature = kwargs.get("temperature", 20)
             self._target_temperature = temperature
-            command = {"command": f"{self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:set(8, 0)')"}
-            command.update({"command_2": f"{self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:set(3, {temperature})')"})
+            command = {"command": f"{grenton_id_part_0}:execute(0, '{grenton_id_part_1}:set(8, 0)')"}
+            command.update({"command_2": f"{grenton_id_part_0}:execute(0, '{grenton_id_part_1}:set(3, {temperature})')"})
             async with aiohttp.ClientSession() as session:
                 async with session.post(f"{self._api_endpoint}", json=command) as response:
                     response.raise_for_status()
@@ -110,14 +112,15 @@ class GrentonClimate(ClimateEntity):
 
     async def async_set_hvac_mode(self, hvac_mode):
         try:
+            grenton_id_part_0, grenton_id_part_1 = self._grenton_id.split('->')
             self._hvac_mode = hvac_mode
-            command = {"command": f"{self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:execute(1, 0)')"}
+            command = {"command": f"{grenton_id_part_0}:execute(0, '{grenton_id_part_1}:execute(1, 0)')"}
             if hvac_mode == HVACMode.HEAT:
-                command = {"command": f"{self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:execute(0, 0)')"}
-                command.update({"command_2": f"return {self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:set(7, 0)')"})
+                command = {"command": f"{grenton_id_part_0}:execute(0, '{grenton_id_part_1}:execute(0, 0)')"}
+                command.update({"command_2": f"return {grenton_id_part_0}:execute(0, '{grenton_id_part_1}:set(7, 0)')"})
             elif hvac_mode == HVACMode.COOL:
-                command = {"command": f"{self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:execute(0, 0)')"}
-                command.update({"command_2": f"return {self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:set(7, 1)')"})
+                command = {"command": f"{grenton_id_part_0}:execute(0, '{grenton_id_part_1}:execute(0, 0)')"}
+                command.update({"command_2": f"return {grenton_id_part_0}:execute(0, '{grenton_id_part_1}:set(7, 1)')"})
             async with aiohttp.ClientSession() as session:
                 async with session.post(f"{self._api_endpoint}", json=command) as response:
                     response.raise_for_status()
@@ -127,10 +130,11 @@ class GrentonClimate(ClimateEntity):
 
     async def async_update(self):
         try:
-            command = {"status": f"return {self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:get(6)')"}
-            command.update({"status_2": f"return {self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:get(7)')"})
-            command.update({"status_3": f"return {self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:get(12)')"})
-            command.update({"status_4": f"return {self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:get(14)')"})
+            grenton_id_part_0, grenton_id_part_1 = self._grenton_id.split('->')
+            command = {"status": f"return {grenton_id_part_0}:execute(0, '{grenton_id_part_1}:get(6)')"}
+            command.update({"status_2": f"return {grenton_id_part_0}:execute(0, '{grenton_id_part_1}:get(7)')"})
+            command.update({"status_3": f"return {grenton_id_part_0}:execute(0, '{grenton_id_part_1}:get(12)')"})
+            command.update({"status_4": f"return {grenton_id_part_0}:execute(0, '{grenton_id_part_1}:get(14)')"})
             async with aiohttp.ClientSession() as session:
                 async with session.get(f"{self._api_endpoint}", json=command) as response:
                     response.raise_for_status()

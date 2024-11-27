@@ -1,14 +1,19 @@
 """
 ==================================================
 Author: Jan Nalepka
-Version: 2.0
-Date: 2024-10-19
+Version: 2.1.0
+Date: 2024-11-27
 Repository: https://github.com/jnalepka/grenton-to-homeassistant
 ==================================================
 """
 
 import aiohttp
-from .const import DOMAIN
+from .const import (
+    DOMAIN,
+    CONF_API_ENDPOINT,
+    CONF_GRENTON_ID,
+    CONF_OBJECT_NAME
+)
 import logging
 import json
 import voluptuous as vol
@@ -19,10 +24,6 @@ from homeassistant.components.binary_sensor import (
 from homeassistant.const import (STATE_ON, STATE_OFF)
 
 _LOGGER = logging.getLogger(__name__)
-
-CONF_API_ENDPOINT = 'api_endpoint'
-CONF_GRENTON_ID = 'grenton_id'
-CONF_OBJECT_NAME = 'name'
 
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Required(CONF_API_ENDPOINT): str,
@@ -61,7 +62,8 @@ class GrentonBinarySensor(BinarySensorEntity):
 
     async def async_update(self):
         try:
-            command = {"status": f"return {self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:get(0)')"}
+            grenton_id_part_0, grenton_id_part_1 = self._grenton_id.split('->')
+            command = {"status": f"return {grenton_id_part_0}:execute(0, '{grenton_id_part_1}:get(0)')"}
             async with aiohttp.ClientSession() as session:
                 async with session.get(f"{self._api_endpoint}", json=command) as response:
                     response.raise_for_status()

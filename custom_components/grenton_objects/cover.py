@@ -1,14 +1,20 @@
 """
 ==================================================
 Author: Jan Nalepka
-Version: 2.0
-Date: 2024-10-19
+Version: 2.1.0
+Date: 2024-11-27
 Repository: https://github.com/jnalepka/grenton-to-homeassistant
 ==================================================
 """
 
 import aiohttp
-from .const import DOMAIN
+from .const import (
+    DOMAIN,
+    CONF_API_ENDPOINT,
+    CONF_GRENTON_ID,
+    CONF_OBJECT_NAME,
+    CONF_REVERSED
+)
 import logging
 import json
 import voluptuous as vol
@@ -25,11 +31,6 @@ from homeassistant.const import (
 )
 
 _LOGGER = logging.getLogger(__name__)
-
-CONF_API_ENDPOINT = 'api_endpoint'
-CONF_GRENTON_ID = 'grenton_id'
-CONF_OBJECT_NAME = 'name'
-CONF_REVERSED = 'reversed'
 
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Required(CONF_API_ENDPOINT): str,
@@ -90,7 +91,8 @@ class GrentonCover(CoverEntity):
 
     async def async_open_cover(self, **kwargs):
         try:
-            command = {"command": f"{self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:execute(0, 0)')"}
+            grenton_id_part_0, grenton_id_part_1 = self._grenton_id.split('->')
+            command = {"command": f"{grenton_id_part_0}:execute(0, '{grenton_id_part_1}:execute(0, 0)')"}
             async with aiohttp.ClientSession() as session:
                 async with session.post(f"{self._api_endpoint}", json=command) as response:
                     response.raise_for_status()
@@ -100,7 +102,8 @@ class GrentonCover(CoverEntity):
 
     async def async_close_cover(self, **kwargs):
         try:
-            command = {"command": f"{self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:execute(1, 0)')"}
+            grenton_id_part_0, grenton_id_part_1 = self._grenton_id.split('->')
+            command = {"command": f"{grenton_id_part_0}:execute(0, '{grenton_id_part_1}:execute(1, 0)')"}
             async with aiohttp.ClientSession() as session:
                 async with session.post(f"{self._api_endpoint}", json=command) as response:
                     response.raise_for_status()
@@ -110,7 +113,8 @@ class GrentonCover(CoverEntity):
 
     async def async_stop_cover(self, **kwargs):
         try:
-            command = {"command": f"{self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:execute(3, 0)')"}
+            grenton_id_part_0, grenton_id_part_1 = self._grenton_id.split('->')
+            command = {"command": f"{grenton_id_part_0}:execute(0, '{grenton_id_part_1}:execute(3, 0)')"}
             async with aiohttp.ClientSession() as session:
                 async with session.post(f"{self._api_endpoint}", json=command) as response:
                     response.raise_for_status()
@@ -120,13 +124,14 @@ class GrentonCover(CoverEntity):
 
     async def async_set_cover_position(self, **kwargs):
         try:
+            grenton_id_part_0, grenton_id_part_1 = self._grenton_id.split('->')
             position = kwargs.get("position", 100)
             self._current_cover_position = position
             if self._reversed == True:
                 position = 100 - position
-            command = {"command": f"{self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:execute(10, {position})')"}
-            if self._grenton_id.split('->')[1].startswith("ZWA"):
-                command = {"command": f"{self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:execute(7, {position})')"}
+            command = {"command": f"{grenton_id_part_0}:execute(0, '{grenton_id_part_1}:execute(10, {position})')"}
+            if grenton_id_part.startswith("ZWA"):
+                command = {"command": f"{grenton_id_part_0}:execute(0, '{grenton_id_part_1}:execute(7, {position})')"}
             async with aiohttp.ClientSession() as session:
                 async with session.post(f"{self._api_endpoint}", json=command) as response:
                     response.raise_for_status()
@@ -145,10 +150,11 @@ class GrentonCover(CoverEntity):
 
     async def async_set_cover_tilt_position(self, **kwargs):
         try:
+            grenton_id_part_0, grenton_id_part_1 = self._grenton_id.split('->')
             tilt_position = kwargs.get("tilt_position", 90)
             self._current_cover_tilt_position = tilt_position
             tilt_position = tilt_position * 90 / 100
-            command = {"command": f"{self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:execute(9, {tilt_position})')"}
+            command = {"command": f"{grenton_id_part_0}:execute(0, '{grenton_id_part_1}:execute(9, {tilt_position})')"}
             async with aiohttp.ClientSession() as session:
                 async with session.post(f"{self._api_endpoint}", json=command) as response:
                     response.raise_for_status()
@@ -157,7 +163,8 @@ class GrentonCover(CoverEntity):
 
     async def async_open_cover_tilt(self, **kwargs):
         try:
-            command = {"command": f"{self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:execute(9, 90)')"}
+            grenton_id_part_0, grenton_id_part_1 = self._grenton_id.split('->')
+            command = {"command": f"{grenton_id_part_0}:execute(0, '{grenton_id_part_1}:execute(9, 90)')"}
             async with aiohttp.ClientSession() as session:
                 async with session.post(f"{self._api_endpoint}", json=command) as response:
                     response.raise_for_status()
@@ -166,7 +173,8 @@ class GrentonCover(CoverEntity):
 
     async def async_close_cover_tilt(self, **kwargs):
         try:
-            command = {"command": f"{self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:execute(9, 0)')"}
+            grenton_id_part_0, grenton_id_part_1 = self._grenton_id.split('->')
+            command = {"command": f"{grenton_id_part_0}:execute(0, '{grenton_id_part_1}:execute(9, 0)')"}
             async with aiohttp.ClientSession() as session:
                 async with session.post(f"{self._api_endpoint}", json=command) as response:
                     response.raise_for_status()
@@ -175,18 +183,19 @@ class GrentonCover(CoverEntity):
 
     async def async_update(self):
         try:
-            if self._grenton_id.split('->')[1].startswith("ZWA"):
-                command = {"status": f"return {self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:get(2)')"}
+            grenton_id_part_0, grenton_id_part_1 = self._grenton_id.split('->')
+            if grenton_id_part.startswith("ZWA"):
+                command = {"status": f"return {grenton_id_part_0}:execute(0, '{grenton_id_part_1}:get(2)')"}
             else:
-                command = {"status": f"return {self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:get(0)')"}
-            if self._grenton_id.split('->')[1].startswith("ZWA"):
-                command.update({"status_2": f"return {self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:get(4)')"})
+                command = {"status": f"return {grenton_id_part_0}:execute(0, '{grenton_id_part_1}:get(0)')"}
+            if grenton_id_part.startswith("ZWA"):
+                command.update({"status_2": f"return {grenton_id_part_0}:execute(0, '{grenton_id_part_1}:get(4)')"})
             else:
-                command.update({"status_2": f"return {self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:get(7)')"})
-            if self._grenton_id.split('->')[1].startswith("ZWA"):
-                command.update({"status_3": f"return {self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:get(6)')"})
+                command.update({"status_2": f"return {grenton_id_part_0}:execute(0, '{grenton_id_part_1}:get(7)')"})
+            if grenton_id_part.startswith("ZWA"):
+                command.update({"status_3": f"return {grenton_id_part_0}:execute(0, '{grenton_id_part_1}:get(6)')"})
             else:
-                command.update({"status_3": f"return {self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:get(8)')"})
+                command.update({"status_3": f"return {grenton_id_part_0}:execute(0, '{grenton_id_part_1}:get(8)')"})
             async with aiohttp.ClientSession() as session:
                 async with session.get(f"{self._api_endpoint}", json=command) as response:
                     response.raise_for_status()

@@ -1,8 +1,8 @@
 """
 ==================================================
 Author: Jan Nalepka
-Version: 2.0
-Date: 2024-10-19
+Version: 2.1.0
+Date: 2024-11-27
 Repository: https://github.com/jnalepka/grenton-to-homeassistant
 ==================================================
 """
@@ -21,7 +21,8 @@ DEVICE_TYPES = {
     "cover": "Cover",
     "climate": "Climate",
     "sensor": "Sensor",
-    "binary_sensor": "Binary sensor"
+    "binary_sensor": "Binary sensor",
+    "script": "Script"
 }
 
 class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
@@ -67,7 +68,7 @@ class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 vol.Required("name"): str,
                 vol.Required("api_endpoint", default="http://192.168.0.4/HAlistener"): str,
                 vol.Required("grenton_id", default="CLU220000000->DOU0000"): str,
-                vol.Required("grenton_type", default="DOUT"): vol.In(["DOUT","DIMMER", "RGB"]),
+                vol.Required("grenton_type", default="DOUT"): vol.In(["DOUT","DIMMER", "RGB", "LED_R", "LED_G", "LED_B", "LED_W"]),
             })
         elif self.device_type == "switch":
             return vol.Schema({

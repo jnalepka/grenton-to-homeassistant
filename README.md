@@ -66,7 +66,7 @@ if reqJson.command or reqJson.status then
     local results = {}
 
     for key, value in pairs(reqJson) do
-        logDebug("HA integration command >> " .. value)
+        -- print("HA integration command >> " .. value)
         results[key] = load(value)()
     end
 
@@ -118,6 +118,11 @@ GATE_HTTP->HA_Listener_Integration->SendResponse()
 * LED RGBW Z-WAVE (SINGLE ZWAVE_LED OBJECT)
 
 ### Light (RGB)
+* LED RGBW DIN
+* LED RGBW FM
+* LED RGBW Z-WAVE
+
+### Light (LED_R, LED_G, LED_B, LED_W)
 * LED RGBW DIN
 * LED RGBW FM
 * LED RGBW Z-WAVE
