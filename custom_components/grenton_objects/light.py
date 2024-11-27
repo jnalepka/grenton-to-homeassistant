@@ -55,15 +55,16 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
 
 class GrentonLight(LightEntity):
     def __init__(self, api_endpoint, grenton_id, grenton_type, object_name):
-        grenton_id_part_0, grenton_id_part_1 = self._grenton_id.split('->')
-        self._api_endpoint = api_endpoint
         self._grenton_id = grenton_id
+        self._api_endpoint = api_endpoint
         self._grenton_type = grenton_type
         self._object_name = object_name
         self._state = None
         self._supported_color_modes: set[ColorMode | str] = set()
         self._brightness = None
         self._rgb_color = None
+        
+        grenton_id_part_0, grenton_id_part_1 = self._grenton_id.split('->')
         
         led_types = {
             CONF_GRENTON_TYPE_LED_R,
