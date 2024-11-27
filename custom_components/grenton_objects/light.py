@@ -1,8 +1,8 @@
 """
 ==================================================
 Author: Jan Nalepka
-Version: 2.0
-Date: 2024-10-19
+Version: 2.1.0
+Date: 2024-11-27
 Repository: https://github.com/jnalepka/grenton-to-homeassistant
 ==================================================
 """
@@ -30,7 +30,7 @@ CONF_OBJECT_NAME = 'name'
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Required(CONF_API_ENDPOINT): str,
     vol.Required(CONF_GRENTON_ID): str,
-    vol.Required(CONF_GRENTON_TYPE, default='UNKNOWN'): str, #DOUT, DIMMER, RGB
+    vol.Required(CONF_GRENTON_TYPE, default='UNKNOWN'): str, #DOUT, DIMMER, RGB, LED_R, LED_G, LED_B, LED_W
     vol.Optional(CONF_OBJECT_NAME, default='Grenton Light'): str
 })
 
@@ -63,7 +63,7 @@ class GrentonLight(LightEntity):
         else:
             if grenton_type == "UNKNOWN": self._grenton_type = "DOUT"
 
-        if self._grenton_type == "DIMMER":
+        if self._grenton_type == "DIMMER" or self._grenton_type == "LED_R" or self._grenton_type == "LED_G" or self._grenton_type == "LED_B" or self._grenton_type == "LED_W":
             self._supported_color_modes.add(ColorMode.BRIGHTNESS)
         elif self._grenton_type == "RGB":
             self._supported_color_modes.add(ColorMode.RGB)
@@ -84,7 +84,7 @@ class GrentonLight(LightEntity):
     
     @property
     def color_mode(self) -> ColorMode:
-        if self._grenton_type == "DIMMER":
+        if self._grenton_type == "DIMMER" or self._grenton_type == "LED_R" or self._grenton_type == "LED_G" or self._grenton_type == "LED_B" or self._grenton_type == "LED_W":
             return ColorMode.BRIGHTNESS
         elif self._grenton_type == "RGB":
             return ColorMode.RGB
@@ -114,6 +114,34 @@ class GrentonLight(LightEntity):
                     scaled_brightness = brightness / 255
                     command = {"command": f"{self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:set(0, {scaled_brightness})')"}
                 self._brightness = brightness
+            elif self._grenton_type == "LED_R":
+                brightness = kwargs.get("brightness", 255)
+                if self._grenton_id.split('->')[1].startswith("ZWA"):
+                    command = {"command": f"{self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:execute(0, {brightness})')"}
+                else:
+                    command = {"command": f"{self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:execute(3, {brightness})')"}
+                self._brightness = brightness
+            elif self._grenton_type == "LED_G":
+                brightness = kwargs.get("brightness", 255)
+                if self._grenton_id.split('->')[1].startswith("ZWA"):
+                    command = {"command": f"{self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:execute(0, {brightness})')"}
+                else:
+                    command = {"command": f"{self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:execute(4, {brightness})')"}
+                self._brightness = brightness
+            elif self._grenton_type == "LED_B":
+                brightness = kwargs.get("brightness", 255)
+                if self._grenton_id.split('->')[1].startswith("ZWA"):
+                    command = {"command": f"{self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:execute(0, {brightness})')"}
+                else:
+                    command = {"command": f"{self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:execute(5, {brightness})')"}
+                self._brightness = brightness
+            elif self._grenton_type == "LED_W":
+                brightness = kwargs.get("brightness", 255)
+                if self._grenton_id.split('->')[1].startswith("ZWA"):
+                    command = {"command": f"{self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:execute(0, {brightness})')"}
+                else:
+                    command = {"command": f"{self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:execute(12, {brightness})')"}
+                self._brightness = brightness
             elif self._grenton_type == "RGB":
                 rgb_color = kwargs.get("rgb_color")
                 if rgb_color:
@@ -142,7 +170,15 @@ class GrentonLight(LightEntity):
             command = {"command": f"{self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:set(0, 0)')"}
             if self._grenton_type == "RGB" or (self._grenton_type == "DIMMER" and self._grenton_id.split('->')[1].startswith("ZWA")):
                 command = {"command": f"{self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:execute(0, 0)')"}
-            
+            elif self._grenton_type == "LED_R":
+                command = {"command": f"{self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:execute(3, 0)')"}
+            elif self._grenton_type == "LED_G":
+                command = {"command": f"{self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:execute(4, 0)')"}
+            elif self._grenton_type == "LED_B":
+                command = {"command": f"{self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:execute(5, 0)')"}
+            elif self._grenton_type == "LED_W":
+                command = {"command": f"{self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:execute(12, 0)')"}
+                
             async with aiohttp.ClientSession() as session:
                 async with session.post(f"{self._api_endpoint}", json=command) as response:
                     response.raise_for_status()
@@ -158,6 +194,26 @@ class GrentonLight(LightEntity):
                     command.update({"status_2": f"return {self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:get(3)')"})
                 else:
                     command.update({"status_2": f"return {self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:get(6)')"})
+            elif self._grenton_type == "LED_R":
+                if self._grenton_id.split('->')[1].startswith("ZWA"):
+                    command = {"status": f"return {self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:get(0)')"}
+                else:
+                    command = {"status": f"return {self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:get(3)')"}
+            elif self._grenton_type == "LED_G":
+                if self._grenton_id.split('->')[1].startswith("ZWA"):
+                    command = {"status": f"return {self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:get(0)')"}
+                else:
+                    command = {"status": f"return {self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:get(4)')"}
+            elif self._grenton_type == "LED_B":
+                if self._grenton_id.split('->')[1].startswith("ZWA"):
+                    command = {"status": f"return {self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:get(0)')"}
+                else:
+                    command = {"status": f"return {self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:get(5)')"}
+            elif self._grenton_type == "LED_W":
+                if self._grenton_id.split('->')[1].startswith("ZWA"):
+                    command = {"status": f"return {self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:get(0)')"}
+                else:
+                    command = {"status": f"return {self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:get(15)')"}
             
             async with aiohttp.ClientSession() as session:
                 async with session.get(f"{self._api_endpoint}", json=command) as response:
@@ -169,6 +225,9 @@ class GrentonLight(LightEntity):
                             self._brightness = data.get("status")
                         else:
                             self._brightness = data.get("status") * 255
+                    elif self._grenton_type == "LED_R" or self._grenton_type == "LED_G" or self._grenton_type == "LED_B" or self._grenton_type == "LED_W"
+                        self._brightness = data.get("status")
+                    
                     if self._grenton_type == "RGB":
                         self._rgb_color = color_util.rgb_hex_to_rgb_list(data.get("status_2").strip("#"))
         except aiohttp.ClientError as ex:
