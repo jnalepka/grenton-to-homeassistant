@@ -8,7 +8,23 @@ Repository: https://github.com/jnalepka/grenton-to-homeassistant
 """
 
 import aiohttp
-from .const import DOMAIN
+from .const import (
+    DOMAIN,
+    CONF_API_ENDPOINT,
+    CONF_GRENTON_ID,
+    CONF_OBJECT_NAME,
+    CONF_GRENTON_TYPE,
+    CONF_DEVICE_CLASS,
+    CONF_STATE_CLASS,
+    CONF_UNIT_OF_MEASUREMENT,
+    CONF_GRENTON_TYPE_DEFAULT_SENSOR,
+    CONF_GRENTON_TYPE_MODBUS_RTU,
+    CONF_GRENTON_TYPE_MODBUS_VALUE,
+    CONF_GRENTON_TYPE_MODBUS,
+    CONF_GRENTON_TYPE_MODBUS_CLIENT,
+    CONF_GRENTON_TYPE_MODBUS_SERVER,
+    CONF_GRENTON_TYPE_MODBUS_SLAVE_RTU
+)
 import logging
 import json
 import voluptuous as vol
@@ -21,18 +37,10 @@ from homeassistant.const import UnitOfTemperature
 
 _LOGGER = logging.getLogger(__name__)
 
-CONF_API_ENDPOINT = 'api_endpoint'
-CONF_GRENTON_ID = 'grenton_id'
-CONF_GRENTON_TYPE = 'grenton_type'
-CONF_OBJECT_NAME = 'name'
-CONF_DEVICE_CLASS = 'device_class'
-CONF_STATE_CLASS = 'state_class'
-CONF_UNIT_OF_MEASUREMENT = 'unit_of_measurement'
-
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Required(CONF_API_ENDPOINT): str,
     vol.Required(CONF_GRENTON_ID): str,
-    vol.Required(CONF_GRENTON_TYPE, default='DEFAULT_SENSOR'): str, #DEFAULT_SENSOR, MODBUS_RTU, MODBUS_VALUE, MODBUS, MODBUS_CLIENT, MODBUS_SLAVE_RTU
+    vol.Required(CONF_GRENTON_TYPE, default=CONF_GRENTON_TYPE_DEFAULT_SENSOR): str, #DEFAULT_SENSOR, MODBUS_RTU, MODBUS_VALUE, MODBUS, MODBUS_CLIENT, MODBUS_SLAVE_RTU
     vol.Required(CONF_UNIT_OF_MEASUREMENT, default=UnitOfTemperature.CELSIUS): str,
     vol.Optional(CONF_OBJECT_NAME, default='Grenton Sensor'): str,
     vol.Optional(CONF_DEVICE_CLASS, default=''): str,
@@ -145,12 +153,12 @@ class GrentonSensor(SensorEntity):
                 command = {"status": f"return getVar(\"{self._grenton_id}\")"}
             elif self._grenton_id.split('->')[1].isupper():
                 grenton_type_mapping = {
-                    "MODBUS": 14,
-                    "MODBUS_VALUE": 20,
-                    "MODBUS_RTU": 22,
-                    "MODBUS_CLIENT": 19,
-                    "MODBUS_SERVER": 10,
-                    "MODBUS_SLAVE_RTU": 10,
+                    CONF_GRENTON_TYPE_MODBUS: 14,
+                    CONF_GRENTON_TYPE_MODBUS_VALUE: 20,
+                    CONF_GRENTON_TYPE_MODBUS_RTU: 22,
+                    CONF_GRENTON_TYPE_MODBUS_CLIENT: 19,
+                    CONF_GRENTON_TYPE_MODBUS_SERVER: 10,
+                    CONF_GRENTON_TYPE_MODBUS_SLAVE_RTU: 10
                 }
                 index = grenton_type_mapping.get(self._grenton_type, 0)
                 command = {"status": f"return {self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:get({index})')"}
