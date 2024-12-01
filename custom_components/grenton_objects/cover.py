@@ -1,8 +1,8 @@
 """
 ==================================================
 Author: Jan Nalepka
-Version: 2.1.0
-Date: 2024-11-27
+Version: 2.1.1
+Date: 2024-12-01
 Repository: https://github.com/jnalepka/grenton-to-homeassistant
 ==================================================
 """
@@ -130,7 +130,7 @@ class GrentonCover(CoverEntity):
             if self._reversed == True:
                 position = 100 - position
             command = {"command": f"{grenton_id_part_0}:execute(0, '{grenton_id_part_1}:execute(10, {position})')"}
-            if grenton_id_part.startswith("ZWA"):
+            if grenton_id_part_1.startswith("ZWA"):
                 command = {"command": f"{grenton_id_part_0}:execute(0, '{grenton_id_part_1}:execute(7, {position})')"}
             async with aiohttp.ClientSession() as session:
                 async with session.post(f"{self._api_endpoint}", json=command) as response:
@@ -184,15 +184,15 @@ class GrentonCover(CoverEntity):
     async def async_update(self):
         try:
             grenton_id_part_0, grenton_id_part_1 = self._grenton_id.split('->')
-            if grenton_id_part.startswith("ZWA"):
+            if grenton_id_part_1.startswith("ZWA"):
                 command = {"status": f"return {grenton_id_part_0}:execute(0, '{grenton_id_part_1}:get(2)')"}
             else:
                 command = {"status": f"return {grenton_id_part_0}:execute(0, '{grenton_id_part_1}:get(0)')"}
-            if grenton_id_part.startswith("ZWA"):
+            if grenton_id_part_1.startswith("ZWA"):
                 command.update({"status_2": f"return {grenton_id_part_0}:execute(0, '{grenton_id_part_1}:get(4)')"})
             else:
                 command.update({"status_2": f"return {grenton_id_part_0}:execute(0, '{grenton_id_part_1}:get(7)')"})
-            if grenton_id_part.startswith("ZWA"):
+            if grenton_id_part_1.startswith("ZWA"):
                 command.update({"status_3": f"return {grenton_id_part_0}:execute(0, '{grenton_id_part_1}:get(6)')"})
             else:
                 command.update({"status_3": f"return {grenton_id_part_0}:execute(0, '{grenton_id_part_1}:get(8)')"})
