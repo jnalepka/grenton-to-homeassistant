@@ -1,8 +1,8 @@
 """
 ==================================================
 Author: Jan Nalepka
-Version: 2.1.0
-Date: 2024-11-27
+Version: 2.1.1
+Date: 2024-12-01
 Repository: https://github.com/jnalepka/grenton-to-homeassistant
 ==================================================
 """
@@ -210,7 +210,7 @@ class GrentonLight(LightEntity):
                 CONF_GRENTON_TYPE_LED_W: {"action": "execute", "index": 12},
             }
             
-            if self._grenton_type == CONF_GRENTON_TYPE_DIMMER and grenton_id_part.startswith("ZWA"):
+            if self._grenton_type == CONF_GRENTON_TYPE_DIMMER and grenton_id_part_1.startswith("ZWA"):
                 config = {"action": "execute", "index": 0}
             else:
                 config = command_mapping.get(self._grenton_type, {"action": "set", "index": 0})
@@ -243,19 +243,18 @@ class GrentonLight(LightEntity):
                 command = self._generate_command("status", grenton_id_part_0, grenton_id_part_1, "get", 0)
             
             if self._grenton_type == CONF_GRENTON_TYPE_RGB:
-                if grenton_id_part.startswith("ZWA"):
+                if grenton_id_part_1.startswith("ZWA"):
                     command.update(self._generate_command("status_2", grenton_id_part_0, grenton_id_part_1, "get", 3))
                 else:
                     command.update(self._generate_command("status_2", grenton_id_part_0, grenton_id_part_1, "get", 6))
 
             async with aiohttp.ClientSession() as session:
                 async with session.get(f"{self._api_endpoint}", json=command) as response:
-                    grenton_id_part = self._grenton_id.split('->')[1]
                     response.raise_for_status()
                     data = await response.json()
                     self._state = STATE_OFF if data.get("status") == 0 else STATE_ON
                     if self._grenton_type == CONF_GRENTON_TYPE_RGB or self._grenton_type == CONF_GRENTON_TYPE_DIMMER:
-                        if self._grenton_type == CONF_GRENTON_TYPE_DIMMER and grenton_id_part.startswith("ZWA"):
+                        if self._grenton_type == CONF_GRENTON_TYPE_DIMMER and grenton_id_part_1.startswith("ZWA"):
                             self._brightness = data.get("status")
                         else:
                             self._brightness = data.get("status") * 255
