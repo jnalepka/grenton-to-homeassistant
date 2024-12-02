@@ -2,7 +2,7 @@
 ==================================================
 Author: Jan Nalepka
 Script version: 2.0
-Date: 2024-12-02
+Date: 02.12.2024
 Repository: https://github.com/jnalepka/grenton-to-homeassistant
 ==================================================
 """
