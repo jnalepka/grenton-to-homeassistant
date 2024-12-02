@@ -1,8 +1,8 @@
 """
 ==================================================
 Author: Jan Nalepka
-Version: 2.2.0
-Date: 2024-12-01
+Script version: 2.0
+Date: 02.12.2024
 Repository: https://github.com/jnalepka/grenton-to-homeassistant
 ==================================================
 """
@@ -10,19 +10,50 @@ Repository: https://github.com/jnalepka/grenton-to-homeassistant
 import voluptuous as vol
 from homeassistant import config_entries
 from homeassistant.core import callback
-from .const import DOMAIN
+from .const import (
+    DOMAIN,
+    CONF_API_ENDPOINT,
+    CONF_GRENTON_ID,
+    CONF_OBJECT_NAME,
+    CONF_GRENTON_TYPE,
+    CONF_GRENTON_TYPE_DOUT,
+    CONF_GRENTON_TYPE_DIMMER,
+    CONF_GRENTON_TYPE_RGB,
+    CONF_GRENTON_TYPE_LED_R,
+    CONF_GRENTON_TYPE_LED_G,
+    CONF_GRENTON_TYPE_LED_B,
+    CONF_GRENTON_TYPE_LED_W,
+    CONF_GRENTON_TYPE_DEFAULT_SENSOR,
+    CONF_GRENTON_TYPE_MODBUS_RTU,
+    CONF_GRENTON_TYPE_MODBUS_VALUE,
+    CONF_GRENTON_TYPE_MODBUS,
+    CONF_GRENTON_TYPE_MODBUS_CLIENT,
+    CONF_GRENTON_TYPE_MODBUS_SERVER,
+    CONF_GRENTON_TYPE_MODBUS_SLAVE_RTU,
+    CONF_DEVICE_CLASS,
+    CONF_STATE_CLASS,
+    CONF_REVERSED,
+    CONF_DEVICE_TYPE,
+    CONF_DEVICE_TYPE_LIGHT,
+    CONF_DEVICE_TYPE_SWITCH,
+    CONF_DEVICE_TYPE_COVER,
+    CONF_DEVICE_TYPE_CLIMATE,
+    CONF_DEVICE_TYPE_SENSOR,
+    CONF_DEVICE_TYPE_BINARY_SENSOR,
+    CONF_DEVICE_TYPE_BUTTON
+)
 import logging
 
 _LOGGER = logging.getLogger(__name__)
 
 DEVICE_TYPES = {
-    "light": "Light",
-    "switch": "Switch",
-    "cover": "Cover",
-    "climate": "Climate",
-    "sensor": "Sensor",
-    "binary_sensor": "Binary sensor",
-    "button": "Script"
+    CONF_DEVICE_TYPE_LIGHT: "Light",
+    CONF_DEVICE_TYPE_SWITCH: "Switch",
+    CONF_DEVICE_TYPE_COVER: "Cover",
+    CONF_DEVICE_TYPE_CLIMATE: "Climate",
+    CONF_DEVICE_TYPE_SENSOR: "Sensor",
+    CONF_DEVICE_TYPE_BINARY_SENSOR: "Binary sensor",
+    CONF_DEVICE_TYPE_BUTTON: "Script"
 }
 
 class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
@@ -37,11 +68,11 @@ class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             return self.async_show_form(
                 step_id="user",
                 data_schema=vol.Schema({
-                    vol.Required("device_type"): vol.In(DEVICE_TYPES)
+                    vol.Required(CONF_DEVICE_TYPE): vol.In(DEVICE_TYPES)
                 })
             )
 
-        self.device_type = user_input["device_type"]
+        self.device_type = user_input[CONF_DEVICE_TYPE]
         return await self.async_step_device_config()
 
     async def async_step_device_config(self, user_input=None):
@@ -51,51 +82,51 @@ class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 data_schema=self._get_device_schema()
             )
 
-        return self.async_create_entry(title=user_input["name"], data={
-            "device_type": self.device_type,
-            "api_endpoint": user_input["api_endpoint"],
-            "grenton_id": user_input["grenton_id"],
-            "name": user_input["name"],
-            "grenton_type": user_input.get("grenton_type", None),
-            "device_class": user_input.get("device_class", None),
-            "state_class": user_input.get("state_class", None),
-            "reversed": user_input.get("reversed", None)
+        return self.async_create_entry(title=user_input[CONF_OBJECT_NAME], data={
+            CONF_DEVICE_TYPE: self.device_type,
+            CONF_API_ENDPOINT: user_input[CONF_API_ENDPOINT],
+            CONF_GRENTON_ID: user_input[CONF_GRENTON_ID],
+            CONF_OBJECT_NAME: user_input[CONF_OBJECT_NAME],
+            CONF_GRENTON_TYPE: user_input.get(CONF_GRENTON_TYPE, None),
+            CONF_DEVICE_CLASS: user_input.get(CONF_DEVICE_CLASS, None),
+            CONF_STATE_CLASS: user_input.get(CONF_STATE_CLASS, None),
+            CONF_REVERSED: user_input.get(CONF_REVERSED, None)
         })
         
     def _get_device_schema(self):
-        if self.device_type == "light":
+        if self.device_type == CONF_DEVICE_TYPE_LIGHT:
             return vol.Schema({
-                vol.Required("name"): str,
-                vol.Required("api_endpoint", default="http://192.168.0.4/HAlistener"): str,
-                vol.Required("grenton_id", default="CLU220000000->DOU0000"): str,
-                vol.Required("grenton_type", default="DOUT"): vol.In(["DOUT","DIMMER", "RGB", "LED_R", "LED_G", "LED_B", "LED_W"]),
+                vol.Required(CONF_OBJECT_NAME): str,
+                vol.Required(CONF_API_ENDPOINT, default="http://192.168.0.4/HAlistener"): str,
+                vol.Required(CONF_GRENTON_ID, default="CLU220000000->DOU0000"): str,
+                vol.Required(CONF_GRENTON_TYPE, default=CONF_GRENTON_TYPE_DOUT): vol.In([CONF_GRENTON_TYPE_DOUT, CONF_GRENTON_TYPE_DIMMER, CONF_GRENTON_TYPE_RGB, CONF_GRENTON_TYPE_LED_R, CONF_GRENTON_TYPE_LED_G, CONF_GRENTON_TYPE_LED_B, CONF_GRENTON_TYPE_LED_W]),
             })
-        elif self.device_type == "switch":
+        elif self.device_type == CONF_DEVICE_TYPE_SWITCH:
             return vol.Schema({
-                vol.Required("name"): str,
-                vol.Required("api_endpoint", default="http://192.168.0.4/HAlistener"): str,
-                vol.Required("grenton_id", default="CLU220000000->DOU0000"): str,
+                vol.Required(CONF_OBJECT_NAME): str,
+                vol.Required(CONF_API_ENDPOINT, default="http://192.168.0.4/HAlistener"): str,
+                vol.Required(CONF_GRENTON_ID, default="CLU220000000->DOU0000"): str,
             })
-        elif self.device_type == "cover":
+        elif self.device_type == CONF_DEVICE_TYPE_COVER:
             return vol.Schema({
-                vol.Required("name"): str,
-                vol.Required("api_endpoint", default="http://192.168.0.4/HAlistener"): str,
-                vol.Required("grenton_id", default="CLU220000000->ROL0000"): str,
-                vol.Optional("reversed", default=False): bool,
+                vol.Required(CONF_OBJECT_NAME): str,
+                vol.Required(CONF_API_ENDPOINT, default="http://192.168.0.4/HAlistener"): str,
+                vol.Required(CONF_GRENTON_ID, default="CLU220000000->ROL0000"): str,
+                vol.Optional(CONF_REVERSED, default=False): bool,
             })
-        elif self.device_type == "climate":
+        elif self.device_type == CONF_DEVICE_TYPE_CLIMATE:
             return vol.Schema({
-                vol.Required("name"): str,
-                vol.Required("api_endpoint", default="http://192.168.0.4/HAlistener"): str,
-                vol.Required("grenton_id", default="CLU220000000->THE0000"): str,
+                vol.Required(CONF_OBJECT_NAME): str,
+                vol.Required(CONF_API_ENDPOINT, default="http://192.168.0.4/HAlistener"): str,
+                vol.Required(CONF_GRENTON_ID, default="CLU220000000->THE0000"): str,
             })
-        elif self.device_type == "sensor":
+        elif self.device_type == CONF_DEVICE_TYPE_SENSOR:
             return vol.Schema({
-                vol.Required("name"): str,
-                vol.Required("api_endpoint", default="http://192.168.0.4/HAlistener"): str,
-                vol.Required("grenton_id", default="CLU220000000->PAN0000"): str,
-                vol.Optional("grenton_type", default="DEFAULT_SENSOR"): vol.In(["DEFAULT_SENSOR", "MODBUS_RTU", "MODBUS_VALUE", "MODBUS", "MODBUS_CLIENT", "MODBUS_SLAVE_RTU"]),
-                vol.Optional("device_class", default="temperature"): vol.In([
+                vol.Required(CONF_OBJECT_NAME): str,
+                vol.Required(CONF_API_ENDPOINT, default="http://192.168.0.4/HAlistener"): str,
+                vol.Required(CONF_GRENTON_ID, default="CLU220000000->PAN0000"): str,
+                vol.Optional(CONF_GRENTON_TYPE, default=CONF_GRENTON_TYPE_DEFAULT_SENSOR): vol.In([CONF_GRENTON_TYPE_DEFAULT_SENSOR, CONF_GRENTON_TYPE_MODBUS_RTU, CONF_GRENTON_TYPE_MODBUS_VALUE, CONF_GRENTON_TYPE_MODBUS, CONF_GRENTON_TYPE_MODBUS_CLIENT, CONF_GRENTON_TYPE_MODBUS_SERVER, CONF_GRENTON_TYPE_MODBUS_SLAVE_RTU]),
+                vol.Optional(CONF_DEVICE_CLASS, default="temperature"): vol.In([
                     "apparent_power",
                     "atmospheric_pressure",
                     "battery",
@@ -141,17 +172,17 @@ class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     "weight",
                     "wind_speed"
                 ]),
-                vol.Optional("state_class", default="measurement"): vol.In(["measurement", "total", "total_increasing"])
+                vol.Optional(CONF_STATE_CLASS, default="measurement"): vol.In(["measurement", "total", "total_increasing"])
             })
-        elif self.device_type == "binary_sensor":
+        elif self.device_type == CONF_DEVICE_TYPE_BINARY_SENSOR:
             return vol.Schema({
-                vol.Required("name"): str,
-                vol.Required("api_endpoint", default="http://192.168.0.4/HAlistener"): str,
-                vol.Required("grenton_id", default="CLU220000000->DIN0000"): str
+                vol.Required(CONF_OBJECT_NAME): str,
+                vol.Required(CONF_API_ENDPOINT, default="http://192.168.0.4/HAlistener"): str,
+                vol.Required(CONF_GRENTON_ID, default="CLU220000000->DIN0000"): str
             })
-        elif self.device_type == "button":
+        elif self.device_type == CONF_DEVICE_TYPE_BUTTON:
             return vol.Schema({
-                vol.Required("name"): str,
-                vol.Required("api_endpoint", default="http://192.168.0.4/HAlistener"): str,
-                vol.Required("grenton_id", default="script_name (script on GateHTTP) or CLU220000000->script_name"): str
+                vol.Required(CONF_OBJECT_NAME): str,
+                vol.Required(CONF_API_ENDPOINT, default="http://192.168.0.4/HAlistener"): str,
+                vol.Required(CONF_GRENTON_ID, default="script_name (script on GateHTTP) or CLU220000000->script_name"): str
             })
