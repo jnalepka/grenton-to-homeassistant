@@ -45,7 +45,7 @@ To install manually, copy the grenton_objects folder along with all its contents
 -- ║ License: MIT License                                                  ║
 -- ║ Github: https://github.com/jnalepka/grenton-to-homeassistant          ║
 -- ║                                                                       ║
--- ║ Version: 1.0.0                                                        ║
+-- ║ Script version: 1.0.0                                                 ║
 -- ║                                                                       ║
 -- ║ Requirements:                                                         ║
 -- ║    Gate Http:                                                         ║
