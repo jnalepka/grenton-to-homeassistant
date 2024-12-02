@@ -1,3 +1,12 @@
+"""
+==================================================
+Author: Jan Nalepka
+Script version: 2.0
+Date: 2024-12-02
+Repository: https://github.com/jnalepka/grenton-to-homeassistant
+==================================================
+"""
+
 DOMAIN = 'grenton_objects'
 CONF_API_ENDPOINT = 'api_endpoint'
 CONF_GRENTON_ID = 'grenton_id'
@@ -22,3 +31,11 @@ CONF_REVERSED = 'reversed'
 CONF_DEVICE_CLASS = 'device_class'
 CONF_STATE_CLASS = 'state_class'
 CONF_UNIT_OF_MEASUREMENT = 'unit_of_measurement'
+CONF_DEVICE_TYPE = 'device_type'
+CONF_DEVICE_TYPE_LIGHT = 'light'
+CONF_DEVICE_TYPE_SWITCH = 'switch'
+CONF_DEVICE_TYPE_COVER = 'cover'
+CONF_DEVICE_TYPE_CLIMATE = 'climate'
+CONF_DEVICE_TYPE_SENSOR = 'sensor',
+CONF_DEVICE_TYPE_BINARY_SENSOR = 'binary_sensor'
+CONF_DEVICE_TYPE_BUTTON = 'button'
