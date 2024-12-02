@@ -1,5 +1,5 @@
 
-![logo@2x](https://github.com/user-attachments/assets/08571ca3-a9b2-404b-820f-dccc688f62e8)
+<img src="https://github.com/user-attachments/assets/08571ca3-a9b2-404b-820f-dccc688f62e8" width="600"/>
 
 # Grenton to Home Assistant
 
@@ -199,7 +199,9 @@ GATE_HTTP->HA_Listener_Integration->SendResponse()
 | `weight`                               | kg, g, mg, µg, oz, lb, st |
 | `wind_speed`                           | ft/s, km/h, kn, m/s, mph |
 
-
+### Script (Button)
+* Local script - GateHTTP script (script_name)
+* Remote scritp - CLU script (CLU->script_name)
 
 # Forced faster state update
 
