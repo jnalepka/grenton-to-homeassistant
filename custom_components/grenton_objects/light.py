@@ -1,7 +1,7 @@
 """
 ==================================================
 Author: Jan Nalepka
-Version: 2.1.1
+Version: 2.2.0
 Date: 2024-12-01
 Repository: https://github.com/jnalepka/grenton-to-homeassistant
 ==================================================
