@@ -1,7 +1,7 @@
 import pytest
 from unittest.mock import AsyncMock, patch
 from homeassistant.const import STATE_ON, STATE_OFF
-from custom_components.grenton.switch import GrentonSwitch
+from custom_components.grenton_objects.switch import GrentonSwitch
 
 # Mock configuration
 MOCK_CONFIG = {
