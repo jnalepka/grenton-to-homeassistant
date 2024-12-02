@@ -98,8 +98,8 @@ GATE_HTTP->HA_Listener_Integration->SendResponse()
 
 | Grenton Object                         | grenton_id (example)           | HA device_type           |    Other settings        |  HA functions         |
 |----------------------------------------|--------------------------|--------------------------|-----------------------|-----------------------|
-| DOUT                                   | CLU221000001->DOU1234    | Switch                   |                          | ON/OFF                |
-| DOUT                                   | CLU221000001->DOU1234    | Light                    |  grenton_type = DOUT     | ON/OFF, BRIGHTNESS    |
+| DOUT (simple switch)                   | CLU221000001->DOU1234    | Switch                   |                          | ON/OFF                |
+| DOUT (light)                           | CLU221000001->DOU1234    | Light                    |  grenton_type = DOUT     | ON/OFF, BRIGHTNESS    |
 | DIMMER                                 | CLU221000001->DIM1234    | Light                    |  grenton_type = DIMMER   | ON/OFF, BRIGHTNESS    |
 | SINGLE ZWAVE_LED OBJECT                | CLU221000001->ZWA1234    | Light                    |  grenton_type = DIMMER   | ON/OFF, BRIGHTNESS    |
 | RGBW (R, G, B, W - SINGLE)             | CLU221000001->LED1234    | Light                    |  grenton_type = LED_R/G/B/W   | ON/OFF, BRIGHTNESS    |
