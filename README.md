@@ -111,7 +111,12 @@ GATE_HTTP->HA_Listener_Integration->SendResponse()
 | ANALOG IN                              | CLU221000001->ANA1234    | Sensor                   |  grenton_type = DEFAULT_SENSOR, device_class=?  | SENSOR        |
 | GATE HTTP User feature (integration clu)    | My_feature   (Without GATE-> !!)      | Sensor |  grenton_type = DEFAULT_SENSOR, device_class=?  | SENSOR        |
 | OTHER CLU User feature                 | CLU221000001->My_feature  | Sensor                  |  grenton_type = DEFAULT_SENSOR, device_class=?  | SENSOR        |
-| MODBUS                                 | CLU501000001->MOD1234     | Sensor                  |  (Pay attention to the virtual object TYPE!) grenton_type = MODBUS / MODBUS_VALUE / MODBUS_RTU / MODBUS_CLIENT / MODBUS_SERVER / MODBUS_SLAVE_RTU, device_class=?  | SENSOR        |
+| MODBUS (Virtual object TYPE!)                                 | CLU501000001->MOD1234     | Sensor                  |   grenton_type = MODBUS, device_class=?  | SENSOR        |
+| MODBUS_VALUE (Virtual object TYPE!)                                 | CLU501000001->MOD1234     | Sensor                  |  grenton_type = MODBUS_VALUE, device_class=?  | SENSOR        |
+| MODBUS_RTU                                 | CLU501000001->MOD1234     | Sensor                  |  grenton_type = MODBUS_RTU, device_class=?  | SENSOR        |
+| MODBUS_CLIENT                                 | CLU501000001->MOD1234     | Sensor                  |  grenton_type = MODBUS_CLIENT , device_class=?  | SENSOR        |
+| MODBUS_SERVER                                | CLU501000001->MOD1234     | Sensor                  |  grenton_type = MODBUS_SERVER, device_class=?  | SENSOR        |
+| MODBUS_SLAVE_RTU                                 | CLU501000001->MOD1234     | Sensor                  |  grenton_type = MODBUS_SLAVE_RTU, device_class=?  | SENSOR        |
 | GATE HTTP Script (integration clu)    | Script_name   (Without GATE-> !!)      | Sensor |  grenton_type = DEFAULT_SENSOR, device_class=?  | SENSOR        |
 | OTHER CLU Script                      | CLU221000001->Script_name  | Script                  |                         | BUTTON        |
 
