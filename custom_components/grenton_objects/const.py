@@ -1,7 +1,7 @@
 """
 ==================================================
 Author: Jan Nalepka
-Script version: 2.0
+Script version: 2.1
 Date: 02.12.2024
 Repository: https://github.com/jnalepka/grenton-to-homeassistant
 ==================================================
@@ -36,6 +36,6 @@ CONF_DEVICE_TYPE_LIGHT = 'light'
 CONF_DEVICE_TYPE_SWITCH = 'switch'
 CONF_DEVICE_TYPE_COVER = 'cover'
 CONF_DEVICE_TYPE_CLIMATE = 'climate'
-CONF_DEVICE_TYPE_SENSOR = 'sensor',
+CONF_DEVICE_TYPE_SENSOR = 'sensor'
 CONF_DEVICE_TYPE_BINARY_SENSOR = 'binary_sensor'
 CONF_DEVICE_TYPE_BUTTON = 'button'
