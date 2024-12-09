@@ -126,6 +126,7 @@ class GrentonCover(CoverEntity):
         try:
             grenton_id_part_0, grenton_id_part_1 = self._grenton_id.split('->')
             position = kwargs.get("position", 100)
+            prev_position = self._current_cover_position
             self._current_cover_position = position
             if self._reversed == True:
                 position = 100 - position
@@ -135,7 +136,7 @@ class GrentonCover(CoverEntity):
             async with aiohttp.ClientSession() as session:
                 async with session.post(f"{self._api_endpoint}", json=command) as response:
                     response.raise_for_status()
-                    if (position > self._current_cover_position):
+                    if (position > prev_position):
                         if self._reversed == True:
                             self._state = STATE_CLOSING
                         else:
