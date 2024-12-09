@@ -20,6 +20,7 @@ async def test_async_update():
         await binary_sensor.async_update()
         
         assert binary_sensor.is_on
+        assert binary_sensor.unique_id == "grenton_DIN0000"
         m.assert_called_once_with(
             api_endpoint,
             method='GET',
@@ -40,6 +41,7 @@ async def test_async_update_off():
         await binary_sensor.async_update()
         
         assert not binary_sensor.is_on
+        assert binary_sensor.unique_id == "grenton_DIN0000"
         m.assert_called_once_with(
             api_endpoint,
             method='GET',
