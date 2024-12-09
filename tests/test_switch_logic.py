@@ -3,7 +3,6 @@ from unittest.mock import patch
 from aioresponses import aioresponses
 from homeassistant.core import HomeAssistant
 from homeassistant.setup import async_setup_component
-from homeassistant.const import STATE_ON, STATE_OFF
 from custom_components.grenton_objects.switch import GrentonSwitch
 
 @pytest.mark.asyncio
