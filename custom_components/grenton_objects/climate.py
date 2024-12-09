@@ -117,10 +117,10 @@ class GrentonClimate(ClimateEntity):
             command = {"command": f"{grenton_id_part_0}:execute(0, '{grenton_id_part_1}:execute(1, 0)')"}
             if hvac_mode == HVACMode.HEAT:
                 command = {"command": f"{grenton_id_part_0}:execute(0, '{grenton_id_part_1}:execute(0, 0)')"}
-                command.update({"command_2": f"return {grenton_id_part_0}:execute(0, '{grenton_id_part_1}:set(7, 0)')"})
+                command.update({"command_2": f"{grenton_id_part_0}:execute(0, '{grenton_id_part_1}:set(7, 0)')"})
             elif hvac_mode == HVACMode.COOL:
                 command = {"command": f"{grenton_id_part_0}:execute(0, '{grenton_id_part_1}:execute(0, 0)')"}
-                command.update({"command_2": f"return {grenton_id_part_0}:execute(0, '{grenton_id_part_1}:set(7, 1)')"})
+                command.update({"command_2": f"{grenton_id_part_0}:execute(0, '{grenton_id_part_1}:set(7, 1)')"})
             async with aiohttp.ClientSession() as session:
                 async with session.post(f"{self._api_endpoint}", json=command) as response:
                     response.raise_for_status()
