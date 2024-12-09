@@ -11,15 +11,15 @@ async def test_async_turn_on():
     grenton_id = "CLU220000000->DOU0000"
     object_name = "Test Switch"
     
-    switch = GrentonSwitch(api_endpoint, grenton_id, object_name)
+    obj = GrentonSwitch(api_endpoint, grenton_id, object_name)
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
         
-        await switch.async_turn_on()
+        await obj.async_turn_on()
         
-        assert switch.is_on
-        assert switch.unique_id == "grenton_DOU0000"
+        assert obj.is_on
+        assert obj.unique_id == "grenton_DOU0000"
         m.assert_called_once_with(
             api_endpoint,
             method='POST',
@@ -32,15 +32,15 @@ async def test_async_turn_off():
     grenton_id = "CLU220000000->DOU0000"
     object_name = "Test Switch"
     
-    switch = GrentonSwitch(api_endpoint, grenton_id, object_name)
+    obj = GrentonSwitch(api_endpoint, grenton_id, object_name)
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
         
-        await switch.async_turn_off()
+        await obj.async_turn_off()
         
-        assert not switch.is_on
-        assert switch.unique_id == "grenton_DOU0000"
+        assert not obj.is_on
+        assert obj.unique_id == "grenton_DOU0000"
         m.assert_called_once_with(
             api_endpoint,
             method='POST',
@@ -53,15 +53,15 @@ async def test_async_update():
     grenton_id = "CLU220000000->DOU0000"
     object_name = "Test Switch"
     
-    switch = GrentonSwitch(api_endpoint, grenton_id, object_name)
+    obj = GrentonSwitch(api_endpoint, grenton_id, object_name)
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 1})
         
-        await switch.async_update()
+        await obj.async_update()
         
-        assert switch.is_on
-        assert switch.unique_id == "grenton_DOU0000"
+        assert obj.is_on
+        assert obj.unique_id == "grenton_DOU0000"
         m.assert_called_once_with(
             api_endpoint,
             method='GET',
@@ -74,15 +74,15 @@ async def test_async_update_off():
     grenton_id = "CLU220000000->DOU0000"
     object_name = "Test Switch"
     
-    switch = GrentonSwitch(api_endpoint, grenton_id, object_name)
+    obj = GrentonSwitch(api_endpoint, grenton_id, object_name)
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 0}) 
         
-        await switch.async_update()
+        await obj.async_update()
         
-        assert not switch.is_on
-        assert switch.unique_id == "grenton_DOU0000"
+        assert not obj.is_on
+        assert obj.unique_id == "grenton_DOU0000"
         m.assert_called_once_with(
             api_endpoint,
             method='GET',
