@@ -1,4 +1,0 @@
-pytest
-pytest-aiohttp
-aioresponses
-pytest-homeassistant-custom-component
