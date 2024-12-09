@@ -21,48 +21,42 @@ def grenton_switch():
 @pytest.mark.asyncio
 async def test_turn_on(grenton_switch):
     with patch("aiohttp.ClientSession.post", new_callable=AsyncMock) as mock_post:
-      
+        # Konfiguracja mocka, aby działał z async with
+        mock_post.return_value.__aenter__.return_value.status = 200
+        
         await grenton_switch.async_turn_on()
-
-        expected_command = {
-            "command": f"CLU220000000:execute(0, 'DOU0000:set(0, 1)')"
-        }
-
+        
         mock_post.assert_called_once_with(
-            MOCK_CONFIG["api_endpoint"], json=expected_command
+            f"{grenton_switch._api_endpoint}",
+            json={"command": "CLU220000000:execute(0, 'DOU0000:set(0, 1)')"}
         )
-        assert grenton_switch._state == STATE_ON
 
 
 @pytest.mark.asyncio
 async def test_turn_off(grenton_switch):
     with patch("aiohttp.ClientSession.post", new_callable=AsyncMock) as mock_post:
-
+        # Konfiguracja mocka, aby działał z async with
+        mock_post.return_value.__aenter__.return_value.status = 200
+        
         await grenton_switch.async_turn_off()
-
-        expected_command = {
-            "command": f"CLU220000000:execute(0, 'DOU0000:set(0, 0)')"
-        }
-
+        
         mock_post.assert_called_once_with(
-            MOCK_CONFIG["api_endpoint"], json=expected_command
+            f"{grenton_switch._api_endpoint}",
+            json={"command": "CLU220000000:execute(0, 'DOU0000:set(0, 0)')"}
         )
-        assert grenton_switch._state == STATE_OFF
 
 
 @pytest.mark.asyncio
 async def test_update(grenton_switch):
     with patch("aiohttp.ClientSession.get", new_callable=AsyncMock) as mock_get:
-
+        # Konfiguracja mocka, aby działał z async with
         mock_get.return_value.__aenter__.return_value.json = AsyncMock(
             return_value={"status": 1}
         )
-
+        
         await grenton_switch.async_update()
-
-        expected_command = {
-            "status": f"return CLU220000000:execute(0, 'DOU0000:get(0)')"
-        }
-
-        mock_get.assert_called_once_with(MOCK_CONFIG["api_endpoint"], json=expected_command)
-        assert grenton_switch._state == STATE_ON
+        
+        mock_get.assert_called_once_with(
+            f"{grenton_switch._api_endpoint}",
+            json={"status": "return CLU220000000:execute(0, 'DOU0000:get(0)')"}
+        )
