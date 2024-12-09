@@ -57,8 +57,8 @@ class GrentonCover(CoverEntity):
         self._reversed = reversed
         self._object_name = object_name
         self._state = None
-        self._current_cover_position = None
-        self._current_cover_tilt_position = None
+        self._current_cover_position = 0
+        self._current_cover_tilt_position = 0
         self._unique_id = f"grenton_{grenton_id.split('->')[1]}"
 
     @property
