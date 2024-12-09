@@ -2,7 +2,7 @@ import pytest
 from unittest.mock import AsyncMock, MagicMock, patch
 from homeassistant.components.switch import SwitchEntity
 from homeassistant.const import STATE_ON, STATE_OFF
-from custom_components.grenton_to_homeassistant import GrentonSwitch  # Zaktualizuj ścieżkę importu
+from custom_components.grenton_objects import GrentonSwitch
 
 @pytest.fixture
 def mock_aiohttp_post():
