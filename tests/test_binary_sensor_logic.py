@@ -12,15 +12,15 @@ async def test_async_update():
     grenton_id = "CLU220000000->DIN0000"
     object_name = "Test Binary Sensor"
     
-    binary_sensor = GrentonBinarySensor(api_endpoint, grenton_id, object_name)
+    obj = GrentonBinarySensor(api_endpoint, grenton_id, object_name)
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 1})
         
-        await binary_sensor.async_update()
+        await obj.async_update()
         
-        assert binary_sensor.is_on
-        assert binary_sensor.unique_id == "grenton_DIN0000"
+        assert obj.is_on
+        assert obj.unique_id == "grenton_DIN0000"
         m.assert_called_once_with(
             api_endpoint,
             method='GET',
@@ -33,15 +33,15 @@ async def test_async_update_off():
     grenton_id = "CLU220000000->DIN0000"
     object_name = "Test Binary Sensor"
     
-    binary_sensor = GrentonBinarySensor(api_endpoint, grenton_id, object_name)
+    obj = GrentonBinarySensor(api_endpoint, grenton_id, object_name)
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 0}) 
         
-        await binary_sensor.async_update()
+        await obj.async_update()
         
-        assert not binary_sensor.is_on
-        assert binary_sensor.unique_id == "grenton_DIN0000"
+        assert not obj.is_on
+        assert obj.unique_id == "grenton_DIN0000"
         m.assert_called_once_with(
             api_endpoint,
             method='GET',
