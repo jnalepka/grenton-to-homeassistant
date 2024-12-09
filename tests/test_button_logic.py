@@ -18,7 +18,7 @@ async def test_async_script_local():
         
         await script.async_press()
         
-        assert script.unique_id == "grenton_script_my_script"
+        assert script.unique_id == "grenton_my_script"
         m.assert_called_once_with(
             api_endpoint,
             method='POST',
@@ -38,7 +38,7 @@ async def test_async_script_remote():
         
         await script.async_press()
         
-        assert script.unique_id == "grenton_script_my_script_2"
+        assert script.unique_id == "grenton_my_script_2"
         m.assert_called_once_with(
             api_endpoint,
             method='POST',
