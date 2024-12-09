@@ -144,4 +144,4 @@ class GrentonClimate(ClimateEntity):
                     self._current_temperature = data.get("status_4")
         except aiohttp.ClientError as ex:
             _LOGGER.error(f"Failed to update the climate state: {ex}")
-            self._state = None
+            self._hvac_mode = HVACMode.OFF
