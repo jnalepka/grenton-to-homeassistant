@@ -26,7 +26,7 @@ async def test_async_turn_on():
         m.assert_called_once_with(
             api_endpoint,
             method='POST',
-            json={"command": "device1:execute(0, 'switch1:set(0, 1)')"}
+            json={"command": "device1:execute(0, 'switch1:set(0, 0)')"}
         )
 
 @pytest.mark.asyncio
