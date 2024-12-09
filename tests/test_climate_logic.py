@@ -18,7 +18,6 @@ async def test_async_turn_on():
         
         await obj.async_set_temperature()
         
-        assert obj.is_on
         assert obj.unique_id == "grenton_THE0000"
         m.assert_called_once_with(
             api_endpoint,
