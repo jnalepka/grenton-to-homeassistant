@@ -11,14 +11,14 @@ async def test_async_script_local():
     grenton_id = "my_script"
     object_name = "Test Script"
     
-    script = GrentonScript(api_endpoint, grenton_id, object_name)
+    obj = GrentonScript(api_endpoint, grenton_id, object_name)
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
         
-        await script.async_press()
+        await obj.async_press()
         
-        assert script.unique_id == "grenton_my_script"
+        assert obj.unique_id == "grenton_my_script"
         m.assert_called_once_with(
             api_endpoint,
             method='POST',
@@ -31,14 +31,14 @@ async def test_async_script_remote():
     grenton_id = "CLU220000000->my_script_2"
     object_name = "Test Script"
     
-    script = GrentonScript(api_endpoint, grenton_id, object_name)
+    obj = GrentonScript(api_endpoint, grenton_id, object_name)
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
         
-        await script.async_press()
+        await obj.async_press()
         
-        assert script.unique_id == "grenton_my_script_2"
+        assert obj.unique_id == "grenton_my_script_2"
         m.assert_called_once_with(
             api_endpoint,
             method='POST',
