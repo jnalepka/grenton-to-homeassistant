@@ -41,7 +41,7 @@ class GrentonScript(ButtonEntity):
         self._object_name = object_name
         self._api_endpoint = api_endpoint
         self._grenton_id = grenton_id
-        self._unique_id = f"grenton_script_{grenton_id.split('->')[1] if '->' in grenton_id else grenton_id}_{object_name}"
+        self._unique_id = f"grenton_{grenton_id.split('->')[1] if '->' in grenton_id else grenton_id}"
         
 
     @property
