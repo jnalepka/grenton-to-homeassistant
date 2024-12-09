@@ -259,7 +259,7 @@ async def test_async_update_zwave():
             json={"status": "return CLU220000000:execute(0, 'ROL0000:get(2)')", "status_2": "return CLU220000000:execute(0, 'ROL0000:get(4)')", "status_3": "return CLU220000000:execute(0, 'ROL0000:get(6)')"}
         )
 
-  @pytest.mark.asyncio
+@pytest.mark.asyncio
 async def test_async_update_reversed():
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ROL0000"
