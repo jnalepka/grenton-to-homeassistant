@@ -19,6 +19,7 @@ async def test_async_turn_on():
         await switch.async_turn_on()
         
         assert switch.is_on
+        assert switch.unique_id == "grenton_DOU0000"
         m.assert_called_once_with(
             api_endpoint,
             method='POST',
@@ -39,6 +40,7 @@ async def test_async_turn_off():
         await switch.async_turn_off()
         
         assert not switch.is_on
+        assert switch.unique_id == "grenton_DOU0000"
         m.assert_called_once_with(
             api_endpoint,
             method='POST',
@@ -59,6 +61,7 @@ async def test_async_update():
         await switch.async_update()
         
         assert switch.is_on
+        assert switch.unique_id == "grenton_DOU0000"
         m.assert_called_once_with(
             api_endpoint,
             method='GET',
@@ -79,6 +82,7 @@ async def test_async_update_off():
         await switch.async_update()
         
         assert not switch.is_on
+        assert switch.unique_id == "grenton_DOU0000"
         m.assert_called_once_with(
             api_endpoint,
             method='GET',
