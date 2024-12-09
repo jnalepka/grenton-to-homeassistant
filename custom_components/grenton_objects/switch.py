@@ -48,7 +48,6 @@ class GrentonSwitch(SwitchEntity):
         self._object_name = object_name
         self._state = None
         self._unique_id = f"grenton_{grenton_id.split('->')[1]}"
-        self._tests_last_command = None #for unit tests
 
     @property
     def name(self):
@@ -66,7 +65,6 @@ class GrentonSwitch(SwitchEntity):
         try:
             grenton_id_part_0, grenton_id_part_1 = self._grenton_id.split('->')
             command = {"command": f"{grenton_id_part_0}:execute(0, '{grenton_id_part_1}:set(0, 1)')"}
-            self._tests_last_command = command #for unit tests
             async with aiohttp.ClientSession() as session:
                 async with session.post(f"{self._api_endpoint}", json=command) as response:
                     response.raise_for_status()
@@ -78,7 +76,6 @@ class GrentonSwitch(SwitchEntity):
         try:
             grenton_id_part_0, grenton_id_part_1 = self._grenton_id.split('->')
             command = {"command": f"{grenton_id_part_0}:execute(0, '{grenton_id_part_1}:set(0, 0)')"}
-            self._tests_last_command = command #for unit tests
             async with aiohttp.ClientSession() as session:
                 async with session.post(f"{self._api_endpoint}", json=command) as response:
                     response.raise_for_status()
@@ -90,7 +87,6 @@ class GrentonSwitch(SwitchEntity):
         try:
             grenton_id_part_0, grenton_id_part_1 = self._grenton_id.split('->')
             command = {"status": f"return {grenton_id_part_0}:execute(0, '{grenton_id_part_1}:get(0)')"}
-            self._tests_last_command = command #for unit tests
             async with aiohttp.ClientSession() as session:
                 async with session.get(f"{self._api_endpoint}", json=command) as response:
                     response.raise_for_status()
