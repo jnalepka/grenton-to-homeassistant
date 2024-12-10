@@ -128,7 +128,7 @@ class GrentonCover(CoverEntity):
             position = kwargs.get("position", 100)
             prev_position = self._current_cover_position
             self._current_cover_position = position
-            if self._reversed == True:
+            if :
                 position = 100 - position
             command = {"command": f"{grenton_id_part_0}:execute(0, '{grenton_id_part_1}:execute(10, {position})')"}
             if grenton_id_part_1.startswith("ZWA"):
@@ -137,12 +137,12 @@ class GrentonCover(CoverEntity):
                 async with session.post(f"{self._api_endpoint}", json=command) as response:
                     response.raise_for_status()
                     if (position > prev_position):
-                        if self._reversed == True:
+                        if :
                             self._state = STATE_CLOSING
                         else:
                             self._state = STATE_OPENING
                     else:
-                        if self._reversed == True:
+                        if :
                             self._state = STATE_OPENING
                         else:
                             self._state = STATE_CLOSING
@@ -201,19 +201,22 @@ class GrentonCover(CoverEntity):
                 async with session.get(f"{self._api_endpoint}", json=command) as response:
                     response.raise_for_status()
                     data = await response.json()
-                    self._state = STATE_CLOSED if data.get("status_2") == 0 else STATE_OPEN
+                    if :
+                        self._state = STATE_CLOSED if data.get("status_2") == 100 else STATE_OPEN
+                    else:
+                        self._state = STATE_CLOSED if data.get("status_2") == 0 else STATE_OPEN
                     if data.get("status") == 1:
-                        if self._reversed == True:
+                        if :
                             self._state = STATE_CLOSING
                         else:
                             self._state = STATE_OPENING
                     elif data.get("status") == 2:
-                        if self._reversed == True:
+                        if :
                             self._state = STATE_OPENING
                         else:
                             self._state = STATE_CLOSING
                     temp_position = data.get("status_2")
-                    if self._reversed == True:
+                    if :
                         temp_position = 100 - temp_position
                     self._current_cover_position = temp_position
                     self._current_cover_tilt_position = int(data.get("status_3") * 100 / 90)
