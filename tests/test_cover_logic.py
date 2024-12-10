@@ -102,7 +102,7 @@ async def test_async_set_cover_position_reversed():
         m.post(api_endpoint, status=200, payload={"status": "ok"})
         
         await obj.async_set_cover_position()
-        assert obj.is_closing
+        assert obj.is_opening
         assert obj.unique_id == "grenton_ROL0000"
         m.assert_called_once_with(
             api_endpoint,
@@ -144,7 +144,7 @@ async def test_async_set_cover_position_reversed_zwave():
         m.post(api_endpoint, status=200, payload={"status": "ok"})
         
         await obj.async_set_cover_position()
-        assert obj.is_closing
+        assert obj.is_opening
         assert obj.unique_id == "grenton_ZWA0000"
         m.assert_called_once_with(
             api_endpoint,
@@ -227,8 +227,8 @@ async def test_async_update():
         
         await obj.async_update()
         assert obj.is_opening
-        assert current_cover_position == 50
-        assert current_cover_tilt_position == 100
+        assert obj.current_cover_position == 50
+        assert obj.current_cover_tilt_position == 100
         assert obj.unique_id == "grenton_ROL0000"
         m.assert_called_once_with(
             api_endpoint,
@@ -250,8 +250,8 @@ async def test_async_update_zwave():
         
         await obj.async_update()
         assert not obj.is_closed
-        assert current_cover_position == 50
-        assert current_cover_tilt_position == 100
+        assert obj.current_cover_position == 50
+        assert obj.current_cover_tilt_position == 100
         assert obj.unique_id == "grenton_ROL0000"
         m.assert_called_once_with(
             api_endpoint,
@@ -273,8 +273,8 @@ async def test_async_update_reversed():
         
         await obj.async_update()
         assert obj.is_closed
-        assert current_cover_position == 0
-        assert current_cover_tilt_position == 100
+        assert obj.current_cover_position == 0
+        assert obj.current_cover_tilt_position == 100
         assert obj.unique_id == "grenton_ROL0000"
         m.assert_called_once_with(
             api_endpoint,
@@ -296,8 +296,8 @@ async def test_async_update_zwave_reversed():
         
         await obj.async_update()
         assert obj.is_opening
-        assert current_cover_position == 0
-        assert current_cover_tilt_position == 0
+        assert obj.current_cover_position == 0
+        assert obj.current_cover_tilt_position == 0
         assert obj.unique_id == "grenton_ROL0000"
         m.assert_called_once_with(
             api_endpoint,
