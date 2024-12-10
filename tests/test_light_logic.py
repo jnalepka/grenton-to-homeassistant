@@ -70,7 +70,7 @@ async def test_async_turn_on_dimmer_zwave():
         m.assert_called_once_with(
             api_endpoint,
             method='POST',
-            json={"command": "CLU220000000:execute(0, 'ZWA0000:set(0, 255)')"}
+            json={"command": "CLU220000000:execute(0, 'ZWA0000:execute(0, 255)')"}
         )
 
 @pytest.mark.asyncio
@@ -93,7 +93,7 @@ async def test_async_turn_on_dimmer_rgbw_r():
         m.assert_called_once_with(
             api_endpoint,
             method='POST',
-            json={"command": "CLU220000000:execute(0, 'LED0000:set(3, 255)')"}
+            json={"command": "CLU220000000:execute(0, 'LED0000:execute(3, 255)')"}
         )
 
 @pytest.mark.asyncio
@@ -116,7 +116,7 @@ async def test_async_turn_on_dimmer_rgbw_g():
         m.assert_called_once_with(
             api_endpoint,
             method='POST',
-            json={"command": "CLU220000000:execute(0, 'LED0000:set(4, 255)')"}
+            json={"command": "CLU220000000:execute(0, 'LED0000:execute(4, 255)')"}
         )
 
 @pytest.mark.asyncio
@@ -139,7 +139,7 @@ async def test_async_turn_on_dimmer_rgbw_b():
         m.assert_called_once_with(
             api_endpoint,
             method='POST',
-            json={"command": "CLU220000000:execute(0, 'LED0000:set(5, 255)')"}
+            json={"command": "CLU220000000:execute(0, 'LED0000:execute(5, 255)')"}
         )
 
 @pytest.mark.asyncio
@@ -162,7 +162,7 @@ async def test_async_turn_on_dimmer_rgbw_w():
         m.assert_called_once_with(
             api_endpoint,
             method='POST',
-            json={"command": "CLU220000000:execute(0, 'LED0000:set(12, 255)')"}
+            json={"command": "CLU220000000:execute(0, 'LED0000:execute(12, 255)')"}
         )
 
 @pytest.mark.asyncio
@@ -185,7 +185,7 @@ async def test_async_turn_on_rgb():
         m.assert_called_once_with(
             api_endpoint,
             method='POST',
-            json={"command": "CLU220000000:execute(0, 'LED0000:set(6, \"000000\")')"}
+            json={"command": "CLU220000000:execute(0, 'LED0000:execute(6, \"000000\")')"}
         )
 
 @pytest.mark.asyncio
@@ -208,7 +208,7 @@ async def test_async_turn_on_rgb():
         m.assert_called_once_with(
             api_endpoint,
             method='POST',
-            json={"command": "CLU220000000:execute(0, 'ZWA0000:set(3, \"000000\")')"}
+            json={"command": "CLU220000000:execute(0, 'ZWA0000:execute(3, \"000000\")')"}
         )
         
 @pytest.mark.asyncio
@@ -231,5 +231,181 @@ async def test_async_turn_on_rgb_no_rgb_color():
         m.assert_called_once_with(
             api_endpoint,
             method='POST',
-            json={"command": "CLU220000000:execute(0, 'RGB0000:set(0, 1)')"}
+            json={"command": "CLU220000000:execute(0, 'RGB0000:execute(0, 1)')"}
+        )
+
+@pytest.mark.asyncio
+async def test_async_turn_off_dout():
+    api_endpoint = "http://192.168.0.4/HAlistener"
+    grenton_id = "CLU220000000->DOU0000"
+    object_name = "Test lIGHT"
+    grenton_type = "DOUT"
+    
+    obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name)
+    
+    with aioresponses() as m:
+        m.post(api_endpoint, status=200, payload={"status": "ok"})
+        
+        await obj.async_turn_on()
+        
+        assert not obj.is_on
+        assert obj.unique_id == "grenton_DOU0000"
+        m.assert_called_once_with(
+            api_endpoint,
+            method='POST',
+            json={"command": "CLU220000000:execute(0, 'DOU0000:set(0, 0)')"}
+        )
+
+@pytest.mark.asyncio
+async def test_async_turn_off_dimmer():
+    api_endpoint = "http://192.168.0.4/HAlistener"
+    grenton_id = "CLU220000000->DOU0000"
+    object_name = "Test lIGHT"
+    grenton_type = "DIMMER"
+    
+    obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name)
+    
+    with aioresponses() as m:
+        m.post(api_endpoint, status=200, payload={"status": "ok"})
+        
+        await obj.async_turn_on()
+        
+        assert not obj.is_on
+        assert obj.unique_id == "grenton_DOU0000"
+        m.assert_called_once_with(
+            api_endpoint,
+            method='POST',
+            json={"command": "CLU220000000:execute(0, 'DOU0000:set(0, 0)')"}
+        )
+
+@pytest.mark.asyncio
+async def test_async_turn_off_dimmer_zwave():
+    api_endpoint = "http://192.168.0.4/HAlistener"
+    grenton_id = "CLU220000000->ZWA0000"
+    object_name = "Test lIGHT"
+    grenton_type = "DIMMER"
+    
+    obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name)
+    
+    with aioresponses() as m:
+        m.post(api_endpoint, status=200, payload={"status": "ok"})
+        
+        await obj.async_turn_on()
+        
+        assert not obj.is_on
+        assert obj.unique_id == "grenton_ZWA0000"
+        m.assert_called_once_with(
+            api_endpoint,
+            method='POST',
+            json={"command": "CLU220000000:execute(0, 'ZWA0000:execute(0, 0)')"}
+        )
+
+@pytest.mark.asyncio
+async def test_async_turn_off_rgb():
+    api_endpoint = "http://192.168.0.4/HAlistener"
+    grenton_id = "CLU220000000->RGB0000"
+    object_name = "Test lIGHT"
+    grenton_type = "RGB"
+    
+    obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name)
+    
+    with aioresponses() as m:
+        m.post(api_endpoint, status=200, payload={"status": "ok"})
+        
+        await obj.async_turn_on()
+        
+        assert not obj.is_on
+        assert obj.unique_id == "grenton_RGB0000"
+        m.assert_called_once_with(
+            api_endpoint,
+            method='POST',
+            json={"command": "CLU220000000:execute(0, 'RGB0000:execute(0, 0)')"}
+        )
+
+@pytest.mark.asyncio
+async def test_async_turn_off_rgb_led_r():
+    api_endpoint = "http://192.168.0.4/HAlistener"
+    grenton_id = "CLU220000000->RGB0000"
+    object_name = "Test lIGHT"
+    grenton_type = "LED_R"
+    
+    obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name)
+    
+    with aioresponses() as m:
+        m.post(api_endpoint, status=200, payload={"status": "ok"})
+        
+        await obj.async_turn_on()
+        
+        assert not obj.is_on
+        assert obj.unique_id == "grenton_RGB0000"
+        m.assert_called_once_with(
+            api_endpoint,
+            method='POST',
+            json={"command": "CLU220000000:execute(0, 'RGB0000:execute(3, 0)')"}
+        )
+
+@pytest.mark.asyncio
+async def test_async_turn_off_rgb_led_g():
+    api_endpoint = "http://192.168.0.4/HAlistener"
+    grenton_id = "CLU220000000->RGB0000"
+    object_name = "Test lIGHT"
+    grenton_type = "LED_G"
+    
+    obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name)
+    
+    with aioresponses() as m:
+        m.post(api_endpoint, status=200, payload={"status": "ok"})
+        
+        await obj.async_turn_on()
+        
+        assert not obj.is_on
+        assert obj.unique_id == "grenton_RGB0000"
+        m.assert_called_once_with(
+            api_endpoint,
+            method='POST',
+            json={"command": "CLU220000000:execute(0, 'RGB0000:execute(4, 0)')"}
+        )
+
+@pytest.mark.asyncio
+async def test_async_turn_off_rgb_led_b():
+    api_endpoint = "http://192.168.0.4/HAlistener"
+    grenton_id = "CLU220000000->RGB0000"
+    object_name = "Test lIGHT"
+    grenton_type = "LED_B"
+    
+    obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name)
+    
+    with aioresponses() as m:
+        m.post(api_endpoint, status=200, payload={"status": "ok"})
+        
+        await obj.async_turn_on()
+        
+        assert not obj.is_on
+        assert obj.unique_id == "grenton_RGB0000"
+        m.assert_called_once_with(
+            api_endpoint,
+            method='POST',
+            json={"command": "CLU220000000:execute(0, 'RGB0000:execute(5, 0)')"}
+        )
+
+@pytest.mark.asyncio
+async def test_async_turn_off_rgb_led_w():
+    api_endpoint = "http://192.168.0.4/HAlistener"
+    grenton_id = "CLU220000000->RGB0000"
+    object_name = "Test lIGHT"
+    grenton_type = "LED_W"
+    
+    obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name)
+    
+    with aioresponses() as m:
+        m.post(api_endpoint, status=200, payload={"status": "ok"})
+        
+        await obj.async_turn_on()
+        
+        assert not obj.is_on
+        assert obj.unique_id == "grenton_RGB0000"
+        m.assert_called_once_with(
+            api_endpoint,
+            method='POST',
+            json={"command": "CLU220000000:execute(0, 'RGB0000:execute(12, 0)')"}
         )
