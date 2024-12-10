@@ -239,7 +239,7 @@ async def test_async_update():
 @pytest.mark.asyncio
 async def test_async_update_zwave():
     api_endpoint = "http://192.168.0.4/HAlistener"
-    grenton_id = "CLU220000000->ROL0000"
+    grenton_id = "CLU220000000->ZWA0000"
     reversed = False
     object_name = "Test Switch"
     
@@ -252,11 +252,11 @@ async def test_async_update_zwave():
         assert not obj.is_closed
         assert obj.current_cover_position == 50
         assert obj.current_cover_tilt_position == 100
-        assert obj.unique_id == "grenton_ROL0000"
+        assert obj.unique_id == "grenton_ZWA0000"
         m.assert_called_once_with(
             api_endpoint,
             method='GET',
-            json={"status": "return CLU220000000:execute(0, 'ROL0000:get(2)')", "status_2": "return CLU220000000:execute(0, 'ROL0000:get(4)')", "status_3": "return CLU220000000:execute(0, 'ROL0000:get(6)')"}
+            json={"status": "return CLU220000000:execute(0, 'ZWA0000:get(2)')", "status_2": "return CLU220000000:execute(0, 'ZWA0000:get(4)')", "status_3": "return CLU220000000:execute(0, 'ZWA0000:get(6)')"}
         )
 
 @pytest.mark.asyncio
@@ -285,7 +285,7 @@ async def test_async_update_reversed():
 @pytest.mark.asyncio
 async def test_async_update_zwave_reversed():
     api_endpoint = "http://192.168.0.4/HAlistener"
-    grenton_id = "CLU220000000->ROL0000"
+    grenton_id = "CLU220000000->ZWA0000"
     reversed = True
     object_name = "Test Switch"
     
@@ -298,9 +298,9 @@ async def test_async_update_zwave_reversed():
         assert obj.is_opening
         assert obj.current_cover_position == 0
         assert obj.current_cover_tilt_position == 0
-        assert obj.unique_id == "grenton_ROL0000"
+        assert obj.unique_id == "grenton_ZWA0000"
         m.assert_called_once_with(
             api_endpoint,
             method='GET',
-            json={"status": "return CLU220000000:execute(0, 'ROL0000:get(2)')", "status_2": "return CLU220000000:execute(0, 'ROL0000:get(4)')", "status_3": "return CLU220000000:execute(0, 'ROL0000:get(6)')"}
+            json={"status": "return CLU220000000:execute(0, 'ZWA0000:get(2)')", "status_2": "return CLU220000000:execute(0, 'ZWA0000:get(4)')", "status_3": "return CLU220000000:execute(0, 'ZWA0000:get(6)')"}
         )
