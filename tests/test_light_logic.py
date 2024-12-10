@@ -9,7 +9,7 @@ from custom_components.grenton_objects.light import GrentonLight
 async def test_async_turn_on_dout():
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->DOU0000"
-    object_name = "Test lIGHT"
+    object_name = "Test Light"
     grenton_type = "DOUT"
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name)
@@ -31,7 +31,7 @@ async def test_async_turn_on_dout():
 async def test_async_turn_on_dimmer():
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->DIM0000"
-    object_name = "Test lIGHT"
+    object_name = "Test Light"
     grenton_type = "DIMMER"
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name)
@@ -42,7 +42,7 @@ async def test_async_turn_on_dimmer():
         await obj.async_turn_on()
         
         assert obj.is_on
-        assert obj.brightness = 255
+        assert obj.brightness == 255
         assert obj.unique_id == "grenton_DIM0000"
         m.assert_called_once_with(
             api_endpoint,
@@ -54,7 +54,7 @@ async def test_async_turn_on_dimmer():
 async def test_async_turn_on_dimmer_zwave():
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ZWA0000"
-    object_name = "Test lIGHT"
+    object_name = "Test Light"
     grenton_type = "DIMMER"
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name)
@@ -65,7 +65,7 @@ async def test_async_turn_on_dimmer_zwave():
         await obj.async_turn_on()
         
         assert obj.is_on
-        assert obj.brightness = 255
+        assert obj.brightness == 255
         assert obj.unique_id == "grenton_ZWA0000"
         m.assert_called_once_with(
             api_endpoint,
@@ -77,7 +77,7 @@ async def test_async_turn_on_dimmer_zwave():
 async def test_async_turn_on_dimmer_rgbw_r():
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->LED0000"
-    object_name = "Test lIGHT"
+    object_name = "Test Light"
     grenton_type = "LED_R"
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name)
@@ -88,7 +88,7 @@ async def test_async_turn_on_dimmer_rgbw_r():
         await obj.async_turn_on()
         
         assert obj.is_on
-        assert obj.brightness = 255
+        assert obj.brightness == 255
         assert obj.unique_id == "grenton_LED0000"
         m.assert_called_once_with(
             api_endpoint,
@@ -100,7 +100,7 @@ async def test_async_turn_on_dimmer_rgbw_r():
 async def test_async_turn_on_dimmer_rgbw_g():
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->LED0000"
-    object_name = "Test lIGHT"
+    object_name = "Test Light"
     grenton_type = "LED_G"
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name)
@@ -111,7 +111,7 @@ async def test_async_turn_on_dimmer_rgbw_g():
         await obj.async_turn_on()
         
         assert obj.is_on
-        assert obj.brightness = 255
+        assert obj.brightness == 255
         assert obj.unique_id == "grenton_LED0000"
         m.assert_called_once_with(
             api_endpoint,
@@ -123,7 +123,7 @@ async def test_async_turn_on_dimmer_rgbw_g():
 async def test_async_turn_on_dimmer_rgbw_b():
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->LED0000"
-    object_name = "Test lIGHT"
+    object_name = "Test Light"
     grenton_type = "LED_B"
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name)
@@ -134,7 +134,7 @@ async def test_async_turn_on_dimmer_rgbw_b():
         await obj.async_turn_on()
         
         assert obj.is_on
-        assert obj.brightness = 255
+        assert obj.brightness == 255
         assert obj.unique_id == "grenton_LED0000"
         m.assert_called_once_with(
             api_endpoint,
@@ -146,7 +146,7 @@ async def test_async_turn_on_dimmer_rgbw_b():
 async def test_async_turn_on_dimmer_rgbw_w():
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->LED0000"
-    object_name = "Test lIGHT"
+    object_name = "Test Light"
     grenton_type = "LED_W"
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name)
@@ -157,7 +157,7 @@ async def test_async_turn_on_dimmer_rgbw_w():
         await obj.async_turn_on()
         
         assert obj.is_on
-        assert obj.brightness = 255
+        assert obj.brightness == 255
         assert obj.unique_id == "grenton_LED0000"
         m.assert_called_once_with(
             api_endpoint,
@@ -169,7 +169,7 @@ async def test_async_turn_on_dimmer_rgbw_w():
 async def test_async_turn_on_rgb():
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->LED0000"
-    object_name = "Test lIGHT"
+    object_name = "Test Light"
     grenton_type = "RGB"
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name)
@@ -192,7 +192,7 @@ async def test_async_turn_on_rgb():
 async def test_async_turn_on_rgb():
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ZWA0000"
-    object_name = "Test lIGHT"
+    object_name = "Test Light"
     grenton_type = "RGB"
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name)
@@ -215,7 +215,7 @@ async def test_async_turn_on_rgb():
 async def test_async_turn_on_rgb_no_rgb_color():
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->RGB0000"
-    object_name = "Test lIGHT"
+    object_name = "Test Light"
     grenton_type = "RGB"
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name)
@@ -238,7 +238,7 @@ async def test_async_turn_on_rgb_no_rgb_color():
 async def test_async_turn_off_dout():
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->DOU0000"
-    object_name = "Test lIGHT"
+    object_name = "Test Light"
     grenton_type = "DOUT"
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name)
@@ -260,7 +260,7 @@ async def test_async_turn_off_dout():
 async def test_async_turn_off_dimmer():
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->DOU0000"
-    object_name = "Test lIGHT"
+    object_name = "Test Light"
     grenton_type = "DIMMER"
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name)
@@ -282,7 +282,7 @@ async def test_async_turn_off_dimmer():
 async def test_async_turn_off_dimmer_zwave():
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ZWA0000"
-    object_name = "Test lIGHT"
+    object_name = "Test Light"
     grenton_type = "DIMMER"
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name)
@@ -304,7 +304,7 @@ async def test_async_turn_off_dimmer_zwave():
 async def test_async_turn_off_rgb():
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->RGB0000"
-    object_name = "Test lIGHT"
+    object_name = "Test Light"
     grenton_type = "RGB"
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name)
@@ -326,7 +326,7 @@ async def test_async_turn_off_rgb():
 async def test_async_turn_off_rgb_led_r():
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->RGB0000"
-    object_name = "Test lIGHT"
+    object_name = "Test Light"
     grenton_type = "LED_R"
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name)
@@ -348,7 +348,7 @@ async def test_async_turn_off_rgb_led_r():
 async def test_async_turn_off_rgb_led_g():
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->RGB0000"
-    object_name = "Test lIGHT"
+    object_name = "Test Light"
     grenton_type = "LED_G"
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name)
@@ -370,7 +370,7 @@ async def test_async_turn_off_rgb_led_g():
 async def test_async_turn_off_rgb_led_b():
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->RGB0000"
-    object_name = "Test lIGHT"
+    object_name = "Test Light"
     grenton_type = "LED_B"
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name)
@@ -392,7 +392,7 @@ async def test_async_turn_off_rgb_led_b():
 async def test_async_turn_off_rgb_led_w():
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->RGB0000"
-    object_name = "Test lIGHT"
+    object_name = "Test Light"
     grenton_type = "LED_W"
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name)
@@ -408,4 +408,26 @@ async def test_async_turn_off_rgb_led_w():
             api_endpoint,
             method='POST',
             json={"command": "CLU220000000:execute(0, 'RGB0000:execute(12, 0)')"}
+        )
+
+@pytest.mark.asyncio
+async def test_async_update():
+    api_endpoint = "http://192.168.0.4/HAlistener"
+    grenton_id = "CLU220000000->DOU0000"
+    object_name = "Test Light"
+    grenton_type = "DOUT"
+    
+    obj = GrentonSwitch(api_endpoint, grenton_id, grenton_type, object_name)
+    
+    with aioresponses() as m:
+        m.get(api_endpoint, status=200, payload={"status": 1})
+        
+        await obj.async_update()
+        
+        assert obj.is_on
+        assert obj.unique_id == "grenton_DOU0000"
+        m.assert_called_once_with(
+            api_endpoint,
+            method='GET',
+            json={"status": "return CLU220000000:execute(0, 'DOU0000:get(0)')"}
         )
