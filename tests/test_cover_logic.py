@@ -10,7 +10,7 @@ async def test_async_open_cover():
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ROL0000"
     reversed = False
-    object_name = "Test Switch"
+    object_name = "Test Cover"
     
     obj = GrentonCover(api_endpoint, grenton_id, reversed, object_name)
     
@@ -31,7 +31,7 @@ async def test_async_close_cover():
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ROL0000"
     reversed = False
-    object_name = "Test Switch"
+    object_name = "Test Cover"
     
     obj = GrentonCover(api_endpoint, grenton_id, reversed, object_name)
     
@@ -52,7 +52,7 @@ async def test_async_stop_cover():
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ROL0000"
     reversed = False
-    object_name = "Test Switch"
+    object_name = "Test Cover"
     
     obj = GrentonCover(api_endpoint, grenton_id, reversed, object_name)
     
@@ -73,7 +73,7 @@ async def test_async_set_cover_position():
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ROL0000"
     reversed = False
-    object_name = "Test Switch"
+    object_name = "Test Cover"
     
     obj = GrentonCover(api_endpoint, grenton_id, reversed, object_name)
     
@@ -94,7 +94,7 @@ async def test_async_set_cover_position_reversed():
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ROL0000"
     reversed = True
-    object_name = "Test Switch"
+    object_name = "Test Cover"
     
     obj = GrentonCover(api_endpoint, grenton_id, reversed, object_name)
     
@@ -115,7 +115,7 @@ async def test_async_set_cover_position_zwave():
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ZWA0000"
     reversed = False
-    object_name = "Test Switch"
+    object_name = "Test Cover"
     
     obj = GrentonCover(api_endpoint, grenton_id, reversed, object_name)
     
@@ -136,7 +136,7 @@ async def test_async_set_cover_position_reversed_zwave():
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ZWA0000"
     reversed = True
-    object_name = "Test Switch"
+    object_name = "Test Cover"
     
     obj = GrentonCover(api_endpoint, grenton_id, reversed, object_name)
     
@@ -158,7 +158,7 @@ async def test_async_set_cover_tilt_position():
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ROL0000"
     reversed = False
-    object_name = "Test Switch"
+    object_name = "Test Cover"
     
     obj = GrentonCover(api_endpoint, grenton_id, reversed, object_name)
     
@@ -178,7 +178,7 @@ async def test_async_open_cover_tilt():
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ROL0000"
     reversed = False
-    object_name = "Test Switch"
+    object_name = "Test Cover"
     
     obj = GrentonCover(api_endpoint, grenton_id, reversed, object_name)
     
@@ -198,7 +198,7 @@ async def test_async_close_cover_tilt():
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ROL0000"
     reversed = False
-    object_name = "Test Switch"
+    object_name = "Test Cover"
     
     obj = GrentonCover(api_endpoint, grenton_id, reversed, object_name)
     
@@ -218,7 +218,7 @@ async def test_async_update():
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ROL0000"
     reversed = False
-    object_name = "Test Switch"
+    object_name = "Test Cover"
     
     obj = GrentonCover(api_endpoint, grenton_id, reversed, object_name)
     
@@ -241,7 +241,7 @@ async def test_async_update_zwave():
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ZWA0000"
     reversed = False
-    object_name = "Test Switch"
+    object_name = "Test Cover"
     
     obj = GrentonCover(api_endpoint, grenton_id, reversed, object_name)
     
@@ -264,7 +264,7 @@ async def test_async_update_reversed():
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ROL0000"
     reversed = True
-    object_name = "Test Switch"
+    object_name = "Test Cover"
     
     obj = GrentonCover(api_endpoint, grenton_id, reversed, object_name)
     
@@ -287,7 +287,7 @@ async def test_async_update_zwave_reversed():
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ZWA0000"
     reversed = True
-    object_name = "Test Switch"
+    object_name = "Test Cover"
     
     obj = GrentonCover(api_endpoint, grenton_id, reversed, object_name)
     
