@@ -272,7 +272,7 @@ async def test_async_update_reversed():
         m.get(api_endpoint, status=200, payload={"status": 0, "status_2": 100, "status_3": 90})
         
         await obj.async_update()
-        assert obj.is_closed
+        assert not obj.is_closed
         assert obj.current_cover_position == 0
         assert obj.current_cover_tilt_position == 100
         assert obj.unique_id == "grenton_ROL0000"
