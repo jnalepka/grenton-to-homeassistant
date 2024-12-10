@@ -154,7 +154,7 @@ class GrentonCover(CoverEntity):
             grenton_id_part_0, grenton_id_part_1 = self._grenton_id.split('->')
             tilt_position = kwargs.get("tilt_position", 100)
             self._current_cover_tilt_position = tilt_position
-            tilt_position = tilt_position * 90 / 100
+            tilt_position = int(tilt_position * 90 / 100)
             command = {"command": f"{grenton_id_part_0}:execute(0, '{grenton_id_part_1}:execute(9, {tilt_position})')"}
             async with aiohttp.ClientSession() as session:
                 async with session.post(f"{self._api_endpoint}", json=command) as response:
@@ -216,7 +216,7 @@ class GrentonCover(CoverEntity):
                     if self._reversed == True:
                         temp_position = 100 - temp_position
                     self._current_cover_position = temp_position
-                    self._current_cover_tilt_position = data.get("status_3") * 100 / 90
+                    self._current_cover_tilt_position = int(data.get("status_3") * 100 / 90)
         except aiohttp.ClientError as ex:
             _LOGGER.error(f"Failed to update the cover state: {ex}")
             self._state = None
