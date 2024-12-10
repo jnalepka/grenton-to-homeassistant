@@ -152,7 +152,7 @@ class GrentonCover(CoverEntity):
     async def async_set_cover_tilt_position(self, **kwargs):
         try:
             grenton_id_part_0, grenton_id_part_1 = self._grenton_id.split('->')
-            tilt_position = kwargs.get("tilt_position", 90)
+            tilt_position = kwargs.get("tilt_position", 100)
             self._current_cover_tilt_position = tilt_position
             tilt_position = tilt_position * 90 / 100
             command = {"command": f"{grenton_id_part_0}:execute(0, '{grenton_id_part_1}:execute(9, {tilt_position})')"}
