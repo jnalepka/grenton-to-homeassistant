@@ -1,6 +1,5 @@
 import pytest
 from aioresponses import aioresponses
-from homeassistant.setup import async_setup_component
 from custom_components.grenton_objects.binary_sensor import GrentonBinarySensor
 
 @pytest.mark.asyncio
