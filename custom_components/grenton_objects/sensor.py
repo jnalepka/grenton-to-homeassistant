@@ -28,6 +28,7 @@ from .const import (
 import logging
 import json
 import voluptuous as vol
+import re
 from homeassistant.components.sensor import (
     SensorEntity,
     PLATFORM_SCHEMA
@@ -148,7 +149,7 @@ class GrentonSensor(SensorEntity):
         try:
             if len(self._grenton_id.split('->')) == 1:
                 command = {"status": f"return getVar(\"{self._grenton_id}\")"}
-            elif self._grenton_id.split('->')[1].isupper():
+            elif re.fullmatch(r"[A-Z]{3}\d{4}", self._grenton_id.split('->')[1]):
                 grenton_type_mapping = {
                     CONF_GRENTON_TYPE_MODBUS: 14,
                     CONF_GRENTON_TYPE_MODBUS_VALUE: 20,
