@@ -660,3 +660,51 @@ async def test_async_update_rgb():
             method='GET',
             json={"status": "return CLU220000000:execute(0, 'LED0000:get(0)')", "status": "return CLU220000000:execute(0, 'LED0000:get(6)')"}
         )
+
+@pytest.mark.asyncio
+async def test_async_update_rgb_off():
+    api_endpoint = "http://192.168.0.4/HAlistener"
+    grenton_id = "CLU220000000->LED0000"
+    object_name = "Test Light"
+    grenton_type = "RGB"
+    
+    obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name)
+    
+    with aioresponses() as m:
+        m.get(api_endpoint, status=200, payload={"status": 0, "status_2": "#ffffff"})
+        
+        await obj.async_update()
+        
+        assert not obj.is_on
+        assert obj.brightness == 0
+        assert obj.rgb_color == [255, 255, 255]
+        assert obj.unique_id == "grenton_LED0000"
+        m.assert_called_once_with(
+            api_endpoint,
+            method='GET',
+            json={"status": "return CLU220000000:execute(0, 'LED0000:get(0)')", "status": "return CLU220000000:execute(0, 'LED0000:get(6)')"}
+        )
+
+@pytest.mark.asyncio
+async def test_async_update_rgb_zwave():
+    api_endpoint = "http://192.168.0.4/HAlistener"
+    grenton_id = "CLU220000000->ZWA0000"
+    object_name = "Test Light"
+    grenton_type = "RGB"
+    
+    obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name)
+    
+    with aioresponses() as m:
+        m.get(api_endpoint, status=200, payload={"status": 1, "status_2": "#ffffff"})
+        
+        await obj.async_update()
+        
+        assert obj.is_on
+        assert obj.brightness == 255
+        assert obj.rgb_color == [255, 255, 255]
+        assert obj.unique_id == "grenton_ZWA0000"
+        m.assert_called_once_with(
+            api_endpoint,
+            method='GET',
+            json={"status": "return CLU220000000:execute(0, 'ZWA0000:get(0)')", "status": "return CLU220000000:execute(0, 'ZWA0000:get(3)')"}
+        )
