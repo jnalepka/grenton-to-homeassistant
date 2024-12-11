@@ -170,4 +170,4 @@ class GrentonSensor(SensorEntity):
                     self._native_value = data.get("status")
         except aiohttp.ClientError as ex:
             _LOGGER.error(f"Failed to update the switch state: {ex}")
-            self._state = None
+            self._native_value = None
