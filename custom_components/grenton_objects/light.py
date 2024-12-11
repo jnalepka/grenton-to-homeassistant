@@ -193,7 +193,7 @@ class GrentonLight(LightEntity):
                 async with session.post(f"{self._api_endpoint}", json=command) as response:
                     response.raise_for_status()
                     self._state = STATE_ON
-                    self._brightness = None
+                    #self._brightness = None
         except aiohttp.ClientError as ex:
             _LOGGER.error(f"Failed to turn on the light: {ex}")
             
