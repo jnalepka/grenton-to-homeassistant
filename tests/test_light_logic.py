@@ -411,7 +411,7 @@ async def test_async_turn_off_rgb_led_w():
         )
 
 @pytest.mark.asyncio
-async def test_async_update():
+async def test_async_update_dout():
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->DOU0000"
     object_name = "Test Light"
@@ -430,4 +430,233 @@ async def test_async_update():
             api_endpoint,
             method='GET',
             json={"status": "return CLU220000000:execute(0, 'DOU0000:get(0)')"}
+        )
+
+@pytest.mark.asyncio
+async def test_async_update_dout_off():
+    api_endpoint = "http://192.168.0.4/HAlistener"
+    grenton_id = "CLU220000000->DOU0000"
+    object_name = "Test Light"
+    grenton_type = "DOUT"
+    
+    obj = GrentonSwitch(api_endpoint, grenton_id, grenton_type, object_name)
+    
+    with aioresponses() as m:
+        m.get(api_endpoint, status=200, payload={"status": 0})
+        
+        await obj.async_update()
+        
+        assert not obj.is_on
+        assert obj.unique_id == "grenton_DOU0000"
+        m.assert_called_once_with(
+            api_endpoint,
+            method='GET',
+            json={"status": "return CLU220000000:execute(0, 'DOU0000:get(0)')"}
+        )
+
+@pytest.mark.asyncio
+async def test_async_update_dimmer():
+    api_endpoint = "http://192.168.0.4/HAlistener"
+    grenton_id = "CLU220000000->DIM0000"
+    object_name = "Test Light"
+    grenton_type = "DIMMER"
+    
+    obj = GrentonSwitch(api_endpoint, grenton_id, grenton_type, object_name)
+    
+    with aioresponses() as m:
+        m.get(api_endpoint, status=200, payload={"status": 1})
+        
+        await obj.async_update()
+        
+        assert obj.is_on
+        assert obj.brightness == 255
+        assert obj.unique_id == "grenton_DIM0000"
+        m.assert_called_once_with(
+            api_endpoint,
+            method='GET',
+            json={"status": "return CLU220000000:execute(0, 'DIM0000:get(0)')"}
+        )
+
+@pytest.mark.asyncio
+async def test_async_update_dimmer_off():
+    api_endpoint = "http://192.168.0.4/HAlistener"
+    grenton_id = "CLU220000000->DIM0000"
+    object_name = "Test Light"
+    grenton_type = "DIMMER"
+    
+    obj = GrentonSwitch(api_endpoint, grenton_id, grenton_type, object_name)
+    
+    with aioresponses() as m:
+        m.get(api_endpoint, status=200, payload={"status": 0})
+        
+        await obj.async_update()
+        
+        assert obj.is_on
+        assert obj.brightness == 0
+        assert obj.unique_id == "grenton_DIM0000"
+        m.assert_called_once_with(
+            api_endpoint,
+            method='GET',
+            json={"status": "return CLU220000000:execute(0, 'DIM0000:get(0)')"}
+        )
+
+@pytest.mark.asyncio
+async def test_async_update_dimmer_zwave():
+    api_endpoint = "http://192.168.0.4/HAlistener"
+    grenton_id = "CLU220000000->ZWA0000"
+    object_name = "Test Light"
+    grenton_type = "DIMMER"
+    
+    obj = GrentonSwitch(api_endpoint, grenton_id, grenton_type, object_name)
+    
+    with aioresponses() as m:
+        m.get(api_endpoint, status=200, payload={"status": 1})
+        
+        await obj.async_update()
+        
+        assert obj.is_on
+        assert obj.brightness == 255
+        assert obj.unique_id == "grenton_ZWA0000"
+        m.assert_called_once_with(
+            api_endpoint,
+            method='GET',
+            json={"status": "return CLU220000000:execute(0, 'ZWA0000:get(0)')"}
+        )
+
+@pytest.mark.asyncio
+async def test_async_update_dimmer_zwave_off():
+    api_endpoint = "http://192.168.0.4/HAlistener"
+    grenton_id = "CLU220000000->ZWA0000"
+    object_name = "Test Light"
+    grenton_type = "DIMMER"
+    
+    obj = GrentonSwitch(api_endpoint, grenton_id, grenton_type, object_name)
+    
+    with aioresponses() as m:
+        m.get(api_endpoint, status=200, payload={"status": 0})
+        
+        await obj.async_update()
+        
+        assert not obj.is_on
+        assert obj.brightness == 0
+        assert obj.unique_id == "grenton_ZWA0000"
+        m.assert_called_once_with(
+            api_endpoint,
+            method='GET',
+            json={"status": "return CLU220000000:execute(0, 'ZWA0000:get(0)')"}
+        )
+
+@pytest.mark.asyncio
+async def test_async_update_led_r():
+    api_endpoint = "http://192.168.0.4/HAlistener"
+    grenton_id = "CLU220000000->LED0000"
+    object_name = "Test Light"
+    grenton_type = "LED_R"
+    
+    obj = GrentonSwitch(api_endpoint, grenton_id, grenton_type, object_name)
+    
+    with aioresponses() as m:
+        m.get(api_endpoint, status=200, payload={"status": 1})
+        
+        await obj.async_update()
+        
+        assert obj.is_on
+        assert obj.brightness == 255
+        assert obj.unique_id == "grenton_LED0000"
+        m.assert_called_once_with(
+            api_endpoint,
+            method='GET',
+            json={"status": "return CLU220000000:execute(0, 'LED0000:get(3)')"}
+        )
+
+@pytest.mark.asyncio
+async def test_async_update_led_g_off():
+    api_endpoint = "http://192.168.0.4/HAlistener"
+    grenton_id = "CLU220000000->LED0000"
+    object_name = "Test Light"
+    grenton_type = "LED_G"
+    
+    obj = GrentonSwitch(api_endpoint, grenton_id, grenton_type, object_name)
+    
+    with aioresponses() as m:
+        m.get(api_endpoint, status=200, payload={"status": 0})
+        
+        await obj.async_update()
+        
+        assert not obj.is_on
+        assert obj.brightness == 0
+        assert obj.unique_id == "grenton_LED0000"
+        m.assert_called_once_with(
+            api_endpoint,
+            method='GET',
+            json={"status": "return CLU220000000:execute(0, 'LED0000:get(4)')"}
+        )
+
+@pytest.mark.asyncio
+async def test_async_update_led_b_off():
+    api_endpoint = "http://192.168.0.4/HAlistener"
+    grenton_id = "CLU220000000->LED0000"
+    object_name = "Test Light"
+    grenton_type = "LED_B"
+    
+    obj = GrentonSwitch(api_endpoint, grenton_id, grenton_type, object_name)
+    
+    with aioresponses() as m:
+        m.get(api_endpoint, status=200, payload={"status": 0})
+        
+        await obj.async_update()
+        
+        assert not obj.is_on
+        assert obj.brightness == 0
+        assert obj.unique_id == "grenton_LED0000"
+        m.assert_called_once_with(
+            api_endpoint,
+            method='GET',
+            json={"status": "return CLU220000000:execute(0, 'LED0000:get(5)')"}
+        )
+
+@pytest.mark.asyncio
+async def test_async_update_led_w():
+    api_endpoint = "http://192.168.0.4/HAlistener"
+    grenton_id = "CLU220000000->LED0000"
+    object_name = "Test Light"
+    grenton_type = "LED_W"
+    
+    obj = GrentonSwitch(api_endpoint, grenton_id, grenton_type, object_name)
+    
+    with aioresponses() as m:
+        m.get(api_endpoint, status=200, payload={"status": 1})
+        
+        await obj.async_update()
+        
+        assert obj.is_on
+        assert obj.brightness == 255
+        assert obj.unique_id == "grenton_LED0000"
+        m.assert_called_once_with(
+            api_endpoint,
+            method='GET',
+            json={"status": "return CLU220000000:execute(0, 'LED0000:get(15)')"}
+        )
+
+@pytest.mark.asyncio
+async def test_async_update_rgb():
+    api_endpoint = "http://192.168.0.4/HAlistener"
+    grenton_id = "CLU220000000->LED0000"
+    object_name = "Test Light"
+    grenton_type = "RGB"
+    
+    obj = GrentonSwitch(api_endpoint, grenton_id, grenton_type, object_name)
+    
+    with aioresponses() as m:
+        m.get(api_endpoint, status=200, payload={"status": 1})
+        
+        await obj.async_update()
+        
+        assert obj.is_on
+        assert obj.brightness == 255
+        assert obj.unique_id == "grenton_LED0000"
+        m.assert_called_once_with(
+            api_endpoint,
+            method='GET',
+            json={"status": "return CLU220000000:execute(0, 'LED0000:get(0)')"}
         )
