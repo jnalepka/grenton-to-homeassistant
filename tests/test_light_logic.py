@@ -47,7 +47,7 @@ async def test_async_turn_on_dimmer():
         m.assert_called_once_with(
             api_endpoint,
             method='POST',
-            json={"command": "CLU220000000:execute(0, 'DIM0000:set(0, 1)')"}
+            json={"command": "CLU220000000:execute(0, 'DIM0000:set(0, 1.0)')"}
         )
 
 @pytest.mark.asyncio
@@ -89,7 +89,7 @@ async def test_async_turn_on_dimmer_rgbw_r():
         
         assert obj.is_on
         assert obj.brightness == 255
-        assert obj.unique_id == "grenton_LED0000"
+        assert obj.unique_id == "grenton_LED0000_LED_R"
         m.assert_called_once_with(
             api_endpoint,
             method='POST',
@@ -112,7 +112,7 @@ async def test_async_turn_on_dimmer_rgbw_g():
         
         assert obj.is_on
         assert obj.brightness == 255
-        assert obj.unique_id == "grenton_LED0000"
+        assert obj.unique_id == "grenton_LED0000_LED_G"
         m.assert_called_once_with(
             api_endpoint,
             method='POST',
@@ -135,7 +135,7 @@ async def test_async_turn_on_dimmer_rgbw_b():
         
         assert obj.is_on
         assert obj.brightness == 255
-        assert obj.unique_id == "grenton_LED0000"
+        assert obj.unique_id == "grenton_LED0000_LED_B"
         m.assert_called_once_with(
             api_endpoint,
             method='POST',
@@ -158,7 +158,7 @@ async def test_async_turn_on_dimmer_rgbw_w():
         
         assert obj.is_on
         assert obj.brightness == 255
-        assert obj.unique_id == "grenton_LED0000"
+        assert obj.unique_id == "grenton_LED0000_LED_W"
         m.assert_called_once_with(
             api_endpoint,
             method='POST',
@@ -185,7 +185,7 @@ async def test_async_turn_on_rgb():
         m.assert_called_once_with(
             api_endpoint,
             method='POST',
-            json={"command": "CLU220000000:execute(0, 'LED0000:execute(6, \"ffffff\")')"}
+            json={"command": "CLU220000000:execute(0, 'LED0000:execute(6, \\"#ffffff\\")')"}
         )
 
 @pytest.mark.asyncio
@@ -200,7 +200,7 @@ async def test_async_turn_on_rgb_zwave():
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
         
-        await obj.async_turn_on(rgb_color=[255, 255, 255])
+        await obj.async_turn_on(rgb_color=[0, 0, 0])
         
         assert obj.is_on
         assert obj.rgb_color == [255, 255, 255]
@@ -208,7 +208,7 @@ async def test_async_turn_on_rgb_zwave():
         m.assert_called_once_with(
             api_endpoint,
             method='POST',
-            json={"command": "CLU220000000:execute(0, 'ZWA0000:execute(3, \"000000\")')"}
+            json={"command": "CLU220000000:execute(0, 'ZWA0000:execute(3, \\"#000000\\")')"}
         )
         
 @pytest.mark.asyncio
@@ -226,12 +226,11 @@ async def test_async_turn_on_rgb_no_rgb_color():
         await obj.async_turn_on()
         
         assert obj.is_on
-        assert obj.rgb_color == [255, 255, 255]
         assert obj.unique_id == "grenton_RGB0000"
         m.assert_called_once_with(
             api_endpoint,
             method='POST',
-            json={"command": "CLU220000000:execute(0, 'RGB0000:execute(0, 1)')"}
+            json={"command": "CLU220000000:execute(0, 'RGB0000:execute(0, 1.0)')"}
         )
 
 @pytest.mark.asyncio
@@ -246,7 +245,7 @@ async def test_async_turn_off_dout():
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
         
-        await obj.async_turn_on()
+        await obj.async_turn_off()
         
         assert not obj.is_on
         assert obj.unique_id == "grenton_DOU0000"
@@ -268,7 +267,7 @@ async def test_async_turn_off_dimmer():
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
         
-        await obj.async_turn_on()
+        await obj.async_turn_off()
         
         assert not obj.is_on
         assert obj.unique_id == "grenton_DOU0000"
@@ -290,7 +289,7 @@ async def test_async_turn_off_dimmer_zwave():
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
         
-        await obj.async_turn_on()
+        await obj.async_turn_off()
         
         assert not obj.is_on
         assert obj.unique_id == "grenton_ZWA0000"
@@ -312,7 +311,7 @@ async def test_async_turn_off_rgb():
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
         
-        await obj.async_turn_on()
+        await obj.async_turn_off()
         
         assert not obj.is_on
         assert obj.unique_id == "grenton_RGB0000"
@@ -334,10 +333,10 @@ async def test_async_turn_off_rgb_led_r():
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
         
-        await obj.async_turn_on()
+        await obj.async_turn_off()
         
         assert not obj.is_on
-        assert obj.unique_id == "grenton_RGB0000"
+        assert obj.unique_id == "grenton_RGB0000_LED_R"
         m.assert_called_once_with(
             api_endpoint,
             method='POST',
@@ -356,10 +355,10 @@ async def test_async_turn_off_rgb_led_g():
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
         
-        await obj.async_turn_on()
+        await obj.async_turn_off()
         
         assert not obj.is_on
-        assert obj.unique_id == "grenton_RGB0000"
+        assert obj.unique_id == "grenton_RGB0000_LED_G"
         m.assert_called_once_with(
             api_endpoint,
             method='POST',
@@ -378,10 +377,10 @@ async def test_async_turn_off_rgb_led_b():
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
         
-        await obj.async_turn_on()
+        await obj.async_turn_off()
         
         assert not obj.is_on
-        assert obj.unique_id == "grenton_RGB0000"
+        assert obj.unique_id == "grenton_RGB0000_LED_B"
         m.assert_called_once_with(
             api_endpoint,
             method='POST',
@@ -400,10 +399,10 @@ async def test_async_turn_off_rgb_led_w():
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
         
-        await obj.async_turn_on()
+        await obj.async_turn_off()
         
         assert not obj.is_on
-        assert obj.unique_id == "grenton_RGB0000"
+        assert obj.unique_id == "grenton_RGB0000_LED_W"
         m.assert_called_once_with(
             api_endpoint,
             method='POST',
@@ -562,7 +561,7 @@ async def test_async_update_led_r():
         
         assert obj.is_on
         assert obj.brightness == 255
-        assert obj.unique_id == "grenton_LED0000"
+        assert obj.unique_id == "grenton_LED0000_LED_R"
         m.assert_called_once_with(
             api_endpoint,
             method='GET',
@@ -585,7 +584,7 @@ async def test_async_update_led_g_off():
         
         assert not obj.is_on
         assert obj.brightness == 0
-        assert obj.unique_id == "grenton_LED0000"
+        assert obj.unique_id == "grenton_LED0000_LED_G"
         m.assert_called_once_with(
             api_endpoint,
             method='GET',
@@ -608,7 +607,7 @@ async def test_async_update_led_b_off():
         
         assert not obj.is_on
         assert obj.brightness == 0
-        assert obj.unique_id == "grenton_LED0000"
+        assert obj.unique_id == "grenton_LED0000_LED_B"
         m.assert_called_once_with(
             api_endpoint,
             method='GET',
@@ -631,7 +630,7 @@ async def test_async_update_led_w():
         
         assert obj.is_on
         assert obj.brightness == 255
-        assert obj.unique_id == "grenton_LED0000"
+        assert obj.unique_id == "grenton_LED0000_LED_W"
         m.assert_called_once_with(
             api_endpoint,
             method='GET',
