@@ -180,7 +180,7 @@ async def test_async_turn_on_rgb():
         await obj.async_turn_on(rgb_color=[255, 255, 255])
         
         assert obj.is_on
-        assert obj.rgb_color = [255, 255, 255]
+        assert obj.rgb_color == [255, 255, 255]
         assert obj.unique_id == "grenton_LED0000"
         m.assert_called_once_with(
             api_endpoint,
@@ -203,7 +203,7 @@ async def test_async_turn_on_rgb():
         await obj.async_turn_on(rgb_color=[255, 255, 255])
         
         assert obj.is_on
-        assert obj.rgb_color = [255, 255, 255]
+        assert obj.rgb_color == [255, 255, 255]
         assert obj.unique_id == "grenton_ZWA0000"
         m.assert_called_once_with(
             api_endpoint,
@@ -226,7 +226,7 @@ async def test_async_turn_on_rgb_no_rgb_color():
         await obj.async_turn_on()
         
         assert obj.is_on
-        assert obj.rgb_color = [255, 255, 255]
+        assert obj.rgb_color == [255, 255, 255]
         assert obj.unique_id == "grenton_RGB0000"
         m.assert_called_once_with(
             api_endpoint,
