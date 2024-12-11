@@ -185,11 +185,11 @@ async def test_async_turn_on_rgb():
         m.assert_called_once_with(
             api_endpoint,
             method='POST',
-            json={"command": "CLU220000000:execute(0, 'LED0000:execute(6, \"000000\")')"}
+            json={"command": "CLU220000000:execute(0, 'LED0000:execute(6, \"ffffff\")')"}
         )
 
 @pytest.mark.asyncio
-async def test_async_turn_on_rgb():
+async def test_async_turn_on_rgb_zwave():
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ZWA0000"
     object_name = "Test Light"
@@ -648,15 +648,16 @@ async def test_async_update_rgb():
     obj = GrentonSwitch(api_endpoint, grenton_id, grenton_type, object_name)
     
     with aioresponses() as m:
-        m.get(api_endpoint, status=200, payload={"status": 1})
+        m.get(api_endpoint, status=200, payload={"status": 1, "status_2": "#000000"})
         
         await obj.async_update()
         
         assert obj.is_on
         assert obj.brightness == 255
+        assert obj.rgb_color == [0, 0, 0]
         assert obj.unique_id == "grenton_LED0000"
         m.assert_called_once_with(
             api_endpoint,
             method='GET',
-            json={"status": "return CLU220000000:execute(0, 'LED0000:get(0)')"}
+            json={"status": "return CLU220000000:execute(0, 'LED0000:get(0)')", "status": "return CLU220000000:execute(0, 'LED0000:get(6)')"}
         )
