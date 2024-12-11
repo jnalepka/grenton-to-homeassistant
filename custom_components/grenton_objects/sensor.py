@@ -114,10 +114,7 @@ class GrentonSensor(SensorEntity):
         self._grenton_id = grenton_id
         self._grenton_type = grenton_type
         self._object_name = object_name
-        if len(self._grenton_id.split('->')) == 1:
-            self._unique_id = f"grenton_{grenton_id}"
-        else:
-            self._unique_id = f"grenton_{grenton_id.split('->')[1]}"
+        self._unique_id = f"grenton_{grenton_id.split('->')[1] if '->' in grenton_id else grenton_id}"
         self._native_value = None
         self._native_unit_of_measurement = unit_of_measurement
         self._device_class = device_class
