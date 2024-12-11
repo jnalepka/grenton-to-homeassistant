@@ -416,7 +416,7 @@ async def test_async_update_dout():
     object_name = "Test Light"
     grenton_type = "DOUT"
     
-    obj = GrentonSwitch(api_endpoint, grenton_id, grenton_type, object_name)
+    obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name)
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 1})
@@ -438,7 +438,7 @@ async def test_async_update_dout_off():
     object_name = "Test Light"
     grenton_type = "DOUT"
     
-    obj = GrentonSwitch(api_endpoint, grenton_id, grenton_type, object_name)
+    obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name)
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 0})
@@ -460,7 +460,7 @@ async def test_async_update_dimmer():
     object_name = "Test Light"
     grenton_type = "DIMMER"
     
-    obj = GrentonSwitch(api_endpoint, grenton_id, grenton_type, object_name)
+    obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name)
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 1})
@@ -483,7 +483,7 @@ async def test_async_update_dimmer_off():
     object_name = "Test Light"
     grenton_type = "DIMMER"
     
-    obj = GrentonSwitch(api_endpoint, grenton_id, grenton_type, object_name)
+    obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name)
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 0})
@@ -506,7 +506,7 @@ async def test_async_update_dimmer_zwave():
     object_name = "Test Light"
     grenton_type = "DIMMER"
     
-    obj = GrentonSwitch(api_endpoint, grenton_id, grenton_type, object_name)
+    obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name)
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 1})
@@ -529,7 +529,7 @@ async def test_async_update_dimmer_zwave_off():
     object_name = "Test Light"
     grenton_type = "DIMMER"
     
-    obj = GrentonSwitch(api_endpoint, grenton_id, grenton_type, object_name)
+    obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name)
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 0})
@@ -552,7 +552,7 @@ async def test_async_update_led_r():
     object_name = "Test Light"
     grenton_type = "LED_R"
     
-    obj = GrentonSwitch(api_endpoint, grenton_id, grenton_type, object_name)
+    obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name)
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 1})
@@ -575,7 +575,7 @@ async def test_async_update_led_g_off():
     object_name = "Test Light"
     grenton_type = "LED_G"
     
-    obj = GrentonSwitch(api_endpoint, grenton_id, grenton_type, object_name)
+    obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name)
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 0})
@@ -598,7 +598,7 @@ async def test_async_update_led_b_off():
     object_name = "Test Light"
     grenton_type = "LED_B"
     
-    obj = GrentonSwitch(api_endpoint, grenton_id, grenton_type, object_name)
+    obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name)
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 0})
@@ -621,7 +621,7 @@ async def test_async_update_led_w():
     object_name = "Test Light"
     grenton_type = "LED_W"
     
-    obj = GrentonSwitch(api_endpoint, grenton_id, grenton_type, object_name)
+    obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name)
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 1})
@@ -644,7 +644,7 @@ async def test_async_update_rgb():
     object_name = "Test Light"
     grenton_type = "RGB"
     
-    obj = GrentonSwitch(api_endpoint, grenton_id, grenton_type, object_name)
+    obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name)
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 1, "status_2": "#000000"})
