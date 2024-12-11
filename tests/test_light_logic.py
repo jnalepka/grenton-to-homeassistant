@@ -185,7 +185,7 @@ async def test_async_turn_on_rgb():
         m.assert_called_once_with(
             api_endpoint,
             method='POST',
-            json={"command": "CLU220000000:execute(0, 'LED0000:execute(6, \\"#ffffff\\")')"}
+            json={"command": "CLU220000000:execute(0, 'LED0000:execute(6, \"#ffffff\")')"}
         )
 
 @pytest.mark.asyncio
@@ -208,7 +208,7 @@ async def test_async_turn_on_rgb_zwave():
         m.assert_called_once_with(
             api_endpoint,
             method='POST',
-            json={"command": "CLU220000000:execute(0, 'ZWA0000:execute(3, \\"#000000\\")')"}
+            json={"command": "CLU220000000:execute(0, 'ZWA0000:execute(3, \"#000000\")')"}
         )
         
 @pytest.mark.asyncio
