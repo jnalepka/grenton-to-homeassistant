@@ -99,7 +99,7 @@ async def test_async_update_clu_feature_contain_obj_id():
     obj = GrentonSensor(api_endpoint, grenton_id, grenton_type, object_name, unit_of_measurement, device_class, state_class)
     
     with aioresponses() as m:
-        m.get(api_endpoint, status=200, payload={"humidity": 100})
+        m.get(api_endpoint, status=200, payload={"status": 100})
         
         await obj.async_update()
         assert obj.native_value == 100
