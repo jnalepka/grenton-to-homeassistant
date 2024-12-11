@@ -83,7 +83,7 @@ async def test_async_update_clu_feature():
         m.assert_called_once_with(
             api_endpoint,
             method='GET',
-            json={"status": "return {CLU220000000:execute(0, 'getVar(\"my_feature_123\")')"}
+            json={"status": "return CLU220000000:execute(0, 'getVar(\"my_feature_123\")')"}
         )
 
 @pytest.mark.asyncio
@@ -110,7 +110,7 @@ async def test_async_update_clu_feature_contain_obj_id():
         m.assert_called_once_with(
             api_endpoint,
             method='GET',
-            json={"status": "return {CLU220000000:execute(0, 'getVar(\"when_DOU1234_light_up\")')"}
+            json={"status": "return CLU220000000:execute(0, 'getVar(\"when_DOU1234_light_up\")')"}
         )
 
 @pytest.mark.asyncio
