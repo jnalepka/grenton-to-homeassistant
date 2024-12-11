@@ -44,7 +44,7 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Required(CONF_UNIT_OF_MEASUREMENT, default=UnitOfTemperature.CELSIUS): str,
     vol.Optional(CONF_OBJECT_NAME, default='Grenton Sensor'): str,
     vol.Optional(CONF_DEVICE_CLASS, default=''): str,
-    vol.Optional(CONF_STATE_CLASS, default=''): str
+    vol.Optional(CONF_STATE_CLASS, default=''): str #measurement, total, total_increasing
 })
 
 DEFAULT_UNITS = {
