@@ -658,7 +658,7 @@ async def test_async_update_rgb():
         m.assert_called_once_with(
             api_endpoint,
             method='GET',
-            json={"status": "return CLU220000000:execute(0, 'LED0000:get(0)')", "status": "return CLU220000000:execute(0, 'LED0000:get(6)')"}
+            json={"status": "return CLU220000000:execute(0, 'LED0000:get(0)')", "status_2": "return CLU220000000:execute(0, 'LED0000:get(6)')"}
         )
 
 @pytest.mark.asyncio
@@ -682,7 +682,7 @@ async def test_async_update_rgb_off():
         m.assert_called_once_with(
             api_endpoint,
             method='GET',
-            json={"status": "return CLU220000000:execute(0, 'LED0000:get(0)')", "status": "return CLU220000000:execute(0, 'LED0000:get(6)')"}
+            json={"status": "return CLU220000000:execute(0, 'LED0000:get(0)')", "status_2": "return CLU220000000:execute(0, 'LED0000:get(6)')"}
         )
 
 @pytest.mark.asyncio
@@ -706,5 +706,5 @@ async def test_async_update_rgb_zwave():
         m.assert_called_once_with(
             api_endpoint,
             method='GET',
-            json={"status": "return CLU220000000:execute(0, 'ZWA0000:get(0)')", "status": "return CLU220000000:execute(0, 'ZWA0000:get(3)')"}
+            json={"status": "return CLU220000000:execute(0, 'ZWA0000:get(0)')", "status_2": "return CLU220000000:execute(0, 'ZWA0000:get(3)')"}
         )
