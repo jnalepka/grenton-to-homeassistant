@@ -1,8 +1,5 @@
 import pytest
-from unittest.mock import patch
 from aioresponses import aioresponses
-from homeassistant.core import HomeAssistant
-from homeassistant.setup import async_setup_component
 from custom_components.grenton_objects.light import GrentonLight
 
 @pytest.mark.asyncio
