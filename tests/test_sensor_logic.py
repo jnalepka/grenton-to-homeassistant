@@ -56,7 +56,7 @@ async def test_async_update_gate_feature():
         m.assert_called_once_with(
             api_endpoint,
             method='GET',
-            json={"status": "return getVar(\"grenton_my_feature_123\")"}
+            json={"status": "return getVar(\"my_feature_123\")"}
         )
 
 @pytest.mark.asyncio
@@ -83,7 +83,7 @@ async def test_async_update_clu_feature():
         m.assert_called_once_with(
             api_endpoint,
             method='GET',
-            json={"status": "return {CLU220000000:execute(0, 'getVar(\"grenton_my_feature_123\")')"}
+            json={"status": "return {CLU220000000:execute(0, 'getVar(\"my_feature_123\")')"}
         )
 
 @pytest.mark.asyncio
@@ -106,7 +106,7 @@ async def test_async_update_clu_feature_contain_obj_id():
         assert obj.native_unit_of_measurement == "%"
         assert obj.device_class == "humidity"
         assert obj.state_class == "measurement"
-        assert obj.unique_id == "when_DOU1234_light_up"
+        assert obj.unique_id == "grenton_when_DOU1234_light_up"
         m.assert_called_once_with(
             api_endpoint,
             method='GET',
