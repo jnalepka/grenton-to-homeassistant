@@ -185,7 +185,7 @@ async def test_async_turn_on_rgb():
         m.assert_called_once_with(
             api_endpoint,
             method='POST',
-            json={"command": "CLU220000000:execute(0, 'LED0000:execute(6, \"#ffffff\")')"}
+            json={"command": "CLU220000000:execute(0, 'LED0000:execute(6, \\\"#ffffff\\\")')"}
         )
 
 @pytest.mark.asyncio
@@ -203,12 +203,12 @@ async def test_async_turn_on_rgb_zwave():
         await obj.async_turn_on(rgb_color=[0, 0, 0])
         
         assert obj.is_on
-        assert obj.rgb_color == [255, 255, 255]
+        assert obj.rgb_color == [0, 0, 0]
         assert obj.unique_id == "grenton_ZWA0000"
         m.assert_called_once_with(
             api_endpoint,
             method='POST',
-            json={"command": "CLU220000000:execute(0, 'ZWA0000:execute(3, \"#000000\")')"}
+            json={"command": "CLU220000000:execute(0, 'ZWA0000:execute(3, \\\"#000000\\\")')"}
         )
         
 @pytest.mark.asyncio
@@ -490,7 +490,7 @@ async def test_async_update_dimmer_off():
         
         await obj.async_update()
         
-        assert obj.is_on
+        assert not obj.is_on
         assert obj.brightness == 0
         assert obj.unique_id == "grenton_DIM0000"
         m.assert_called_once_with(
@@ -509,7 +509,7 @@ async def test_async_update_dimmer_zwave():
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name)
     
     with aioresponses() as m:
-        m.get(api_endpoint, status=200, payload={"status": 1})
+        m.get(api_endpoint, status=200, payload={"status": 255})
         
         await obj.async_update()
         
@@ -555,7 +555,7 @@ async def test_async_update_led_r():
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name)
     
     with aioresponses() as m:
-        m.get(api_endpoint, status=200, payload={"status": 1})
+        m.get(api_endpoint, status=200, payload={"status": 255})
         
         await obj.async_update()
         
@@ -624,7 +624,7 @@ async def test_async_update_led_w():
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name)
     
     with aioresponses() as m:
-        m.get(api_endpoint, status=200, payload={"status": 1})
+        m.get(api_endpoint, status=200, payload={"status": 255})
         
         await obj.async_update()
         
