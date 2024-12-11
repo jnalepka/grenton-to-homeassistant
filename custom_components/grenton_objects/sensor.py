@@ -28,6 +28,7 @@ from .const import (
 import logging
 import json
 import voluptuous as vol
+import re
 from homeassistant.components.sensor import (
     SensorEntity,
     PLATFORM_SCHEMA
@@ -44,7 +45,7 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Required(CONF_UNIT_OF_MEASUREMENT, default=UnitOfTemperature.CELSIUS): str,
     vol.Optional(CONF_OBJECT_NAME, default='Grenton Sensor'): str,
     vol.Optional(CONF_DEVICE_CLASS, default=''): str,
-    vol.Optional(CONF_STATE_CLASS, default=''): str
+    vol.Optional(CONF_STATE_CLASS, default=''): str #measurement, total, total_increasing
 })
 
 DEFAULT_UNITS = {
@@ -114,10 +115,7 @@ class GrentonSensor(SensorEntity):
         self._grenton_id = grenton_id
         self._grenton_type = grenton_type
         self._object_name = object_name
-        if len(self._grenton_id.split('->')) == 1:
-            self._unique_id = f"grenton_{grenton_id}"
-        else:
-            self._unique_id = f"grenton_{grenton_id.split('->')[1]}"
+        self._unique_id = f"grenton_{grenton_id.split('->')[1] if '->' in grenton_id else grenton_id}"
         self._native_value = None
         self._native_unit_of_measurement = unit_of_measurement
         self._device_class = device_class
@@ -151,7 +149,7 @@ class GrentonSensor(SensorEntity):
         try:
             if len(self._grenton_id.split('->')) == 1:
                 command = {"status": f"return getVar(\"{self._grenton_id}\")"}
-            elif self._grenton_id.split('->')[1].isupper():
+            elif re.fullmatch(r"[A-Z]{3}\d{4}", self._grenton_id.split('->')[1]):
                 grenton_type_mapping = {
                     CONF_GRENTON_TYPE_MODBUS: 14,
                     CONF_GRENTON_TYPE_MODBUS_VALUE: 20,
@@ -172,4 +170,4 @@ class GrentonSensor(SensorEntity):
                     self._native_value = data.get("status")
         except aiohttp.ClientError as ex:
             _LOGGER.error(f"Failed to update the switch state: {ex}")
-            self._state = None
+            self._native_value = None
