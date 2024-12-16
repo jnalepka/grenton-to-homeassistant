@@ -258,7 +258,7 @@ class GrentonLight(LightEntity):
                     response.raise_for_status()
                     data = await response.json()
                     self._state = STATE_OFF if data.get("status") == 0 else STATE_ON
-                    LOGGER.debug(f"DEBUG light.py GRENTON STATE UPDATE - {self._object_name}, Grenton status: {data.get("status")}")
+                    _LOGGER.debug(f"DEBUG light.py GRENTON STATE UPDATE - {self._object_name}, Grenton status: {data.get("status")}")
                     if self._grenton_type == CONF_GRENTON_TYPE_RGB or self._grenton_type == CONF_GRENTON_TYPE_DIMMER:
                         if self._grenton_type == CONF_GRENTON_TYPE_DIMMER and grenton_id_part_1.startswith("ZWA"):
                             self._brightness = data.get("status")
