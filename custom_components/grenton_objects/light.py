@@ -189,7 +189,6 @@ class GrentonLight(LightEntity):
             else:
                 command = self._generate_command("command", grenton_id_part_0, grenton_id_part_1, "set", 0, 1)
             self._state = STATE_ON
-            _LOGGER.debug(f"DEBUG light.py TURN ON REQUEST - {self._object_name}, HA status: {self._state}")
             
             async with aiohttp.ClientSession() as session:
                 async with session.post(f"{self._api_endpoint}", json=command) as response:
@@ -219,7 +218,6 @@ class GrentonLight(LightEntity):
             
             command = self._generate_command("command", grenton_id_part_0, grenton_id_part_1, config["action"], config["index"], 0)
             self._state = STATE_OFF
-            _LOGGER.debug(f"DEBUG light.py TURN OFF REQUEST - {self._object_name}, HA status: {self._state}")
             
             async with aiohttp.ClientSession() as session:
                 async with session.post(f"{self._api_endpoint}", json=command) as response:
@@ -252,13 +250,11 @@ class GrentonLight(LightEntity):
                 else:
                     command.update(self._generate_get_command("status_2", grenton_id_part_0, grenton_id_part_1, "get", 6))
             
-            _LOGGER.debug(f"DEBUG light.py START UPDATE REQUEST - {self._object_name}, HA status: {self._state}")
             async with aiohttp.ClientSession() as session:
                 async with session.get(f"{self._api_endpoint}", json=command) as response:
                     response.raise_for_status()
                     data = await response.json()
                     self._state = STATE_OFF if data.get("status") == 0 else STATE_ON
-                    _LOGGER.debug(f"DEBUG light.py GRENTON STATE UPDATE - {self._object_name}, Grenton status: {data.get("status")}")
                     if self._grenton_type == CONF_GRENTON_TYPE_RGB or self._grenton_type == CONF_GRENTON_TYPE_DIMMER:
                         if self._grenton_type == CONF_GRENTON_TYPE_DIMMER and grenton_id_part_1.startswith("ZWA"):
                             self._brightness = data.get("status")
