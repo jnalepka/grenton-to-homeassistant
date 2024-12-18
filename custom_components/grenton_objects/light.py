@@ -188,11 +188,12 @@ class GrentonLight(LightEntity):
                     self._brightness = brightness
             else:
                 command = self._generate_command("command", grenton_id_part_0, grenton_id_part_1, "set", 0, 1)
+            self._state = STATE_ON
             
             async with aiohttp.ClientSession() as session:
                 async with session.post(f"{self._api_endpoint}", json=command) as response:
                     response.raise_for_status()
-                    self._state = STATE_ON
+                    #self._state = STATE_ON
                     #self._brightness = None
         except aiohttp.ClientError as ex:
             _LOGGER.error(f"Failed to turn on the light: {ex}")
@@ -216,11 +217,12 @@ class GrentonLight(LightEntity):
                 config = command_mapping.get(self._grenton_type, {"action": "set", "index": 0})
             
             command = self._generate_command("command", grenton_id_part_0, grenton_id_part_1, config["action"], config["index"], 0)
+            self._state = STATE_OFF
             
             async with aiohttp.ClientSession() as session:
                 async with session.post(f"{self._api_endpoint}", json=command) as response:
                     response.raise_for_status()
-                    self._state = STATE_OFF
+                    #self._state = STATE_OFF
         except aiohttp.ClientError as ex:
             _LOGGER.error(f"Failed to turn off the light: {ex}")
 
@@ -247,7 +249,7 @@ class GrentonLight(LightEntity):
                     command.update(self._generate_get_command("status_2", grenton_id_part_0, grenton_id_part_1, "get", 3))
                 else:
                     command.update(self._generate_get_command("status_2", grenton_id_part_0, grenton_id_part_1, "get", 6))
-
+            
             async with aiohttp.ClientSession() as session:
                 async with session.get(f"{self._api_endpoint}", json=command) as response:
                     response.raise_for_status()
