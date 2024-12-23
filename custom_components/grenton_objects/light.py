@@ -63,6 +63,7 @@ class GrentonLight(LightEntity):
         self._supported_color_modes: set[ColorMode | str] = set()
         self._brightness = None
         self._rgb_color = None
+        self._last_command_time = None
         
         grenton_id_part_0, grenton_id_part_1 = self._grenton_id.split('->')
         
@@ -189,12 +190,11 @@ class GrentonLight(LightEntity):
             else:
                 command = self._generate_command("command", grenton_id_part_0, grenton_id_part_1, "set", 0, 1)
             self._state = STATE_ON
+            self._last_command_time = hass.loop.time()
             
             async with aiohttp.ClientSession() as session:
                 async with session.post(f"{self._api_endpoint}", json=command) as response:
                     response.raise_for_status()
-                    #self._state = STATE_ON
-                    #self._brightness = None
         except aiohttp.ClientError as ex:
             _LOGGER.error(f"Failed to turn on the light: {ex}")
             
@@ -218,15 +218,18 @@ class GrentonLight(LightEntity):
             
             command = self._generate_command("command", grenton_id_part_0, grenton_id_part_1, config["action"], config["index"], 0)
             self._state = STATE_OFF
+            self._last_command_time = hass.loop.time()
             
             async with aiohttp.ClientSession() as session:
                 async with session.post(f"{self._api_endpoint}", json=command) as response:
                     response.raise_for_status()
-                    #self._state = STATE_OFF
         except aiohttp.ClientError as ex:
             _LOGGER.error(f"Failed to turn off the light: {ex}")
 
     async def async_update(self):
+        if self._last_command_time and hass.loop.time() - self._last_command_time < 2:
+            return
+            
         try:
             grenton_id_part_0, grenton_id_part_1 = self._grenton_id.split('->')
             xml_index__mapping = {
