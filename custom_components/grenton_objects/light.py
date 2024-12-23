@@ -190,7 +190,7 @@ class GrentonLight(LightEntity):
             else:
                 command = self._generate_command("command", grenton_id_part_0, grenton_id_part_1, "set", 0, 1)
             self._state = STATE_ON
-            self._last_command_time = hass.loop.time()
+            self._last_command_time = self.hass.loop.time()
             
             async with aiohttp.ClientSession() as session:
                 async with session.post(f"{self._api_endpoint}", json=command) as response:
@@ -218,7 +218,7 @@ class GrentonLight(LightEntity):
             
             command = self._generate_command("command", grenton_id_part_0, grenton_id_part_1, config["action"], config["index"], 0)
             self._state = STATE_OFF
-            self._last_command_time = hass.loop.time()
+            self._last_command_time = self.hass.loop.time()
             
             async with aiohttp.ClientSession() as session:
                 async with session.post(f"{self._api_endpoint}", json=command) as response:
@@ -227,7 +227,7 @@ class GrentonLight(LightEntity):
             _LOGGER.error(f"Failed to turn off the light: {ex}")
 
     async def async_update(self):
-        if self._last_command_time and hass.loop.time() - self._last_command_time < 2:
+        if self._last_command_time and self.hass.loop.time() - self._last_command_time < 2:
             return
             
         try:
