@@ -1,8 +1,8 @@
 """
 ==================================================
 Author: Jan Nalepka
-Script version: 2.0
-Date: 02.12.2024
+Script version: 2.1
+Date: 26.12.2024
 Repository: https://github.com/jnalepka/grenton-to-homeassistant
 ==================================================
 """
@@ -48,6 +48,7 @@ class GrentonSwitch(SwitchEntity):
         self._object_name = object_name
         self._state = None
         self._unique_id = f"grenton_{grenton_id.split('->')[1]}"
+        self._last_command_time = None
 
     @property
     def name(self):
@@ -65,10 +66,12 @@ class GrentonSwitch(SwitchEntity):
         try:
             grenton_id_part_0, grenton_id_part_1 = self._grenton_id.split('->')
             command = {"command": f"{grenton_id_part_0}:execute(0, '{grenton_id_part_1}:set(0, 1)')"}
+            self._state = STATE_ON
+            self._last_command_time = self.hass.loop.time() if self.hass is not None else None
+            
             async with aiohttp.ClientSession() as session:
                 async with session.post(f"{self._api_endpoint}", json=command) as response:
                     response.raise_for_status()
-                    self._state = STATE_ON
         except aiohttp.ClientError as ex:
             _LOGGER.error(f"Failed to turn on the switch: {ex}")
 
@@ -76,14 +79,19 @@ class GrentonSwitch(SwitchEntity):
         try:
             grenton_id_part_0, grenton_id_part_1 = self._grenton_id.split('->')
             command = {"command": f"{grenton_id_part_0}:execute(0, '{grenton_id_part_1}:set(0, 0)')"}
+            self._state = STATE_OFF
+            self._last_command_time = self.hass.loop.time() if self.hass is not None else None
+            
             async with aiohttp.ClientSession() as session:
                 async with session.post(f"{self._api_endpoint}", json=command) as response:
                     response.raise_for_status()
-                    self._state = STATE_OFF
         except aiohttp.ClientError as ex:
             _LOGGER.error(f"Failed to turn off the switch: {ex}")
 
     async def async_update(self):
+        if self._last_command_time and self.hass.loop.time() - self._last_command_time < 2:
+            return
+            
         try:
             grenton_id_part_0, grenton_id_part_1 = self._grenton_id.split('->')
             command = {"status": f"return {grenton_id_part_0}:execute(0, '{grenton_id_part_1}:get(0)')"}
