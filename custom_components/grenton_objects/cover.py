@@ -1,8 +1,8 @@
 """
 ==================================================
 Author: Jan Nalepka
-Script version: 2.1
-Date: 11.12.2024
+Script version: 2.2
+Date: 26.12.2024
 Repository: https://github.com/jnalepka/grenton-to-homeassistant
 ==================================================
 """
@@ -60,6 +60,7 @@ class GrentonCover(CoverEntity):
         self._current_cover_position = 0
         self._current_cover_tilt_position = 0
         self._unique_id = f"grenton_{grenton_id.split('->')[1]}"
+        self._last_command_time = None
 
     @property
     def name(self):
@@ -93,10 +94,12 @@ class GrentonCover(CoverEntity):
         try:
             grenton_id_part_0, grenton_id_part_1 = self._grenton_id.split('->')
             command = {"command": f"{grenton_id_part_0}:execute(0, '{grenton_id_part_1}:execute(0, 0)')"}
+            self._state = STATE_OPENING
+            self._last_command_time = self.hass.loop.time() if self.hass is not None else None
+            
             async with aiohttp.ClientSession() as session:
                 async with session.post(f"{self._api_endpoint}", json=command) as response:
                     response.raise_for_status()
-                    self._state = STATE_OPENING
         except aiohttp.ClientError as ex:
             _LOGGER.error(f"Failed to open the cover: {ex}")
 
@@ -104,10 +107,12 @@ class GrentonCover(CoverEntity):
         try:
             grenton_id_part_0, grenton_id_part_1 = self._grenton_id.split('->')
             command = {"command": f"{grenton_id_part_0}:execute(0, '{grenton_id_part_1}:execute(1, 0)')"}
+            self._state = STATE_CLOSING
+            self._last_command_time = self.hass.loop.time() if self.hass is not None else None
+            
             async with aiohttp.ClientSession() as session:
                 async with session.post(f"{self._api_endpoint}", json=command) as response:
                     response.raise_for_status()
-                    self._state = STATE_CLOSING
         except aiohttp.ClientError as ex:
             _LOGGER.error(f"Failed to close the cover: {ex}")
 
@@ -115,10 +120,12 @@ class GrentonCover(CoverEntity):
         try:
             grenton_id_part_0, grenton_id_part_1 = self._grenton_id.split('->')
             command = {"command": f"{grenton_id_part_0}:execute(0, '{grenton_id_part_1}:execute(3, 0)')"}
+            self._state = STATE_OPEN
+            self._last_command_time = self.hass.loop.time() if self.hass is not None else None
+            
             async with aiohttp.ClientSession() as session:
                 async with session.post(f"{self._api_endpoint}", json=command) as response:
                     response.raise_for_status()
-                    self._state = STATE_OPEN
         except aiohttp.ClientError as ex:
             _LOGGER.error(f"Failed to stop the cover: {ex}")
 
@@ -133,19 +140,21 @@ class GrentonCover(CoverEntity):
             command = {"command": f"{grenton_id_part_0}:execute(0, '{grenton_id_part_1}:execute(10, {position})')"}
             if grenton_id_part_1.startswith("ZWA"):
                 command = {"command": f"{grenton_id_part_0}:execute(0, '{grenton_id_part_1}:execute(7, {position})')"}
+            if (position > prev_position):
+                if self._reversed:
+                    self._state = STATE_CLOSING
+                else:
+                    self._state = STATE_OPENING
+            else:
+                if self._reversed:
+                    self._state = STATE_OPENING
+                else:
+                    self._state = STATE_CLOSING
+            self._last_command_time = self.hass.loop.time() if self.hass is not None else None
+            
             async with aiohttp.ClientSession() as session:
                 async with session.post(f"{self._api_endpoint}", json=command) as response:
                     response.raise_for_status()
-                    if (position > prev_position):
-                        if self._reversed:
-                            self._state = STATE_CLOSING
-                        else:
-                            self._state = STATE_OPENING
-                    else:
-                        if self._reversed:
-                            self._state = STATE_OPENING
-                        else:
-                            self._state = STATE_CLOSING
         except aiohttp.ClientError as ex:
             _LOGGER.error(f"Failed to set the cover position: {ex}")
 
@@ -156,6 +165,8 @@ class GrentonCover(CoverEntity):
             self._current_cover_tilt_position = tilt_position
             tilt_position = int(tilt_position * 90 / 100)
             command = {"command": f"{grenton_id_part_0}:execute(0, '{grenton_id_part_1}:execute(9, {tilt_position})')"}
+            self._last_command_time = self.hass.loop.time() if self.hass is not None else None
+            
             async with aiohttp.ClientSession() as session:
                 async with session.post(f"{self._api_endpoint}", json=command) as response:
                     response.raise_for_status()
@@ -166,6 +177,8 @@ class GrentonCover(CoverEntity):
         try:
             grenton_id_part_0, grenton_id_part_1 = self._grenton_id.split('->')
             command = {"command": f"{grenton_id_part_0}:execute(0, '{grenton_id_part_1}:execute(9, 90)')"}
+            self._last_command_time = self.hass.loop.time() if self.hass is not None else None
+            
             async with aiohttp.ClientSession() as session:
                 async with session.post(f"{self._api_endpoint}", json=command) as response:
                     response.raise_for_status()
@@ -176,6 +189,8 @@ class GrentonCover(CoverEntity):
         try:
             grenton_id_part_0, grenton_id_part_1 = self._grenton_id.split('->')
             command = {"command": f"{grenton_id_part_0}:execute(0, '{grenton_id_part_1}:execute(9, 0)')"}
+            self._last_command_time = self.hass.loop.time() if self.hass is not None else None
+            
             async with aiohttp.ClientSession() as session:
                 async with session.post(f"{self._api_endpoint}", json=command) as response:
                     response.raise_for_status()
@@ -183,6 +198,9 @@ class GrentonCover(CoverEntity):
             _LOGGER.error(f"Failed to close the cover tilt: {ex}")
 
     async def async_update(self):
+        if self._last_command_time and self.hass.loop.time() - self._last_command_time < 2:
+            return
+            
         try:
             grenton_id_part_0, grenton_id_part_1 = self._grenton_id.split('->')
             if grenton_id_part_1.startswith("ZWA"):
