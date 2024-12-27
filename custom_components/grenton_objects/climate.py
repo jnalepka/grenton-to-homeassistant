@@ -1,8 +1,8 @@
 """
 ==================================================
 Author: Jan Nalepka
-Script version: 2.1
-Date: 11.12.2024
+Script version: 2.2
+Date: 26.12.2024
 Repository: https://github.com/jnalepka/grenton-to-homeassistant
 ==================================================
 """
@@ -60,6 +60,7 @@ class GrentonClimate(ClimateEntity):
             ClimateEntityFeature.TURN_OFF |
             ClimateEntityFeature.TARGET_TEMPERATURE
         )
+        self._last_command_time = None
 
     @property
     def name(self):
@@ -104,6 +105,8 @@ class GrentonClimate(ClimateEntity):
             self._target_temperature = temperature
             command = {"command": f"{grenton_id_part_0}:execute(0, '{grenton_id_part_1}:set(8, 0)')"}
             command.update({"command_2": f"{grenton_id_part_0}:execute(0, '{grenton_id_part_1}:set(3, {temperature})')"})
+            self._last_command_time = self.hass.loop.time() if self.hass is not None else None
+            
             async with aiohttp.ClientSession() as session:
                 async with session.post(f"{self._api_endpoint}", json=command) as response:
                     response.raise_for_status()
@@ -121,6 +124,8 @@ class GrentonClimate(ClimateEntity):
             elif hvac_mode == HVACMode.COOL:
                 command = {"command": f"{grenton_id_part_0}:execute(0, '{grenton_id_part_1}:execute(0, 0)')"}
                 command.update({"command_2": f"{grenton_id_part_0}:execute(0, '{grenton_id_part_1}:set(7, 1)')"})
+            self._last_command_time = self.hass.loop.time() if self.hass is not None else None
+            
             async with aiohttp.ClientSession() as session:
                 async with session.post(f"{self._api_endpoint}", json=command) as response:
                     response.raise_for_status()
@@ -129,6 +134,9 @@ class GrentonClimate(ClimateEntity):
         
 
     async def async_update(self):
+        if self._last_command_time and self.hass.loop.time() - self._last_command_time < 2:
+            return
+        
         try:
             grenton_id_part_0, grenton_id_part_1 = self._grenton_id.split('->')
             command = {"status": f"return {grenton_id_part_0}:execute(0, '{grenton_id_part_1}:get(6)')"}
