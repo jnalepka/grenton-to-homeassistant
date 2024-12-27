@@ -83,6 +83,7 @@ class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             )
 
         self.hass.data[f"{DOMAIN}_last_api_endpoint"] = user_input[CONF_API_ENDPOINT]
+        self.hass.data[f"{DOMAIN}_last_grenton_clu_id"] = user_input[CONF_GRENTON_ID].split("->")[0]
 
         return self.async_create_entry(title=user_input[CONF_OBJECT_NAME], data={
             CONF_DEVICE_TYPE: self.device_type,
@@ -97,37 +98,38 @@ class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         
     def _get_device_schema(self):
         last_api_endpoint = self.hass.data.get(f"{DOMAIN}_last_api_endpoint", "http://192.168.0.4/HAlistener")
+        last_grenton_clu_id = self.hass.data.get(f"{DOMAIN}_last_grenton_clu_id", "CLU220000000")
         if self.device_type == CONF_DEVICE_TYPE_LIGHT:
             return vol.Schema({
                 vol.Required(CONF_OBJECT_NAME): str,
                 vol.Required(CONF_API_ENDPOINT, default=last_api_endpoint): str,
-                vol.Required(CONF_GRENTON_ID, default="CLU220000000->DOU0000"): str,
+                vol.Required(CONF_GRENTON_ID, default=last_grenton_clu_id+"->DOU0000"): str,
                 vol.Required(CONF_GRENTON_TYPE, default=CONF_GRENTON_TYPE_DOUT): vol.In([CONF_GRENTON_TYPE_DOUT, CONF_GRENTON_TYPE_DIMMER, CONF_GRENTON_TYPE_RGB, CONF_GRENTON_TYPE_LED_R, CONF_GRENTON_TYPE_LED_G, CONF_GRENTON_TYPE_LED_B, CONF_GRENTON_TYPE_LED_W]),
             })
         elif self.device_type == CONF_DEVICE_TYPE_SWITCH:
             return vol.Schema({
                 vol.Required(CONF_OBJECT_NAME): str,
                 vol.Required(CONF_API_ENDPOINT, default=last_api_endpoint): str,
-                vol.Required(CONF_GRENTON_ID, default="CLU220000000->DOU0000"): str,
+                vol.Required(CONF_GRENTON_ID, default=last_grenton_clu_id+"->DOU0000"): str,
             })
         elif self.device_type == CONF_DEVICE_TYPE_COVER:
             return vol.Schema({
                 vol.Required(CONF_OBJECT_NAME): str,
                 vol.Required(CONF_API_ENDPOINT, default=last_api_endpoint): str,
-                vol.Required(CONF_GRENTON_ID, default="CLU220000000->ROL0000"): str,
+                vol.Required(CONF_GRENTON_ID, default=last_grenton_clu_id+"->ROL0000"): str,
                 vol.Optional(CONF_REVERSED, default=False): bool,
             })
         elif self.device_type == CONF_DEVICE_TYPE_CLIMATE:
             return vol.Schema({
                 vol.Required(CONF_OBJECT_NAME): str,
                 vol.Required(CONF_API_ENDPOINT, default=last_api_endpoint): str,
-                vol.Required(CONF_GRENTON_ID, default="CLU220000000->THE0000"): str,
+                vol.Required(CONF_GRENTON_ID, default=last_grenton_clu_id+"->THE0000"): str,
             })
         elif self.device_type == CONF_DEVICE_TYPE_SENSOR:
             return vol.Schema({
                 vol.Required(CONF_OBJECT_NAME): str,
                 vol.Required(CONF_API_ENDPOINT, default=last_api_endpoint): str,
-                vol.Required(CONF_GRENTON_ID, default="CLU220000000->PAN0000"): str,
+                vol.Required(CONF_GRENTON_ID, default=last_grenton_clu_id+"->PAN0000"): str,
                 vol.Optional(CONF_GRENTON_TYPE, default=CONF_GRENTON_TYPE_DEFAULT_SENSOR): vol.In([CONF_GRENTON_TYPE_DEFAULT_SENSOR, CONF_GRENTON_TYPE_MODBUS_RTU, CONF_GRENTON_TYPE_MODBUS_VALUE, CONF_GRENTON_TYPE_MODBUS, CONF_GRENTON_TYPE_MODBUS_CLIENT, CONF_GRENTON_TYPE_MODBUS_SERVER, CONF_GRENTON_TYPE_MODBUS_SLAVE_RTU]),
                 vol.Optional(CONF_DEVICE_CLASS, default="temperature"): vol.In([
                     "apparent_power",
@@ -181,11 +183,11 @@ class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             return vol.Schema({
                 vol.Required(CONF_OBJECT_NAME): str,
                 vol.Required(CONF_API_ENDPOINT, default=last_api_endpoint): str,
-                vol.Required(CONF_GRENTON_ID, default="CLU220000000->DIN0000"): str
+                vol.Required(CONF_GRENTON_ID, default=last_grenton_clu_id+"->DIN0000"): str
             })
         elif self.device_type == CONF_DEVICE_TYPE_BUTTON:
             return vol.Schema({
                 vol.Required(CONF_OBJECT_NAME): str,
                 vol.Required(CONF_API_ENDPOINT, default=last_api_endpoint): str,
-                vol.Required(CONF_GRENTON_ID, default="script_name (script on GateHTTP) or CLU220000000->script_name"): str
+                vol.Required(CONF_GRENTON_ID, default="script_name (script on GateHTTP) or "+last_grenton_clu_id+"->script_name"): str
             })
