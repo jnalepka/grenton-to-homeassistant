@@ -18,6 +18,8 @@ If you like what I do, buy me a `coffee`!
 </a>
 
 
+<br>Watch the video how to use this integration: https://www.youtube.com/watch?v=uhjFG1vz1Ro
+
 # Installation
 
 If you're using [HACS](https://hacs.xyz/), is to the easiest way is to install Grenton Objects through it. The integration is still awaiting approval, but in the meantime, you can add it by going to HACS -> (menu) Custom repositories and pasting https://github.com/jnalepka/grenton-to-homeassistant (Type: Integration).
