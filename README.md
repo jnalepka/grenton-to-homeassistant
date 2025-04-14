@@ -108,7 +108,7 @@ GATE_HTTP->HA_Listener_Integration->SendResponse()
 | RGBW                                   | CLU221000001->LED1234    | Light                    |  grenton_type = RGB      | ON/OFF, BRIGHTNESS, RGB   |
 | ROLLER_SHUTTER / ZWAVE_ROLLER_SHUTTER  | CLU221000001->ROL1234    | Cover                    |  if ReversePosition=Yes, check reversed     | UP/DOWN, POSITION, TILT POSITION     |
 | THERMOSTAT                             | CLU221000001->THE1234    | Climate                  |                          | TEMPERATURE CONTROL   |
-| DIN / ZWAVE_DIN                        | CLU221000001->DIN1234    | Binary Sensor            |                          | BINARY SENSOR         |
+| DIN / ZWAVE_DIN / ZWAVE_BINARY_SENSOR  | CLU221000001->DIN1234    | Binary Sensor            |                          | BINARY SENSOR         |
 | ONE_WIRE / TEMPERATURE_SENSOR /  PANELSENSTEMP   |  CLU221000001->ONE1234     | Sensor       |  grenton_type = DEFAULT_SENSOR, device_class=temperature  | SENSOR        |
 | ANALOG IN                              | CLU221000001->ANA1234    | Sensor                   |  grenton_type = DEFAULT_SENSOR, device_class=?  | SENSOR        |
 | GATE HTTP User feature (where the script is)    | My_feature   (Without GATE-> !!)      | Sensor |  grenton_type = DEFAULT_SENSOR, device_class=?  | SENSOR        |
