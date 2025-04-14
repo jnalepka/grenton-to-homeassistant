@@ -106,7 +106,7 @@ GATE_HTTP->HA_Listener_Integration->SendResponse()
 | SINGLE ZWAVE_LED OBJECT                | CLU221000001->ZWA1234    | Light                    |  grenton_type = DIMMER   | ON/OFF, BRIGHTNESS    |
 | RGBW (R, G, B, W - SINGLE)             | CLU221000001->LED1234    | Light                    |  grenton_type = LED_R/G/B/W   | ON/OFF, BRIGHTNESS    |
 | RGBW                                   | CLU221000001->LED1234    | Light                    |  grenton_type = RGB      | ON/OFF, BRIGHTNESS, RGB   |
-| ROLLER_SHUTTER                         | CLU221000001->ROL1234    | Cover                    |  if ReversePosition=Yes, check reversed     | UP/DOWN, POSITION     |
+| ROLLER_SHUTTER                         | CLU221000001->ROL1234    | Cover                    |  if ReversePosition=Yes, check reversed     | UP/DOWN, POSITION, TILT POSITION     |
 | THERMOSTAT                             | CLU221000001->THE1234    | Climate                  |                          | TEMPERATURE CONTROL   |
 | DIN                                    | CLU221000001->DIN1234    | Binary Sensor            |                          | BINARY SENSOR         |
 | ONE_WIRE / TEMPERATURE_SENSOR /  PANELSENSTEMP   |  CLU221000001->ONE1234     | Sensor       |  grenton_type = DEFAULT_SENSOR, device_class=temperature  | SENSOR        |
