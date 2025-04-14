@@ -100,25 +100,25 @@ GATE_HTTP->HA_Listener_Integration->SendResponse()
 
 | Grenton Object                         | grenton_id (example)           | HA device_type           |    Other settings        |  HA functions         |
 |----------------------------------------|--------------------------|--------------------------|-----------------------|-----------------------|
-| DOUT (simple switch)                   | CLU221000001->DOU1234    | Switch                   |                          | ON/OFF                |
-| DOUT (light)                           | CLU221000001->DOU1234    | Light                    |  grenton_type = DOUT     | ON/OFF    |
+| DOUT / ZWAVE_DOUT (simple switch)      | CLU221000001->DOU1234    | Switch                   |                          | ON/OFF                |
+| DOUT / ZWAVE_DOUT (light)              | CLU221000001->DOU1234    | Light                    |  grenton_type = DOUT     | ON/OFF    |
 | DIMMER                                 | CLU221000001->DIM1234    | Light                    |  grenton_type = DIMMER   | ON/OFF, BRIGHTNESS    |
-| SINGLE ZWAVE_LED OBJECT                | CLU221000001->ZWA1234    | Light                    |  grenton_type = DIMMER   | ON/OFF, BRIGHTNESS    |
-| RGBW (R, G, B, W - SINGLE)             | CLU221000001->LED1234    | Light                    |  grenton_type = LED_R/G/B/W   | ON/OFF, BRIGHTNESS    |
+| DIMMER SINGLE ZWAVE_LED                | CLU221000001->ZWA1234    | Light                    |  grenton_type = DIMMER   | ON/OFF, BRIGHTNESS    |
+| DIMMER RGBW_Red, RGBW_Green, RGBW_Blue, RGBW_White | CLU221000001->LED1234    | Light                    |  grenton_type = LED_R/G/B/W   | ON/OFF, BRIGHTNESS    |
 | RGBW                                   | CLU221000001->LED1234    | Light                    |  grenton_type = RGB      | ON/OFF, BRIGHTNESS, RGB   |
-| ROLLER_SHUTTER                         | CLU221000001->ROL1234    | Cover                    |  if ReversePosition=Yes, check reversed     | UP/DOWN, POSITION, TILT POSITION     |
+| ROLLER_SHUTTER / ZWAVE_ROLLER_SHUTTER  | CLU221000001->ROL1234    | Cover                    |  if ReversePosition=Yes, check reversed     | UP/DOWN, POSITION, TILT POSITION     |
 | THERMOSTAT                             | CLU221000001->THE1234    | Climate                  |                          | TEMPERATURE CONTROL   |
-| DIN                                    | CLU221000001->DIN1234    | Binary Sensor            |                          | BINARY SENSOR         |
+| DIN / ZWAVE_DIN                        | CLU221000001->DIN1234    | Binary Sensor            |                          | BINARY SENSOR         |
 | ONE_WIRE / TEMPERATURE_SENSOR /  PANELSENSTEMP   |  CLU221000001->ONE1234     | Sensor       |  grenton_type = DEFAULT_SENSOR, device_class=temperature  | SENSOR        |
 | ANALOG IN                              | CLU221000001->ANA1234    | Sensor                   |  grenton_type = DEFAULT_SENSOR, device_class=?  | SENSOR        |
-| GATE HTTP User feature (integration clu)    | My_feature   (Without GATE-> !!)      | Sensor |  grenton_type = DEFAULT_SENSOR, device_class=?  | SENSOR        |
-| OTHER CLU User feature                 | CLU221000001->My_feature  | Sensor                  |  grenton_type = DEFAULT_SENSOR, device_class=?  | SENSOR        |
-| MODBUS (Virtual object TYPE!)                                 | CLU501000001->MOD1234     | Sensor                  |   grenton_type = MODBUS, device_class=?  | SENSOR        |
-| MODBUS_VALUE (Virtual object TYPE!)                                 | CLU501000001->MOD1234     | Sensor                  |  grenton_type = MODBUS_VALUE, device_class=?  | SENSOR        |
-| MODBUS_RTU                                 | CLU501000001->MOD1234     | Sensor                  |  grenton_type = MODBUS_RTU, device_class=?  | SENSOR        |
-| MODBUS_CLIENT                                 | CLU501000001->MOD1234     | Sensor                  |  grenton_type = MODBUS_CLIENT , device_class=?  | SENSOR        |
-| MODBUS_SERVER                                | CLU501000001->MOD1234     | Sensor                  |  grenton_type = MODBUS_SERVER, device_class=?  | SENSOR        |
-| MODBUS_SLAVE_RTU                                 | CLU501000001->MOD1234     | Sensor                  |  grenton_type = MODBUS_SLAVE_RTU, device_class=?  | SENSOR        |
+| GATE HTTP User feature (where the script is)    | My_feature   (Without GATE-> !!)      | Sensor |  grenton_type = DEFAULT_SENSOR, device_class=?  | SENSOR        |
+| CLU User feature                       | CLU221000001->My_feature  | Sensor                  |  grenton_type = DEFAULT_SENSOR, device_class=?  | SENSOR        |
+| MODBUS (Virtual object TYPE!)          | CLU501000001->MOD1234     | Sensor                  |   grenton_type = MODBUS, device_class=?  | SENSOR        |
+| MODBUS_VALUE (Virtual object TYPE!)    | CLU501000001->MOD1234     | Sensor                  |  grenton_type = MODBUS_VALUE, device_class=?  | SENSOR        |
+| MODBUS_RTU                             | CLU501000001->MOD1234     | Sensor                  |  grenton_type = MODBUS_RTU, device_class=?  | SENSOR        |
+| MODBUS_CLIENT                          | CLU501000001->MOD1234     | Sensor                  |  grenton_type = MODBUS_CLIENT , device_class=?  | SENSOR        |
+| MODBUS_SERVER                          | CLU501000001->MOD1234     | Sensor                  |  grenton_type = MODBUS_SERVER, device_class=?  | SENSOR        |
+| MODBUS_SLAVE_RTU                       | CLU501000001->MOD1234     | Sensor                  |  grenton_type = MODBUS_SLAVE_RTU, device_class=?  | SENSOR        |
 | GATE HTTP Script (integration clu)    | Script_name   (Without GATE-> !!)      | Sensor |  grenton_type = DEFAULT_SENSOR, device_class=?  | SENSOR        |
 | OTHER CLU Script                      | CLU221000001->Script_name  | Script                  |                         | BUTTON        |
 
