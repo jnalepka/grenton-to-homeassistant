@@ -22,7 +22,7 @@ If you like what I do, buy me a `coffee`!
 
 # Installation
 
-If you're using [HACS](https://hacs.xyz/), is to the easiest way is to install Grenton Objects through it. The integration is still awaiting approval, but in the meantime, you can add it by going to HACS -> (menu) Custom repositories and pasting https://github.com/jnalepka/grenton-to-homeassistant (Type: Integration).
+If you're using [HACS](https://hacs.xyz/), is to the easiest way is to install Grenton Objects through it.
 
 To install manually, copy the grenton_objects folder along with all its contents into the custom_components folder of your Home Assistant setup. This folder is typically found within the /config directory.
 
