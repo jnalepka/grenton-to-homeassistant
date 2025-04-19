@@ -292,7 +292,7 @@ async def test_async_update_zwave_reversed():
         m.get(api_endpoint, status=200, payload={"status": 2, "status_2": 100, "status_3": 0})
         
         await obj.async_update()
-        assert obj.is_opening
+        assert obj.is_closing
         assert obj.current_cover_position == 0
         assert obj.current_cover_tilt_position == 0
         assert obj.unique_id == "grenton_ZWA0000"
