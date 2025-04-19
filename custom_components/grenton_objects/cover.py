@@ -219,24 +219,15 @@ class GrentonCover(CoverEntity):
                 async with session.get(f"{self._api_endpoint}", json=command) as response:
                     response.raise_for_status()
                     data = await response.json()
+                    position = data.get("status_2")
                     if self._reversed:
-                        self._state = STATE_CLOSED if data.get("status_2") == 100 else STATE_OPEN
-                    else:
-                        self._state = STATE_CLOSED if data.get("status_2") == 0 else STATE_OPEN
+                        position = 100 - position
+                    self._state = STATE_CLOSED if position == 0 else STATE_OPEN
                     if data.get("status") == 1:
-                        if self._reversed:
-                            self._state = STATE_CLOSING
-                        else:
-                            self._state = STATE_OPENING
+                        self._state = STATE_OPENING
                     elif data.get("status") == 2:
-                        if self._reversed:
-                            self._state = STATE_OPENING
-                        else:
-                            self._state = STATE_CLOSING
-                    temp_position = data.get("status_2")
-                    if self._reversed:
-                        temp_position = 100 - temp_position
-                    self._current_cover_position = temp_position
+                        self._state = STATE_CLOSING
+                    self._current_cover_position = position
                     self._current_cover_tilt_position = int(data.get("status_3") * 100 / 90)
         except aiohttp.ClientError as ex:
             _LOGGER.error(f"Failed to update the cover state: {ex}")
