@@ -10,6 +10,7 @@ Repository: https://github.com/jnalepka/grenton-to-homeassistant
 DOMAIN = 'grenton_objects'
 CONF_API_ENDPOINT = 'api_endpoint'
 CONF_GRENTON_ID = 'grenton_id'
+CONF_POLLING = True
 CONF_GRENTON_TYPE = 'grenton_type'
 CONF_GRENTON_TYPE_UNKNOWN = 'UNKNOWN'
 CONF_GRENTON_TYPE_DOUT = 'DOUT'
