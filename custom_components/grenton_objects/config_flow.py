@@ -1,8 +1,8 @@
 """
 ==================================================
 Author: Jan Nalepka
-Script version: 2.1
-Date: 16.12.2024
+Script version: 3.0
+Date: 15.09.2025
 Repository: https://github.com/jnalepka/grenton-to-homeassistant
 ==================================================
 """
@@ -43,6 +43,7 @@ from .const import (
     CONF_DEVICE_TYPE_BUTTON
 )
 import logging
+from .options_flow import GrentonOptionsFlowHandler
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -57,7 +58,6 @@ DEVICE_TYPES = {
 }
 
 class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
-
     VERSION = 1
     def __init__(self):
         self.device_type = None
@@ -191,3 +191,8 @@ class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 vol.Required(CONF_API_ENDPOINT, default=last_api_endpoint): str,
                 vol.Required(CONF_GRENTON_ID, default="script_name (script on GateHTTP) or "+last_grenton_clu_id+"->script_name"): str
             })
+    
+    @staticmethod
+    @callback
+    def async_get_options_flow(config_entry: config_entries.ConfigEntry) -> GrentonOptionsFlowHandler:
+        return GrentonOptionsFlowHandler()

@@ -1,8 +1,8 @@
 """
 ==================================================
 Author: Jan Nalepka
-Script version: 2.2
-Date: 26.12.2024
+Script version: 3.0
+Date: 15.09.2025
 Repository: https://github.com/jnalepka/grenton-to-homeassistant
 ==================================================
 """
@@ -44,12 +44,10 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
 })
 
 async def async_setup_entry(hass, config_entry, async_add_entities):
-    device = config_entry.data
-    
-    api_endpoint = device.get(CONF_API_ENDPOINT)
-    grenton_id = device.get(CONF_GRENTON_ID)
-    grenton_type = device.get(CONF_GRENTON_TYPE, CONF_GRENTON_TYPE_UNKNOWN)
-    object_name = device.get(CONF_OBJECT_NAME, "Grenton Light")
+    api_endpoint = config_entry.options.get(CONF_API_ENDPOINT, config_entry.data.get(CONF_API_ENDPOINT))
+    grenton_id = config_entry.data.get(CONF_GRENTON_ID)
+    grenton_type = config_entry.data.get(CONF_GRENTON_TYPE, CONF_GRENTON_TYPE_UNKNOWN)
+    object_name = config_entry.data.get(CONF_OBJECT_NAME, "Grenton Light")
     
     async_add_entities([GrentonLight(api_endpoint, grenton_id, grenton_type, object_name)], True)
 
