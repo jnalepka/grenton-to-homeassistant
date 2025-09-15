@@ -1,0 +1,18 @@
+{
+  "config": {
+    "flow_title": "Add Grenton Object"
+  },
+  "options": {
+    "flow_title": "Grenton Object Settings",
+    "step": {
+      "init": {
+        "title": "Grenton Object Options",
+        "description": "Warning! If automatic update is disabled, Home Assistant will not automatically fetch the state from Grenton, manual update will be required (see manual).",
+        "data": {
+          "api_endpoint": "URL to the Grenton Http Listener",
+          "auto_update": "Automatic object update"
+        }
+      }
+    }
+  }
+}
