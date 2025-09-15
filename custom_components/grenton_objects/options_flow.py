@@ -32,5 +32,4 @@ class GrentonOptionsFlowHandler(config_entries.OptionsFlow):
             vol.Required(CONF_API_ENDPOINT, default=default_endpoint): str,
             vol.Required(CONF_AUTO_UPDATE, default=default_auto_update): bool
         })
-        return self.async_show_form(step_id="init", data_schema=data_schema, description="Change the Gate HTTP URL or toggle auto-update. If the auto-update is disabled, you should update the object state manually (see manual).",
-    title="Object Settings")
+        return self.async_show_form(step_id="init", data_schema=data_schema)
