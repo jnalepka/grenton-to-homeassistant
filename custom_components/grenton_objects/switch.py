@@ -12,7 +12,8 @@ from .const import (
     DOMAIN,
     CONF_API_ENDPOINT,
     CONF_GRENTON_ID,
-    CONF_OBJECT_NAME
+    CONF_OBJECT_NAME,
+    CONF_AUTO_UPDATE
 )
 
 import logging
@@ -36,17 +37,19 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
     api_endpoint = config_entry.options.get(CONF_API_ENDPOINT, config_entry.data.get(CONF_API_ENDPOINT))
     grenton_id = config_entry.data.get(CONF_GRENTON_ID)
     object_name = config_entry.data.get(CONF_OBJECT_NAME)
+    auto_update = config_entry.options.get(CONF_AUTO_UPDATE, True)
 
-    async_add_entities([GrentonSwitch(api_endpoint, grenton_id, object_name)], True)
+    async_add_entities([GrentonSwitch(api_endpoint, grenton_id, object_name, auto_update)], True)
 
 class GrentonSwitch(SwitchEntity):
-    def __init__(self, api_endpoint, grenton_id, object_name):
+    def __init__(self, api_endpoint, grenton_id, object_name, auto_update=True):
         self._api_endpoint = api_endpoint
         self._grenton_id = grenton_id
         self._object_name = object_name
         self._state = None
         self._unique_id = f"grenton_{grenton_id.split('->')[1]}"
         self._last_command_time = None
+        self._auto_update = auto_update
 
     @property
     def name(self):
@@ -87,6 +90,9 @@ class GrentonSwitch(SwitchEntity):
             _LOGGER.error(f"Failed to turn off the switch: {ex}")
 
     async def async_update(self):
+        if not self._auto_update:
+            return
+        
         if self._last_command_time and self.hass.loop.time() - self._last_command_time < 2:
             return
             

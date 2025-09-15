@@ -11,7 +11,8 @@ import voluptuous as vol
 from homeassistant import config_entries
 from .const import (
     DOMAIN,
-    CONF_API_ENDPOINT
+    CONF_API_ENDPOINT,
+    CONF_AUTO_UPDATE
 )
 
 class GrentonOptionsFlowHandler(config_entries.OptionsFlow):
@@ -25,7 +26,11 @@ class GrentonOptionsFlowHandler(config_entries.OptionsFlow):
             self.config_entry.data.get(CONF_API_ENDPOINT)
         )
 
+        default_auto_update = self.config_entry.options.get(CONF_AUTO_UPDATE, True)
+
         data_schema = vol.Schema({
-            vol.Required(CONF_API_ENDPOINT, default=default_endpoint): str
+            vol.Required(CONF_API_ENDPOINT, default=default_endpoint): str,
+            vol.Required(CONF_AUTO_UPDATE, default=default_auto_update): bool
         })
-        return self.async_show_form(step_id="init", data_schema=data_schema)
+        return self.async_show_form(step_id="init", data_schema=data_schema, description="Change the Gate HTTP URL or toggle auto-update. If the auto-update is disabled, you should update the object state manually (see manual).",
+    title="Object Settings")

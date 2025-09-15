@@ -12,7 +12,8 @@ from .const import (
     DOMAIN,
     CONF_API_ENDPOINT,
     CONF_GRENTON_ID,
-    CONF_OBJECT_NAME
+    CONF_OBJECT_NAME,
+    CONF_AUTO_UPDATE
 )
 import logging
 import json
@@ -35,16 +36,18 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
     api_endpoint = config_entry.options.get(CONF_API_ENDPOINT, config_entry.data.get(CONF_API_ENDPOINT))
     grenton_id = config_entry.data.get(CONF_GRENTON_ID)
     object_name = config_entry.data.get(CONF_OBJECT_NAME)
+    auto_update = config_entry.options.get(CONF_AUTO_UPDATE, True)
 
-    async_add_entities([GrentonBinarySensor(api_endpoint, grenton_id, object_name)], True)
+    async_add_entities([GrentonBinarySensor(api_endpoint, grenton_id, object_name, auto_update)], True)
 
 class GrentonBinarySensor(BinarySensorEntity):
-    def __init__(self, api_endpoint, grenton_id, object_name):
+    def __init__(self, api_endpoint, grenton_id, object_name, auto_update=True):
         self._api_endpoint = api_endpoint
         self._grenton_id = grenton_id
         self._object_name = object_name
         self._unique_id = f"grenton_{grenton_id.split('->')[1]}"
         self._state = None
+        self._auto_update = auto_update
 
     @property
     def name(self):
@@ -59,6 +62,9 @@ class GrentonBinarySensor(BinarySensorEntity):
         return self._state == STATE_ON
 
     async def async_update(self):
+        if not self._auto_update:
+            return
+        
         try:
             grenton_id_part_0, grenton_id_part_1 = self._grenton_id.split('->')
             command = {"status": f"return {grenton_id_part_0}:execute(0, '{grenton_id_part_1}:get(0)')"}

@@ -13,7 +13,8 @@ from .const import (
     CONF_API_ENDPOINT,
     CONF_GRENTON_ID,
     CONF_OBJECT_NAME,
-    CONF_REVERSED
+    CONF_REVERSED,
+    CONF_AUTO_UPDATE
 )
 import logging
 import json
@@ -44,11 +45,12 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
     grenton_id = config_entry.data.get(CONF_GRENTON_ID)
     reversed = config_entry.data.get(CONF_REVERSED)
     object_name = config_entry.data.get(CONF_OBJECT_NAME)
+    auto_update = config_entry.options.get(CONF_AUTO_UPDATE, True)
 
-    async_add_entities([GrentonCover(api_endpoint, grenton_id, reversed, object_name)], True)
+    async_add_entities([GrentonCover(api_endpoint, grenton_id, reversed, object_name, auto_update)], True)
 
 class GrentonCover(CoverEntity):
-    def __init__(self, api_endpoint, grenton_id, reversed, object_name):
+    def __init__(self, api_endpoint, grenton_id, reversed, object_name, auto_update=True):
         self._device_class = CoverDeviceClass.BLIND
         self._api_endpoint = api_endpoint
         self._grenton_id = grenton_id
@@ -59,6 +61,7 @@ class GrentonCover(CoverEntity):
         self._current_cover_tilt_position = 0
         self._unique_id = f"grenton_{grenton_id.split('->')[1]}"
         self._last_command_time = None
+        self._auto_update = auto_update
 
     @property
     def name(self):
@@ -196,6 +199,9 @@ class GrentonCover(CoverEntity):
             _LOGGER.error(f"Failed to close the cover tilt: {ex}")
 
     async def async_update(self):
+        if not self._auto_update:
+            return
+        
         if self._last_command_time and self.hass.loop.time() - self._last_command_time < 2:
             return
             

@@ -21,7 +21,8 @@ from .const import (
     CONF_GRENTON_TYPE_LED_R,
     CONF_GRENTON_TYPE_LED_G,
     CONF_GRENTON_TYPE_LED_B,
-    CONF_GRENTON_TYPE_LED_W
+    CONF_GRENTON_TYPE_LED_W,
+    CONF_AUTO_UPDATE
 )
 import logging
 import json
@@ -48,11 +49,12 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
     grenton_id = config_entry.data.get(CONF_GRENTON_ID)
     grenton_type = config_entry.data.get(CONF_GRENTON_TYPE, CONF_GRENTON_TYPE_UNKNOWN)
     object_name = config_entry.data.get(CONF_OBJECT_NAME, "Grenton Light")
+    auto_update = config_entry.options.get(CONF_AUTO_UPDATE, True)
     
-    async_add_entities([GrentonLight(api_endpoint, grenton_id, grenton_type, object_name)], True)
+    async_add_entities([GrentonLight(api_endpoint, grenton_id, grenton_type, object_name, auto_update)], True)
 
 class GrentonLight(LightEntity):
-    def __init__(self, api_endpoint, grenton_id, grenton_type, object_name):
+    def __init__(self, api_endpoint, grenton_id, grenton_type, object_name, auto_update=True):
         self._grenton_id = grenton_id
         self._api_endpoint = api_endpoint
         self._grenton_type = grenton_type
@@ -62,6 +64,7 @@ class GrentonLight(LightEntity):
         self._brightness = None
         self._rgb_color = None
         self._last_command_time = None
+        self._auto_update = auto_update
         
         grenton_id_part_0, grenton_id_part_1 = self._grenton_id.split('->')
         
@@ -225,6 +228,9 @@ class GrentonLight(LightEntity):
             _LOGGER.error(f"Failed to turn off the light: {ex}")
 
     async def async_update(self):
+        if not self._auto_update:
+            return
+        
         if self._last_command_time and self.hass.loop.time() - self._last_command_time < 2:
             return
             
