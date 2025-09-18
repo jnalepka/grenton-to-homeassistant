@@ -1,9 +1,29 @@
 {
   "config": {
-    "flow_title": "Dodaj obiekt Grenton"
+    "step": {
+      "user": {
+        "title": "Dodaj obiekt Grenton",
+        "description": "Uwaga! Do prawidłowego działania niezbędne jest utworzenie obiektu wirtualnego HTTP Listener w Grenton (manual https://github.com/jnalepka/grenton-to-homeassistant).",
+        "data": {
+          "device_type": "Typ urządzenia"
+        }
+      },
+      "device_config": {
+      "title": "Konfiguracja obiektu Grenton",
+      "description": "Uzupełnij szczegóły dla wybranego typu urządzenia.\n\nUwaga! Jeśli dodawany obiekt jest cechą użytkownika lub skryptem, który znajduje bezpośrednio na Gate HTTP, to w ID nie wpisujemy na początku \"CLU->\".",
+      "data": {
+        "name": "Nazwa obiektu",
+        "api_endpoint": "Adres URL do Grenton HTTP Listener",
+        "grenton_id": "ID obiektu Grenton",
+        "grenton_type": "Typ obiektu Grenton",
+        "device_class": "Klasa urządzenia",
+        "state_class": "Klasa stanu",
+        "reversed": "Odwrócony kierunek"
+      }
+    }
+    }
   },
   "options": {
-    "flow_title": "Ustawienia obiektu Grenton",
     "step": {
       "init": {
         "title": "Opcje obiektu Grenton",
@@ -12,6 +32,19 @@
           "api_endpoint": "URL do obiektu Grenton Http Listener",
           "auto_update": "Automatyczna aktualizacja obiektu"
         }
+      }
+    }
+  },
+  "selector": {
+    "device_type": {
+      "options": {
+        "light": "Światło – DOUT / DIMMER / LED / ZWAVE",
+        "switch": "Przełącznik – DOUT / ZWAVE",
+        "cover": "Rolety – ROLLER_SHUTTER / ZWAVE",
+        "climate": "Klimat – THERMOSTAT",
+        "sensor": "Czujnik – ONE_WIRE / TEMPERATURE / ANALOG IN / MODBUS / ZWAVE / Cecha użytkownika",
+        "binary_sensor": "Czujnik binarny 0/1 – DIN / BINARY_SENSOR / ZWAVE",
+        "button": "Skrypt użytkownika"
       }
     }
   }

@@ -1,8 +1,8 @@
 """
 ==================================================
 Author: Jan Nalepka
-Script version: 2.1
-Date: 02.12.2024
+Script version: 3.0
+Date: 15.09.2025
 Repository: https://github.com/jnalepka/grenton-to-homeassistant
 ==================================================
 """
@@ -10,7 +10,6 @@ Repository: https://github.com/jnalepka/grenton-to-homeassistant
 DOMAIN = 'grenton_objects'
 CONF_API_ENDPOINT = 'api_endpoint'
 CONF_GRENTON_ID = 'grenton_id'
-CONF_POLLING = True
 CONF_GRENTON_TYPE = 'grenton_type'
 CONF_GRENTON_TYPE_UNKNOWN = 'UNKNOWN'
 CONF_GRENTON_TYPE_DOUT = 'DOUT'
@@ -32,12 +31,87 @@ CONF_REVERSED = 'reversed'
 CONF_DEVICE_CLASS = 'device_class'
 CONF_STATE_CLASS = 'state_class'
 CONF_UNIT_OF_MEASUREMENT = 'unit_of_measurement'
-CONF_DEVICE_TYPE = 'device_type'
-CONF_DEVICE_TYPE_LIGHT = 'light'
-CONF_DEVICE_TYPE_SWITCH = 'switch'
-CONF_DEVICE_TYPE_COVER = 'cover'
-CONF_DEVICE_TYPE_CLIMATE = 'climate'
-CONF_DEVICE_TYPE_SENSOR = 'sensor'
-CONF_DEVICE_TYPE_BINARY_SENSOR = 'binary_sensor'
-CONF_DEVICE_TYPE_BUTTON = 'button'
-CONF_AUTO_UPDATE = "auto_update"
+CONF_AUTO_UPDATE = 'auto_update'
+
+DEVICE_TYPE_OPTIONS = [
+    "light",
+    "switch",
+    "cover",
+    "climate",
+    "sensor",
+    "binary_sensor",
+    "button"
+]
+
+DEVICE_CLASS_OPTIONS = [
+    "apparent_power",
+    "atmospheric_pressure",
+    "battery",
+    "carbon_dioxide",
+    "carbon_monoxide",
+    "current",
+    "distance",
+    "duration",
+    "energy",
+    "energy_storage",
+    "frequency",
+    "gas",
+    "humidity",
+    "illuminance",
+    "irradiance",
+    "moisture",
+    "nitrogen_dioxide",
+    "nitrogen_monoxide",
+    "nitrous_oxide",
+    "ozone",
+    "ph",
+    "pm1",
+    "pm10",
+    "pm25",
+    "power",
+    "power_factor",
+    "precipitation",
+    "precipitation_intensity",
+    "pressure",
+    "reactive_power",
+    "signal_strength",
+    "sound_pressure",
+    "speed",
+    "sulphur_dioxide",
+    "temperature",
+    "volatile_organic_compounds",
+    "volatile_organic_compounds_parts",
+    "voltage",
+    "volume",
+    "volume_flow_rate",
+    "volume_storage",
+    "water",
+    "weight",
+    "wind_speed"
+]
+
+STATE_CLASS_OPTIONS = [
+    "measurement",
+    "total",
+    "total_increasing"
+]
+
+LIGHT_GRENTON_TYPE_OPTIONS = [
+    CONF_GRENTON_TYPE_DOUT, 
+    CONF_GRENTON_TYPE_DIMMER, 
+    CONF_GRENTON_TYPE_RGB, 
+    CONF_GRENTON_TYPE_LED_R, 
+    CONF_GRENTON_TYPE_LED_G, 
+    CONF_GRENTON_TYPE_LED_B, 
+    CONF_GRENTON_TYPE_LED_W
+]
+
+SENSOR_GRENTON_TYPE_OPTIONS = [
+    CONF_GRENTON_TYPE_DEFAULT_SENSOR, 
+    CONF_GRENTON_TYPE_MODBUS_RTU, 
+    CONF_GRENTON_TYPE_MODBUS_VALUE, 
+    CONF_GRENTON_TYPE_MODBUS, 
+    CONF_GRENTON_TYPE_MODBUS_CLIENT, 
+    CONF_GRENTON_TYPE_MODBUS_SERVER, 
+    CONF_GRENTON_TYPE_MODBUS_SLAVE_RTU
+]
