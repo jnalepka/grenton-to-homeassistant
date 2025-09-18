@@ -27,6 +27,8 @@ from homeassistant.components.climate import (
 from homeassistant.const import UnitOfTemperature
 from datetime import timedelta
 from homeassistant.helpers.event import async_track_time_interval
+import asyncio
+import random
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -67,12 +69,16 @@ class GrentonClimate(ClimateEntity):
         self._auto_update = auto_update
         self._update_interval = update_interval
         self._unsub_interval = None
+        self._initialized = False
 
     async def async_added_to_hass(self):
+        await asyncio.sleep(random.uniform(0, self._update_interval))  # rozproszenie startu
+        self._initialized = True
         if self._auto_update:
             self._unsub_interval = async_track_time_interval(
                 self.hass, self._update_callback, timedelta(seconds=self._update_interval)
             )
+            await self.async_update()
 
     async def async_will_remove_from_hass(self):
         if self._unsub_interval:
@@ -116,6 +122,11 @@ class GrentonClimate(ClimateEntity):
     @property
     def supported_features(self):
         return self._supported_features
+    
+    @property
+    def should_poll(self):
+        return False
+
 
     async def async_set_temperature(self, **kwargs):
         try:
@@ -153,6 +164,9 @@ class GrentonClimate(ClimateEntity):
         
 
     async def async_update(self):
+        if not self._initialized:
+            return
+        
         if self._last_command_time and self.hass.loop.time() - self._last_command_time < 2:
             return
         

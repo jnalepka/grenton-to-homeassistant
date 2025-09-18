@@ -25,6 +25,8 @@ from homeassistant.components.binary_sensor import (
 from homeassistant.const import (STATE_ON, STATE_OFF)
 from datetime import timedelta
 from homeassistant.helpers.event import async_track_time_interval
+import asyncio
+import random
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -53,14 +55,16 @@ class GrentonBinarySensor(BinarySensorEntity):
         self._auto_update = auto_update
         self._update_interval = update_interval
         self._unsub_interval = None
-        _LOGGER.debug(f"Tworzę sensor: auto_update={auto_update}, interval={update_interval}")
+        self._initialized = False
 
     async def async_added_to_hass(self):
+        await asyncio.sleep(random.uniform(0, self._update_interval))  # rozproszenie startu
+        self._initialized = True
         if self._auto_update:
             self._unsub_interval = async_track_time_interval(
                 self.hass, self._update_callback, timedelta(seconds=self._update_interval)
             )
-        _LOGGER.debug(f"Sensor dodany: auto_update={self._auto_update}")
+            await self.async_update()
 
     async def async_will_remove_from_hass(self):
         if self._unsub_interval:
@@ -81,7 +85,14 @@ class GrentonBinarySensor(BinarySensorEntity):
     def is_on(self):
         return self._state == STATE_ON
 
+    @property
+    def should_poll(self):
+        return False
+
     async def async_update(self):
+        if not self._initialized:
+            return
+
         try:
             grenton_id_part_0, grenton_id_part_1 = self._grenton_id.split('->')
             command = {"status": f"return {grenton_id_part_0}:execute(0, '{grenton_id_part_1}:get(0)')"}

@@ -36,6 +36,8 @@ from homeassistant.const import (STATE_ON, STATE_OFF)
 from homeassistant.util import color as color_util
 from datetime import timedelta
 from homeassistant.helpers.event import async_track_time_interval
+import asyncio
+import random
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -70,6 +72,7 @@ class GrentonLight(LightEntity):
         self._auto_update = auto_update
         self._update_interval = update_interval
         self._unsub_interval = None
+        self._initialized = False
         
         grenton_id_part_0, grenton_id_part_1 = self._grenton_id.split('->')
         
@@ -110,10 +113,13 @@ class GrentonLight(LightEntity):
             self._supported_color_modes.add(ColorMode.ONOFF)
 
     async def async_added_to_hass(self):
+        await asyncio.sleep(random.uniform(0, self._update_interval))  # rozproszenie startu
+        self._initialized = True
         if self._auto_update:
             self._unsub_interval = async_track_time_interval(
                 self.hass, self._update_callback, timedelta(seconds=self._update_interval)
             )
+            await self.async_update()
 
     async def async_will_remove_from_hass(self):
         if self._unsub_interval:
@@ -162,6 +168,10 @@ class GrentonLight(LightEntity):
     @property
     def rgb_color(self):
         return self._rgb_color
+    
+    @property
+    def should_poll(self):
+        return False
         
     def _generate_command(self, command_type, grenton_id_part_0, grenton_id_part_1, action, xml_index, param):
         return {
@@ -246,6 +256,9 @@ class GrentonLight(LightEntity):
             _LOGGER.error(f"Failed to turn off the light: {ex}")
 
     async def async_update(self):
+        if not self._initialized:
+            return
+        
         if self._last_command_time and self.hass.loop.time() - self._last_command_time < 2:
             return
             

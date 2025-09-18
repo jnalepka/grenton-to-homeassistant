@@ -26,6 +26,8 @@ from homeassistant.components.switch import (
 from homeassistant.const import (STATE_ON, STATE_OFF)
 from datetime import timedelta
 from homeassistant.helpers.event import async_track_time_interval
+import asyncio
+import random
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -55,12 +57,16 @@ class GrentonSwitch(SwitchEntity):
         self._auto_update = auto_update
         self._update_interval = update_interval
         self._unsub_interval = None
+        self._initialized = False
 
     async def async_added_to_hass(self):
+        await asyncio.sleep(random.uniform(0, self._update_interval))  # rozproszenie startu
+        self._initialized = True
         if self._auto_update:
             self._unsub_interval = async_track_time_interval(
                 self.hass, self._update_callback, timedelta(seconds=self._update_interval)
             )
+            await self.async_update()
 
     async def async_will_remove_from_hass(self):
         if self._unsub_interval:
@@ -80,6 +86,10 @@ class GrentonSwitch(SwitchEntity):
     @property
     def unique_id(self):
         return self._unique_id
+    
+    @property
+    def should_poll(self):
+        return False
 
     async def async_turn_on(self, **kwargs):
         try:
@@ -108,6 +118,9 @@ class GrentonSwitch(SwitchEntity):
             _LOGGER.error(f"Failed to turn off the switch: {ex}")
 
     async def async_update(self):
+        if not self._initialized:
+            return
+        
         if self._last_command_time and self.hass.loop.time() - self._last_command_time < 2:
             return
             
