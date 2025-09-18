@@ -1,8 +1,8 @@
 """
 ==================================================
 Author: Jan Nalepka
-Script version: 2.0
-Date: 02.12.2024
+Script version: 3.0
+Date: 15.09.2025
 Repository: https://github.com/jnalepka/grenton-to-homeassistant
 ==================================================
 """
@@ -10,7 +10,6 @@ Repository: https://github.com/jnalepka/grenton-to-homeassistant
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.typing import ConfigType
-from .const import DOMAIN
 
 async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     return True
