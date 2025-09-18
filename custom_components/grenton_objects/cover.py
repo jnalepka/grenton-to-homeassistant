@@ -9,15 +9,15 @@ Repository: https://github.com/jnalepka/grenton-to-homeassistant
 
 import aiohttp
 from .const import (
-    DOMAIN,
     CONF_API_ENDPOINT,
     CONF_GRENTON_ID,
     CONF_OBJECT_NAME,
     CONF_REVERSED,
-    CONF_AUTO_UPDATE
+    CONF_AUTO_UPDATE,
+    CONF_UPDATE_INTERVAL, 
+    DEFAULT_UPDATE_INTERVAL
 )
 import logging
-import json
 import voluptuous as vol
 from homeassistant.components.cover import (
     CoverEntity,
@@ -30,6 +30,8 @@ from homeassistant.const import (
     STATE_OPEN,
     STATE_OPENING
 )
+from datetime import timedelta
+from homeassistant.helpers.event import async_track_time_interval
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -46,11 +48,12 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
     reversed = config_entry.data.get(CONF_REVERSED)
     object_name = config_entry.data.get(CONF_OBJECT_NAME)
     auto_update = config_entry.options.get(CONF_AUTO_UPDATE, True)
+    update_interval = config_entry.options.get(CONF_UPDATE_INTERVAL, DEFAULT_UPDATE_INTERVAL)
 
-    async_add_entities([GrentonCover(api_endpoint, grenton_id, reversed, object_name, auto_update)], True)
+    async_add_entities([GrentonCover(api_endpoint, grenton_id, reversed, object_name, auto_update, update_interval)], True)
 
 class GrentonCover(CoverEntity):
-    def __init__(self, api_endpoint, grenton_id, reversed, object_name, auto_update=True):
+    def __init__(self, api_endpoint, grenton_id, reversed, object_name, auto_update, update_interval):
         self._device_class = CoverDeviceClass.BLIND
         self._api_endpoint = api_endpoint
         self._grenton_id = grenton_id
@@ -62,6 +65,21 @@ class GrentonCover(CoverEntity):
         self._unique_id = f"grenton_{grenton_id.split('->')[1]}"
         self._last_command_time = None
         self._auto_update = auto_update
+        self._update_interval = update_interval
+        self._unsub_interval = None
+
+    async def async_added_to_hass(self):
+        if self._auto_update:
+            self._unsub_interval = async_track_time_interval(
+                self.hass, self._update_callback, timedelta(seconds=self._update_interval)
+            )
+
+    async def async_will_remove_from_hass(self):
+        if self._unsub_interval:
+            self._unsub_interval()
+
+    async def _update_callback(self, now):
+        await self.async_update()
 
     @property
     def name(self):
@@ -199,9 +217,6 @@ class GrentonCover(CoverEntity):
             _LOGGER.error(f"Failed to close the cover tilt: {ex}")
 
     async def async_update(self):
-        if not self._auto_update:
-            return
-        
         if self._last_command_time and self.hass.loop.time() - self._last_command_time < 2:
             return
             

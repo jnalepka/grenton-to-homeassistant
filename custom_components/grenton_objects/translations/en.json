@@ -76,6 +76,10 @@
           "grenton_id": "Grenton Object ID"
         }
       }
+    },
+    "error": {
+      "min_value": "The value must be at least {min}.",
+      "max_value": "The value can be at most {max}."
     }
   },
   "options": {
@@ -85,7 +89,8 @@
         "description": "Note! If automatic updates are disabled, Home Assistant will not automatically retrieve the state from Grenton; manual updates will be required (see manual).",
         "data": {
           "api_endpoint": "URL to Grenton HTTP Listener",
-          "auto_update": "Automatic Object Updates"
+          "auto_update": "Automatic Object Updates",
+          "update_interval": "Refresh interval (in seconds)"
         }
       }
     }

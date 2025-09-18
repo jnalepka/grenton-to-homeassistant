@@ -32,6 +32,8 @@ CONF_DEVICE_CLASS = 'device_class'
 CONF_STATE_CLASS = 'state_class'
 CONF_UNIT_OF_MEASUREMENT = 'unit_of_measurement'
 CONF_AUTO_UPDATE = 'auto_update'
+CONF_UPDATE_INTERVAL = "update_interval"
+DEFAULT_UPDATE_INTERVAL = 30  # sekundy
 
 DEVICE_TYPE_OPTIONS = [
     "light",

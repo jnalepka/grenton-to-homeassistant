@@ -10,9 +10,10 @@ Repository: https://github.com/jnalepka/grenton-to-homeassistant
 import voluptuous as vol
 from homeassistant import config_entries
 from .const import (
-    DOMAIN,
     CONF_API_ENDPOINT,
-    CONF_AUTO_UPDATE
+    CONF_AUTO_UPDATE,
+    CONF_UPDATE_INTERVAL, 
+    DEFAULT_UPDATE_INTERVAL
 )
 
 class GrentonOptionsFlowHandler(config_entries.OptionsFlow):
@@ -28,8 +29,14 @@ class GrentonOptionsFlowHandler(config_entries.OptionsFlow):
 
         default_auto_update = self.config_entry.options.get(CONF_AUTO_UPDATE, True)
 
+        default_update_interval = self.config_entry.options.get(
+            CONF_UPDATE_INTERVAL,
+            DEFAULT_UPDATE_INTERVAL
+        )
+
         data_schema = vol.Schema({
             vol.Required(CONF_API_ENDPOINT, default=default_endpoint): str,
-            vol.Required(CONF_AUTO_UPDATE, default=default_auto_update): bool
+            vol.Required(CONF_AUTO_UPDATE, default=default_auto_update): bool,
+            vol.Required(CONF_UPDATE_INTERVAL, default=default_update_interval): vol.All(vol.Coerce(int), vol.Range(min=5, max=3600))
         })
         return self.async_show_form(step_id="init", data_schema=data_schema)

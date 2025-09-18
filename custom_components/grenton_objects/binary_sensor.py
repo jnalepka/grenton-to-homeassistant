@@ -9,20 +9,22 @@ Repository: https://github.com/jnalepka/grenton-to-homeassistant
 
 import aiohttp
 from .const import (
-    DOMAIN,
     CONF_API_ENDPOINT,
     CONF_GRENTON_ID,
     CONF_OBJECT_NAME,
-    CONF_AUTO_UPDATE
+    CONF_AUTO_UPDATE,
+    CONF_UPDATE_INTERVAL, 
+    DEFAULT_UPDATE_INTERVAL
 )
 import logging
-import json
 import voluptuous as vol
 from homeassistant.components.binary_sensor import (
     BinarySensorEntity,
     PLATFORM_SCHEMA
 )
 from homeassistant.const import (STATE_ON, STATE_OFF)
+from datetime import timedelta
+from homeassistant.helpers.event import async_track_time_interval
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -37,17 +39,35 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
     grenton_id = config_entry.data.get(CONF_GRENTON_ID)
     object_name = config_entry.data.get(CONF_OBJECT_NAME)
     auto_update = config_entry.options.get(CONF_AUTO_UPDATE, True)
+    update_interval = config_entry.options.get(CONF_UPDATE_INTERVAL, DEFAULT_UPDATE_INTERVAL)
 
-    async_add_entities([GrentonBinarySensor(api_endpoint, grenton_id, object_name, auto_update)], True)
+    async_add_entities([GrentonBinarySensor(api_endpoint, grenton_id, object_name, auto_update, update_interval)], True)
 
 class GrentonBinarySensor(BinarySensorEntity):
-    def __init__(self, api_endpoint, grenton_id, object_name, auto_update=True):
+    def __init__(self, api_endpoint, grenton_id, object_name, auto_update, update_interval):
         self._api_endpoint = api_endpoint
         self._grenton_id = grenton_id
         self._object_name = object_name
         self._unique_id = f"grenton_{grenton_id.split('->')[1]}"
         self._state = None
         self._auto_update = auto_update
+        self._update_interval = update_interval
+        self._unsub_interval = None
+        _LOGGER.debug(f"Tworzę sensor: auto_update={auto_update}, interval={update_interval}")
+
+    async def async_added_to_hass(self):
+        if self._auto_update:
+            self._unsub_interval = async_track_time_interval(
+                self.hass, self._update_callback, timedelta(seconds=self._update_interval)
+            )
+        _LOGGER.debug(f"Sensor dodany: auto_update={self._auto_update}")
+
+    async def async_will_remove_from_hass(self):
+        if self._unsub_interval:
+            self._unsub_interval()
+
+    async def _update_callback(self, now):
+        await self.async_update()
 
     @property
     def name(self):
@@ -62,9 +82,6 @@ class GrentonBinarySensor(BinarySensorEntity):
         return self._state == STATE_ON
 
     async def async_update(self):
-        if not self._auto_update:
-            return
-        
         try:
             grenton_id_part_0, grenton_id_part_1 = self._grenton_id.split('->')
             command = {"status": f"return {grenton_id_part_0}:execute(0, '{grenton_id_part_1}:get(0)')"}

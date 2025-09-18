@@ -9,7 +9,6 @@ Repository: https://github.com/jnalepka/grenton-to-homeassistant
 
 import aiohttp
 from .const import (
-    DOMAIN,
     CONF_API_ENDPOINT,
     CONF_GRENTON_ID,
     CONF_OBJECT_NAME,
@@ -22,10 +21,11 @@ from .const import (
     CONF_GRENTON_TYPE_LED_G,
     CONF_GRENTON_TYPE_LED_B,
     CONF_GRENTON_TYPE_LED_W,
-    CONF_AUTO_UPDATE
+    CONF_AUTO_UPDATE,
+    CONF_UPDATE_INTERVAL, 
+    DEFAULT_UPDATE_INTERVAL
 )
 import logging
-import json
 import voluptuous as vol
 from homeassistant.components.light import (
     LightEntity, 
@@ -34,6 +34,8 @@ from homeassistant.components.light import (
 )
 from homeassistant.const import (STATE_ON, STATE_OFF)
 from homeassistant.util import color as color_util
+from datetime import timedelta
+from homeassistant.helpers.event import async_track_time_interval
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -50,11 +52,12 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
     grenton_type = config_entry.data.get(CONF_GRENTON_TYPE, CONF_GRENTON_TYPE_UNKNOWN)
     object_name = config_entry.data.get(CONF_OBJECT_NAME, "Grenton Light")
     auto_update = config_entry.options.get(CONF_AUTO_UPDATE, True)
+    update_interval = config_entry.options.get(CONF_UPDATE_INTERVAL, DEFAULT_UPDATE_INTERVAL)
     
-    async_add_entities([GrentonLight(api_endpoint, grenton_id, grenton_type, object_name, auto_update)], True)
+    async_add_entities([GrentonLight(api_endpoint, grenton_id, grenton_type, object_name, auto_update, update_interval)], True)
 
 class GrentonLight(LightEntity):
-    def __init__(self, api_endpoint, grenton_id, grenton_type, object_name, auto_update=True):
+    def __init__(self, api_endpoint, grenton_id, grenton_type, object_name, auto_update, update_interval):
         self._grenton_id = grenton_id
         self._api_endpoint = api_endpoint
         self._grenton_type = grenton_type
@@ -65,6 +68,8 @@ class GrentonLight(LightEntity):
         self._rgb_color = None
         self._last_command_time = None
         self._auto_update = auto_update
+        self._update_interval = update_interval
+        self._unsub_interval = None
         
         grenton_id_part_0, grenton_id_part_1 = self._grenton_id.split('->')
         
@@ -103,6 +108,19 @@ class GrentonLight(LightEntity):
             self._supported_color_modes.add(ColorMode.RGB)
         else:
             self._supported_color_modes.add(ColorMode.ONOFF)
+
+    async def async_added_to_hass(self):
+        if self._auto_update:
+            self._unsub_interval = async_track_time_interval(
+                self.hass, self._update_callback, timedelta(seconds=self._update_interval)
+            )
+
+    async def async_will_remove_from_hass(self):
+        if self._unsub_interval:
+            self._unsub_interval()
+
+    async def _update_callback(self, now):
+        await self.async_update()
 
     @property
     def name(self):
@@ -228,9 +246,6 @@ class GrentonLight(LightEntity):
             _LOGGER.error(f"Failed to turn off the light: {ex}")
 
     async def async_update(self):
-        if not self._auto_update:
-            return
-        
         if self._last_command_time and self.hass.loop.time() - self._last_command_time < 2:
             return
             
