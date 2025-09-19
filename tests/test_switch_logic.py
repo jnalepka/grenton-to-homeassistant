@@ -8,7 +8,7 @@ async def test_async_turn_on():
     grenton_id = "CLU220000000->DOU0000"
     object_name = "Test Switch"
     
-    obj = GrentonSwitch(api_endpoint, grenton_id, object_name)
+    obj = GrentonSwitch(api_endpoint, grenton_id, object_name, True, 5)
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -29,7 +29,7 @@ async def test_async_turn_off():
     grenton_id = "CLU220000000->DOU0000"
     object_name = "Test Switch"
     
-    obj = GrentonSwitch(api_endpoint, grenton_id, object_name)
+    obj = GrentonSwitch(api_endpoint, grenton_id, object_name, True, 5)
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -50,7 +50,7 @@ async def test_async_update():
     grenton_id = "CLU220000000->DOU0000"
     object_name = "Test Switch"
     
-    obj = GrentonSwitch(api_endpoint, grenton_id, object_name)
+    obj = GrentonSwitch(api_endpoint, grenton_id, object_name, True, 5)
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 1})
@@ -71,7 +71,7 @@ async def test_async_update_off():
     grenton_id = "CLU220000000->DOU0000"
     object_name = "Test Switch"
     
-    obj = GrentonSwitch(api_endpoint, grenton_id, object_name)
+    obj = GrentonSwitch(api_endpoint, grenton_id, object_name, True, 5)
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 0}) 

@@ -8,7 +8,7 @@ async def test_async_update():
     grenton_id = "CLU220000000->DIN0000"
     object_name = "Test Binary Sensor"
     
-    obj = GrentonBinarySensor(api_endpoint, grenton_id, object_name)
+    obj = GrentonBinarySensor(api_endpoint, grenton_id, object_name, True, 5)
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 1})
@@ -29,7 +29,7 @@ async def test_async_update_off():
     grenton_id = "CLU220000000->DIN0000"
     object_name = "Test Binary Sensor"
     
-    obj = GrentonBinarySensor(api_endpoint, grenton_id, object_name)
+    obj = GrentonBinarySensor(api_endpoint, grenton_id, object_name, True, 5)
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 0}) 

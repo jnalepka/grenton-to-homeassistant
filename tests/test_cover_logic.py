@@ -9,7 +9,7 @@ async def test_async_open_cover():
     reversed = False
     object_name = "Test Cover"
     
-    obj = GrentonCover(api_endpoint, grenton_id, reversed, object_name)
+    obj = GrentonCover(api_endpoint, grenton_id, reversed, object_name, True, 5)
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -30,7 +30,7 @@ async def test_async_close_cover():
     reversed = False
     object_name = "Test Cover"
     
-    obj = GrentonCover(api_endpoint, grenton_id, reversed, object_name)
+    obj = GrentonCover(api_endpoint, grenton_id, reversed, object_name, True, 5)
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -51,7 +51,7 @@ async def test_async_stop_cover():
     reversed = False
     object_name = "Test Cover"
     
-    obj = GrentonCover(api_endpoint, grenton_id, reversed, object_name)
+    obj = GrentonCover(api_endpoint, grenton_id, reversed, object_name, True, 5)
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -72,7 +72,7 @@ async def test_async_set_cover_position():
     reversed = False
     object_name = "Test Cover"
     
-    obj = GrentonCover(api_endpoint, grenton_id, reversed, object_name)
+    obj = GrentonCover(api_endpoint, grenton_id, reversed, object_name, True, 5)
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -93,7 +93,7 @@ async def test_async_set_cover_position_reversed():
     reversed = True
     object_name = "Test Cover"
     
-    obj = GrentonCover(api_endpoint, grenton_id, reversed, object_name)
+    obj = GrentonCover(api_endpoint, grenton_id, reversed, object_name, True, 5)
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -114,7 +114,7 @@ async def test_async_set_cover_position_zwave():
     reversed = False
     object_name = "Test Cover"
     
-    obj = GrentonCover(api_endpoint, grenton_id, reversed, object_name)
+    obj = GrentonCover(api_endpoint, grenton_id, reversed, object_name, True, 5)
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -135,7 +135,7 @@ async def test_async_set_cover_position_reversed_zwave():
     reversed = True
     object_name = "Test Cover"
     
-    obj = GrentonCover(api_endpoint, grenton_id, reversed, object_name)
+    obj = GrentonCover(api_endpoint, grenton_id, reversed, object_name, True, 5)
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -157,7 +157,7 @@ async def test_async_set_cover_tilt_position():
     reversed = False
     object_name = "Test Cover"
     
-    obj = GrentonCover(api_endpoint, grenton_id, reversed, object_name)
+    obj = GrentonCover(api_endpoint, grenton_id, reversed, object_name, True, 5)
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -177,7 +177,7 @@ async def test_async_open_cover_tilt():
     reversed = False
     object_name = "Test Cover"
     
-    obj = GrentonCover(api_endpoint, grenton_id, reversed, object_name)
+    obj = GrentonCover(api_endpoint, grenton_id, reversed, object_name, True, 5)
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -197,7 +197,7 @@ async def test_async_close_cover_tilt():
     reversed = False
     object_name = "Test Cover"
     
-    obj = GrentonCover(api_endpoint, grenton_id, reversed, object_name)
+    obj = GrentonCover(api_endpoint, grenton_id, reversed, object_name, True, 5)
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -217,7 +217,7 @@ async def test_async_update():
     reversed = False
     object_name = "Test Cover"
     
-    obj = GrentonCover(api_endpoint, grenton_id, reversed, object_name)
+    obj = GrentonCover(api_endpoint, grenton_id, reversed, object_name, True, 5)
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 1, "status_2": 50, "status_3": 90})
@@ -240,7 +240,7 @@ async def test_async_update_zwave():
     reversed = False
     object_name = "Test Cover"
     
-    obj = GrentonCover(api_endpoint, grenton_id, reversed, object_name)
+    obj = GrentonCover(api_endpoint, grenton_id, reversed, object_name, True, 5)
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 0, "status_2": 50, "status_3": 90})
@@ -263,7 +263,7 @@ async def test_async_update_reversed():
     reversed = True
     object_name = "Test Cover"
     
-    obj = GrentonCover(api_endpoint, grenton_id, reversed, object_name)
+    obj = GrentonCover(api_endpoint, grenton_id, reversed, object_name, True, 5)
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 0, "status_2": 100, "status_3": 90})
@@ -286,7 +286,7 @@ async def test_async_update_zwave_reversed():
     reversed = True
     object_name = "Test Cover"
     
-    obj = GrentonCover(api_endpoint, grenton_id, reversed, object_name)
+    obj = GrentonCover(api_endpoint, grenton_id, reversed, object_name, True, 5)
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 2, "status_2": 100, "status_3": 0})

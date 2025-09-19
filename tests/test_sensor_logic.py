@@ -12,7 +12,7 @@ async def test_async_update_palensenstemp():
     device_class = "temperature"
     state_class = "measurement"
     
-    obj = GrentonSensor(api_endpoint, grenton_id, grenton_type, object_name, unit_of_measurement, device_class, state_class)
+    obj = GrentonSensor(api_endpoint, grenton_id, grenton_type, object_name, unit_of_measurement, device_class, state_class, True, 5)
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 22.4})
@@ -39,7 +39,7 @@ async def test_async_update_gate_feature():
     device_class = "wind_speed"
     state_class = "measurement"
     
-    obj = GrentonSensor(api_endpoint, grenton_id, grenton_type, object_name, unit_of_measurement, device_class, state_class)
+    obj = GrentonSensor(api_endpoint, grenton_id, grenton_type, object_name, unit_of_measurement, device_class, state_class, True, 5)
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 50.5})
@@ -66,7 +66,7 @@ async def test_async_update_clu_feature():
     device_class = "wind_speed"
     state_class = "measurement"
     
-    obj = GrentonSensor(api_endpoint, grenton_id, grenton_type, object_name, unit_of_measurement, device_class, state_class)
+    obj = GrentonSensor(api_endpoint, grenton_id, grenton_type, object_name, unit_of_measurement, device_class, state_class, True, 5)
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 50.5})
@@ -93,7 +93,7 @@ async def test_async_update_clu_feature_contain_obj_id():
     device_class = "humidity"
     state_class = "measurement"
     
-    obj = GrentonSensor(api_endpoint, grenton_id, grenton_type, object_name, unit_of_measurement, device_class, state_class)
+    obj = GrentonSensor(api_endpoint, grenton_id, grenton_type, object_name, unit_of_measurement, device_class, state_class, True, 5)
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 100})
@@ -120,7 +120,7 @@ async def test_async_update_modbus():
     device_class = "energy"
     state_class = "total"
     
-    obj = GrentonSensor(api_endpoint, grenton_id, grenton_type, object_name, unit_of_measurement, device_class, state_class)
+    obj = GrentonSensor(api_endpoint, grenton_id, grenton_type, object_name, unit_of_measurement, device_class, state_class, True, 5)
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 192349.12})
@@ -147,7 +147,7 @@ async def test_async_update_modbus_value():
     device_class = "energy"
     state_class = "total_increasing"
     
-    obj = GrentonSensor(api_endpoint, grenton_id, grenton_type, object_name, unit_of_measurement, device_class, state_class)
+    obj = GrentonSensor(api_endpoint, grenton_id, grenton_type, object_name, unit_of_measurement, device_class, state_class, True, 5)
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 0.01})
@@ -174,7 +174,7 @@ async def test_async_update_modbus_rtu():
     device_class = "power"
     state_class = "measurement"
     
-    obj = GrentonSensor(api_endpoint, grenton_id, grenton_type, object_name, unit_of_measurement, device_class, state_class)
+    obj = GrentonSensor(api_endpoint, grenton_id, grenton_type, object_name, unit_of_measurement, device_class, state_class, True, 5)
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 0.1})
@@ -201,7 +201,7 @@ async def test_async_update_modbus_client():
     device_class = "ph"
     state_class = "measurement"
     
-    obj = GrentonSensor(api_endpoint, grenton_id, grenton_type, object_name, unit_of_measurement, device_class, state_class)
+    obj = GrentonSensor(api_endpoint, grenton_id, grenton_type, object_name, unit_of_measurement, device_class, state_class, True, 5)
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 192349.12})
@@ -228,7 +228,7 @@ async def test_async_update_modbus_server():
     device_class = "water"
     state_class = "measurement"
     
-    obj = GrentonSensor(api_endpoint, grenton_id, grenton_type, object_name, unit_of_measurement, device_class, state_class)
+    obj = GrentonSensor(api_endpoint, grenton_id, grenton_type, object_name, unit_of_measurement, device_class, state_class, True, 5)
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 60})
@@ -255,7 +255,7 @@ async def test_async_update_modbus_slave_rtu():
     device_class = "volatile_organic_compounds_parts"
     state_class = "measurement"
     
-    obj = GrentonSensor(api_endpoint, grenton_id, grenton_type, object_name, unit_of_measurement, device_class, state_class)
+    obj = GrentonSensor(api_endpoint, grenton_id, grenton_type, object_name, unit_of_measurement, device_class, state_class, True, 5)
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 401.1})
