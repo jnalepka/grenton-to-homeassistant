@@ -10,6 +10,7 @@ async def test_async_turn_on_dout():
     grenton_type = "DOUT"
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name, True, 5)
+    obj._initialized = True
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -32,6 +33,7 @@ async def test_async_turn_on_dimmer():
     grenton_type = "DIMMER"
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name, True, 5)
+    obj._initialized = True
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -55,6 +57,7 @@ async def test_async_turn_on_dimmer_zwave():
     grenton_type = "DIMMER"
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name, True, 5)
+    obj._initialized = True
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -78,6 +81,7 @@ async def test_async_turn_on_dimmer_rgbw_r():
     grenton_type = "LED_R"
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name, True, 5)
+    obj._initialized = True
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -101,6 +105,7 @@ async def test_async_turn_on_dimmer_rgbw_g():
     grenton_type = "LED_G"
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name, True, 5)
+    obj._initialized = True
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -124,6 +129,7 @@ async def test_async_turn_on_dimmer_rgbw_b():
     grenton_type = "LED_B"
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name, True, 5)
+    obj._initialized = True
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -147,6 +153,7 @@ async def test_async_turn_on_dimmer_rgbw_w():
     grenton_type = "LED_W"
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name, True, 5)
+    obj._initialized = True
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -170,6 +177,7 @@ async def test_async_turn_on_rgb():
     grenton_type = "RGB"
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name, True, 5)
+    obj._initialized = True
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -193,6 +201,7 @@ async def test_async_turn_on_rgb_zwave():
     grenton_type = "RGB"
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name, True, 5)
+    obj._initialized = True
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -216,6 +225,7 @@ async def test_async_turn_on_rgb_no_rgb_color():
     grenton_type = "RGB"
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name, True, 5)
+    obj._initialized = True
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -238,6 +248,7 @@ async def test_async_turn_off_dout():
     grenton_type = "DOUT"
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name, True, 5)
+    obj._initialized = True
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -260,6 +271,7 @@ async def test_async_turn_off_dimmer():
     grenton_type = "DIMMER"
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name, True, 5)
+    obj._initialized = True
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -282,6 +294,7 @@ async def test_async_turn_off_dimmer_zwave():
     grenton_type = "DIMMER"
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name, True, 5)
+    obj._initialized = True
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -304,6 +317,7 @@ async def test_async_turn_off_rgb():
     grenton_type = "RGB"
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name, True, 5)
+    obj._initialized = True
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -326,6 +340,7 @@ async def test_async_turn_off_rgb_led_r():
     grenton_type = "LED_R"
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name, True, 5)
+    obj._initialized = True
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -348,6 +363,7 @@ async def test_async_turn_off_rgb_led_g():
     grenton_type = "LED_G"
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name, True, 5)
+    obj._initialized = True
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -370,6 +386,7 @@ async def test_async_turn_off_rgb_led_b():
     grenton_type = "LED_B"
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name, True, 5)
+    obj._initialized = True
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -392,6 +409,7 @@ async def test_async_turn_off_rgb_led_w():
     grenton_type = "LED_W"
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name, True, 5)
+    obj._initialized = True
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -414,6 +432,7 @@ async def test_async_update_dout():
     grenton_type = "DOUT"
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name, True, 5)
+    obj._initialized = True
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 1})
@@ -436,6 +455,7 @@ async def test_async_update_dout_off():
     grenton_type = "DOUT"
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name, True, 5)
+    obj._initialized = True
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 0})
@@ -458,6 +478,7 @@ async def test_async_update_dimmer():
     grenton_type = "DIMMER"
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name, True, 5)
+    obj._initialized = True
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 1})
@@ -481,6 +502,7 @@ async def test_async_update_dimmer_off():
     grenton_type = "DIMMER"
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name, True, 5)
+    obj._initialized = True
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 0})
@@ -504,6 +526,7 @@ async def test_async_update_dimmer_zwave():
     grenton_type = "DIMMER"
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name, True, 5)
+    obj._initialized = True
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 255})
@@ -527,6 +550,7 @@ async def test_async_update_dimmer_zwave_off():
     grenton_type = "DIMMER"
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name, True, 5)
+    obj._initialized = True
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 0})
@@ -550,6 +574,7 @@ async def test_async_update_led_r():
     grenton_type = "LED_R"
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name, True, 5)
+    obj._initialized = True
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 255})
@@ -573,6 +598,7 @@ async def test_async_update_led_g_off():
     grenton_type = "LED_G"
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name, True, 5)
+    obj._initialized = True
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 0})
@@ -596,6 +622,7 @@ async def test_async_update_led_b_off():
     grenton_type = "LED_B"
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name, True, 5)
+    obj._initialized = True
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 0})
@@ -619,6 +646,7 @@ async def test_async_update_led_w():
     grenton_type = "LED_W"
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name, True, 5)
+    obj._initialized = True
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 255})
@@ -642,6 +670,7 @@ async def test_async_update_rgb():
     grenton_type = "RGB"
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name, True, 5)
+    obj._initialized = True
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 1, "status_2": "#000000"})
@@ -666,6 +695,7 @@ async def test_async_update_rgb_off():
     grenton_type = "RGB"
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name, True, 5)
+    obj._initialized = True
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 0, "status_2": "#ffffff"})
@@ -690,6 +720,7 @@ async def test_async_update_rgb_zwave():
     grenton_type = "RGB"
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name, True, 5)
+    obj._initialized = True
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 1, "status_2": "#ffffff"})

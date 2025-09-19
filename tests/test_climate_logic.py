@@ -10,6 +10,7 @@ async def test_async_set_temperature():
     object_name = "Test Thermostat"
     
     obj = GrentonClimate(api_endpoint, grenton_id, object_name, True, 5)
+    obj._initialized = True
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -30,6 +31,7 @@ async def test_async_set_hvac_mode_heat():
     object_name = "Test Thermostat"
     
     obj = GrentonClimate(api_endpoint, grenton_id, object_name, True, 5)
+    obj._initialized = True
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -50,6 +52,7 @@ async def test_async_set_hvac_mode_cool():
     object_name = "Test Thermostat"
     
     obj = GrentonClimate(api_endpoint, grenton_id, object_name, True, 5)
+    obj._initialized = True
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -70,6 +73,7 @@ async def test_async_update():
     object_name = "Test Thermostat"
     
     obj = GrentonClimate(api_endpoint, grenton_id, object_name, True, 5)
+    obj._initialized = True
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 1, "status_2": 1, "status_3": 22, "status_4": 19})
