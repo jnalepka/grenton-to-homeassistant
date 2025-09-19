@@ -14,7 +14,9 @@ async def test_async_update_palensenstemp():
     
     obj = GrentonSensor(api_endpoint, grenton_id, grenton_type, object_name, unit_of_measurement, device_class, state_class, True, 5)
     obj._initialized = True
+    await hass.async_add_executor_job(lambda: None)
     await obj.async_added_to_hass()
+    obj.hass = hass
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 22.4})
@@ -43,7 +45,9 @@ async def test_async_update_gate_feature():
     
     obj = GrentonSensor(api_endpoint, grenton_id, grenton_type, object_name, unit_of_measurement, device_class, state_class, True, 5)
     obj._initialized = True
+    await hass.async_add_executor_job(lambda: None)
     await obj.async_added_to_hass()
+    obj.hass = hass
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 50.5})
@@ -72,7 +76,9 @@ async def test_async_update_clu_feature():
     
     obj = GrentonSensor(api_endpoint, grenton_id, grenton_type, object_name, unit_of_measurement, device_class, state_class, True, 5)
     obj._initialized = True
+    await hass.async_add_executor_job(lambda: None)
     await obj.async_added_to_hass()
+    obj.hass = hass
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 50.5})
@@ -101,7 +107,9 @@ async def test_async_update_clu_feature_contain_obj_id():
     
     obj = GrentonSensor(api_endpoint, grenton_id, grenton_type, object_name, unit_of_measurement, device_class, state_class, True, 5)
     obj._initialized = True
+    await hass.async_add_executor_job(lambda: None)
     await obj.async_added_to_hass()
+    obj.hass = hass
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 100})
@@ -130,7 +138,9 @@ async def test_async_update_modbus():
     
     obj = GrentonSensor(api_endpoint, grenton_id, grenton_type, object_name, unit_of_measurement, device_class, state_class, True, 5)
     obj._initialized = True
+    await hass.async_add_executor_job(lambda: None)
     await obj.async_added_to_hass()
+    obj.hass = hass
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 192349.12})
@@ -159,7 +169,9 @@ async def test_async_update_modbus_value():
     
     obj = GrentonSensor(api_endpoint, grenton_id, grenton_type, object_name, unit_of_measurement, device_class, state_class, True, 5)
     obj._initialized = True
+    await hass.async_add_executor_job(lambda: None)
     await obj.async_added_to_hass()
+    obj.hass = hass
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 0.01})
@@ -188,7 +200,9 @@ async def test_async_update_modbus_rtu():
     
     obj = GrentonSensor(api_endpoint, grenton_id, grenton_type, object_name, unit_of_measurement, device_class, state_class, True, 5)
     obj._initialized = True
+    await hass.async_add_executor_job(lambda: None)
     await obj.async_added_to_hass()
+    obj.hass = hass
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 0.1})
@@ -217,7 +231,9 @@ async def test_async_update_modbus_client():
     
     obj = GrentonSensor(api_endpoint, grenton_id, grenton_type, object_name, unit_of_measurement, device_class, state_class, True, 5)
     obj._initialized = True
+    await hass.async_add_executor_job(lambda: None)
     await obj.async_added_to_hass()
+    obj.hass = hass
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 192349.12})
@@ -246,7 +262,9 @@ async def test_async_update_modbus_server():
     
     obj = GrentonSensor(api_endpoint, grenton_id, grenton_type, object_name, unit_of_measurement, device_class, state_class, True, 5)
     obj._initialized = True
+    await hass.async_add_executor_job(lambda: None)
     await obj.async_added_to_hass()
+    obj.hass = hass
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 60})
@@ -275,7 +293,9 @@ async def test_async_update_modbus_slave_rtu():
     
     obj = GrentonSensor(api_endpoint, grenton_id, grenton_type, object_name, unit_of_measurement, device_class, state_class, True, 5)
     obj._initialized = True
+    await hass.async_add_executor_job(lambda: None)
     await obj.async_added_to_hass()
+    obj.hass = hass
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 401.1})

@@ -11,7 +11,9 @@ async def test_async_set_temperature():
     
     obj = GrentonClimate(api_endpoint, grenton_id, object_name, True, 5)
     obj._initialized = True
+    await hass.async_add_executor_job(lambda: None)
     await obj.async_added_to_hass()
+    obj.hass = hass
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -33,7 +35,9 @@ async def test_async_set_hvac_mode_heat():
     
     obj = GrentonClimate(api_endpoint, grenton_id, object_name, True, 5)
     obj._initialized = True
+    await hass.async_add_executor_job(lambda: None)
     await obj.async_added_to_hass()
+    obj.hass = hass
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -55,7 +59,9 @@ async def test_async_set_hvac_mode_cool():
     
     obj = GrentonClimate(api_endpoint, grenton_id, object_name, True, 5)
     obj._initialized = True
+    await hass.async_add_executor_job(lambda: None)
     await obj.async_added_to_hass()
+    obj.hass = hass
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -77,7 +83,9 @@ async def test_async_update():
     
     obj = GrentonClimate(api_endpoint, grenton_id, object_name, True, 5)
     obj._initialized = True
+    await hass.async_add_executor_job(lambda: None)
     await obj.async_added_to_hass()
+    obj.hass = hass
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 1, "status_2": 1, "status_3": 22, "status_4": 19})
