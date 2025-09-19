@@ -101,6 +101,7 @@ class GrentonBinarySensor(BinarySensorEntity):
                     response.raise_for_status()
                     data = await response.json()
                     self._state = STATE_OFF if data.get("status") == 0 else STATE_ON
+                    self.async_write_ha_state()
         except aiohttp.ClientError as ex:
             _LOGGER.error(f"Failed to update the binary sensor state: {ex}")
             self._state = None

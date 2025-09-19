@@ -64,6 +64,6 @@ class GrentonScript(ButtonEntity):
             async with aiohttp.ClientSession() as session:
                 async with session.post(self._api_endpoint, json=command) as response:
                     response.raise_for_status()
-                    _LOGGER.info(f"Script {self._object_name} executed successfully.")
+                    _LOGGER.info(f"Script {self._object_name} executed successfully (Grenton).")
         except aiohttp.ClientError as ex:
             _LOGGER.error(f"Failed to execute script {self._object_name}: {ex}")

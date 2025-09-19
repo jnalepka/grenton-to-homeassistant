@@ -125,6 +125,7 @@ class GrentonCover(CoverEntity):
             command = {"command": f"{grenton_id_part_0}:execute(0, '{grenton_id_part_1}:execute(0, 0)')"}
             self._state = STATE_OPENING
             self._last_command_time = self.hass.loop.time() if self.hass is not None else None
+            self.async_write_ha_state()
             
             async with aiohttp.ClientSession() as session:
                 async with session.post(f"{self._api_endpoint}", json=command) as response:
@@ -138,6 +139,7 @@ class GrentonCover(CoverEntity):
             command = {"command": f"{grenton_id_part_0}:execute(0, '{grenton_id_part_1}:execute(1, 0)')"}
             self._state = STATE_CLOSING
             self._last_command_time = self.hass.loop.time() if self.hass is not None else None
+            self.async_write_ha_state()
             
             async with aiohttp.ClientSession() as session:
                 async with session.post(f"{self._api_endpoint}", json=command) as response:
@@ -151,6 +153,7 @@ class GrentonCover(CoverEntity):
             command = {"command": f"{grenton_id_part_0}:execute(0, '{grenton_id_part_1}:execute(3, 0)')"}
             self._state = STATE_OPEN
             self._last_command_time = self.hass.loop.time() if self.hass is not None else None
+            self.async_write_ha_state()
             
             async with aiohttp.ClientSession() as session:
                 async with session.post(f"{self._api_endpoint}", json=command) as response:
@@ -180,6 +183,7 @@ class GrentonCover(CoverEntity):
                 else:
                     self._state = STATE_CLOSING
             self._last_command_time = self.hass.loop.time() if self.hass is not None else None
+            self.async_write_ha_state()
             
             async with aiohttp.ClientSession() as session:
                 async with session.post(f"{self._api_endpoint}", json=command) as response:
@@ -195,6 +199,7 @@ class GrentonCover(CoverEntity):
             tilt_position = int(tilt_position * 90 / 100)
             command = {"command": f"{grenton_id_part_0}:execute(0, '{grenton_id_part_1}:execute(9, {tilt_position})')"}
             self._last_command_time = self.hass.loop.time() if self.hass is not None else None
+            self.async_write_ha_state()
             
             async with aiohttp.ClientSession() as session:
                 async with session.post(f"{self._api_endpoint}", json=command) as response:
@@ -207,6 +212,7 @@ class GrentonCover(CoverEntity):
             grenton_id_part_0, grenton_id_part_1 = self._grenton_id.split('->')
             command = {"command": f"{grenton_id_part_0}:execute(0, '{grenton_id_part_1}:execute(9, 90)')"}
             self._last_command_time = self.hass.loop.time() if self.hass is not None else None
+            self.async_write_ha_state()
             
             async with aiohttp.ClientSession() as session:
                 async with session.post(f"{self._api_endpoint}", json=command) as response:
@@ -219,6 +225,7 @@ class GrentonCover(CoverEntity):
             grenton_id_part_0, grenton_id_part_1 = self._grenton_id.split('->')
             command = {"command": f"{grenton_id_part_0}:execute(0, '{grenton_id_part_1}:execute(9, 0)')"}
             self._last_command_time = self.hass.loop.time() if self.hass is not None else None
+            self.async_write_ha_state()
             
             async with aiohttp.ClientSession() as session:
                 async with session.post(f"{self._api_endpoint}", json=command) as response:
@@ -261,6 +268,7 @@ class GrentonCover(CoverEntity):
                         self._state = STATE_CLOSING
                     self._current_cover_position = position
                     self._current_cover_tilt_position = int(data.get("status_3") * 100 / 90)
+                    self.async_write_ha_state()
         except aiohttp.ClientError as ex:
             _LOGGER.error(f"Failed to update the cover state: {ex}")
             self._state = None

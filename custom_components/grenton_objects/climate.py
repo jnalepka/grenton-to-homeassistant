@@ -136,6 +136,7 @@ class GrentonClimate(ClimateEntity):
             command = {"command": f"{grenton_id_part_0}:execute(0, '{grenton_id_part_1}:set(8, 0)')"}
             command.update({"command_2": f"{grenton_id_part_0}:execute(0, '{grenton_id_part_1}:set(3, {temperature})')"})
             self._last_command_time = self.hass.loop.time() if self.hass is not None else None
+            self.async_write_ha_state()
             
             async with aiohttp.ClientSession() as session:
                 async with session.post(f"{self._api_endpoint}", json=command) as response:
@@ -155,6 +156,7 @@ class GrentonClimate(ClimateEntity):
                 command = {"command": f"{grenton_id_part_0}:execute(0, '{grenton_id_part_1}:execute(0, 0)')"}
                 command.update({"command_2": f"{grenton_id_part_0}:execute(0, '{grenton_id_part_1}:set(7, 1)')"})
             self._last_command_time = self.hass.loop.time() if self.hass is not None else None
+            self.async_write_ha_state()
             
             async with aiohttp.ClientSession() as session:
                 async with session.post(f"{self._api_endpoint}", json=command) as response:
@@ -183,6 +185,7 @@ class GrentonClimate(ClimateEntity):
                     self._hvac_mode = HVACMode.OFF if data.get("status") == 0 else (HVACMode.COOL if data.get("status_2") == 1 else HVACMode.HEAT)
                     self._target_temperature = data.get("status_3")
                     self._current_temperature = data.get("status_4")
+                    self.async_write_ha_state()
         except aiohttp.ClientError as ex:
             _LOGGER.error(f"Failed to update the climate state: {ex}")
             self._hvac_mode = HVACMode.OFF

@@ -199,6 +199,7 @@ class GrentonSensor(SensorEntity):
                     response.raise_for_status()
                     data = await response.json()
                     self._native_value = data.get("status")
+                    self.async_write_ha_state()
         except aiohttp.ClientError as ex:
             _LOGGER.error(f"Failed to update the sensor value: {ex}")
             self._native_value = None
