@@ -10,6 +10,7 @@ async def test_async_update():
     
     obj = GrentonBinarySensor(api_endpoint, grenton_id, object_name, True, 5)
     obj._initialized = True
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 1})
@@ -32,6 +33,7 @@ async def test_async_update_off():
     
     obj = GrentonBinarySensor(api_endpoint, grenton_id, object_name, True, 5)
     obj._initialized = True
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 0}) 

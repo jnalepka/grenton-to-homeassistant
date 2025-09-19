@@ -9,7 +9,6 @@ async def test_async_script_local():
     object_name = "Test Script"
     
     obj = GrentonScript(api_endpoint, grenton_id, object_name)
-    obj._initialized = True
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -30,7 +29,6 @@ async def test_async_script_remote():
     object_name = "Test Script"
     
     obj = GrentonScript(api_endpoint, grenton_id, object_name)
-    obj._initialized = True
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})

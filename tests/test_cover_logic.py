@@ -11,6 +11,7 @@ async def test_async_open_cover():
     
     obj = GrentonCover(api_endpoint, grenton_id, reversed, object_name, True, 5)
     obj._initialized = True
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -33,6 +34,7 @@ async def test_async_close_cover():
     
     obj = GrentonCover(api_endpoint, grenton_id, reversed, object_name, True, 5)
     obj._initialized = True
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -55,6 +57,7 @@ async def test_async_stop_cover():
     
     obj = GrentonCover(api_endpoint, grenton_id, reversed, object_name, True, 5)
     obj._initialized = True
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -77,6 +80,7 @@ async def test_async_set_cover_position():
     
     obj = GrentonCover(api_endpoint, grenton_id, reversed, object_name, True, 5)
     obj._initialized = True
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -99,6 +103,7 @@ async def test_async_set_cover_position_reversed():
     
     obj = GrentonCover(api_endpoint, grenton_id, reversed, object_name, True, 5)
     obj._initialized = True
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -121,6 +126,7 @@ async def test_async_set_cover_position_zwave():
     
     obj = GrentonCover(api_endpoint, grenton_id, reversed, object_name, True, 5)
     obj._initialized = True
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -143,6 +149,7 @@ async def test_async_set_cover_position_reversed_zwave():
     
     obj = GrentonCover(api_endpoint, grenton_id, reversed, object_name, True, 5)
     obj._initialized = True
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -166,6 +173,7 @@ async def test_async_set_cover_tilt_position():
     
     obj = GrentonCover(api_endpoint, grenton_id, reversed, object_name, True, 5)
     obj._initialized = True
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -187,6 +195,7 @@ async def test_async_open_cover_tilt():
     
     obj = GrentonCover(api_endpoint, grenton_id, reversed, object_name, True, 5)
     obj._initialized = True
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -208,6 +217,7 @@ async def test_async_close_cover_tilt():
     
     obj = GrentonCover(api_endpoint, grenton_id, reversed, object_name, True, 5)
     obj._initialized = True
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -229,6 +239,7 @@ async def test_async_update():
     
     obj = GrentonCover(api_endpoint, grenton_id, reversed, object_name, True, 5)
     obj._initialized = True
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 1, "status_2": 50, "status_3": 90})
@@ -253,6 +264,7 @@ async def test_async_update_zwave():
     
     obj = GrentonCover(api_endpoint, grenton_id, reversed, object_name, True, 5)
     obj._initialized = True
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 0, "status_2": 50, "status_3": 90})
@@ -277,6 +289,7 @@ async def test_async_update_reversed():
     
     obj = GrentonCover(api_endpoint, grenton_id, reversed, object_name, True, 5)
     obj._initialized = True
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 0, "status_2": 100, "status_3": 90})
@@ -301,6 +314,7 @@ async def test_async_update_zwave_reversed():
     
     obj = GrentonCover(api_endpoint, grenton_id, reversed, object_name, True, 5)
     obj._initialized = True
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 2, "status_2": 100, "status_3": 0})
