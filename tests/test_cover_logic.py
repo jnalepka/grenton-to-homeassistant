@@ -1,6 +1,7 @@
 import pytest
 from aioresponses import aioresponses
 from custom_components.grenton_objects.cover import GrentonCover
+from homeassistant.core import HomeAssistant
 
 @pytest.mark.asyncio
 async def test_async_open_cover():

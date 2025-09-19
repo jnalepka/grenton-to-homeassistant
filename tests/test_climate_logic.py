@@ -2,6 +2,7 @@ import pytest
 from aioresponses import aioresponses
 from custom_components.grenton_objects.climate import GrentonClimate
 from homeassistant.components.climate import HVACMode
+from homeassistant.core import HomeAssistant
 
 @pytest.mark.asyncio
 async def test_async_set_temperature():
