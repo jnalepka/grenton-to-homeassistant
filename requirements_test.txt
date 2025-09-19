@@ -1,3 +1,4 @@
 pytest
 aioresponses
-pytest-homeassistant-custom-component[2023.9.0]
+pytest-homeassistant-custom-component
+homeassistant==2023.9.0
