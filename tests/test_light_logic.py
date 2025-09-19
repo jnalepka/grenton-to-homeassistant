@@ -3,7 +3,8 @@ from aioresponses import aioresponses
 from custom_components.grenton_objects.light import GrentonLight
 
 @pytest.mark.asyncio
-async def test_async_turn_on_dout(hass):
+async def test_async_turn_on_dout():
+    hass = HomeAssistant()
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->DOU0000"
     object_name = "Test Light"
@@ -11,9 +12,8 @@ async def test_async_turn_on_dout(hass):
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name, True, 5)
     obj._initialized = True
-    await hass.async_add_executor_job(lambda: None)
-    await obj.async_added_to_hass()
     obj.hass = hass
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -29,7 +29,8 @@ async def test_async_turn_on_dout(hass):
         )
 
 @pytest.mark.asyncio
-async def test_async_turn_on_dimmer(hass):
+async def test_async_turn_on_dimmer():
+    hass = HomeAssistant()
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->DIM0000"
     object_name = "Test Light"
@@ -37,9 +38,8 @@ async def test_async_turn_on_dimmer(hass):
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name, True, 5)
     obj._initialized = True
-    await hass.async_add_executor_job(lambda: None)
-    await obj.async_added_to_hass()
     obj.hass = hass
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -56,7 +56,8 @@ async def test_async_turn_on_dimmer(hass):
         )
 
 @pytest.mark.asyncio
-async def test_async_turn_on_dimmer_zwave(hass):
+async def test_async_turn_on_dimmer_zwave():
+    hass = HomeAssistant()
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ZWA0000"
     object_name = "Test Light"
@@ -64,9 +65,8 @@ async def test_async_turn_on_dimmer_zwave(hass):
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name, True, 5)
     obj._initialized = True
-    await hass.async_add_executor_job(lambda: None)
-    await obj.async_added_to_hass()
     obj.hass = hass
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -83,7 +83,8 @@ async def test_async_turn_on_dimmer_zwave(hass):
         )
 
 @pytest.mark.asyncio
-async def test_async_turn_on_dimmer_rgbw_r(hass):
+async def test_async_turn_on_dimmer_rgbw_r():
+    hass = HomeAssistant()
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->LED0000"
     object_name = "Test Light"
@@ -91,9 +92,8 @@ async def test_async_turn_on_dimmer_rgbw_r(hass):
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name, True, 5)
     obj._initialized = True
-    await hass.async_add_executor_job(lambda: None)
-    await obj.async_added_to_hass()
     obj.hass = hass
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -110,7 +110,8 @@ async def test_async_turn_on_dimmer_rgbw_r(hass):
         )
 
 @pytest.mark.asyncio
-async def test_async_turn_on_dimmer_rgbw_g(hass):
+async def test_async_turn_on_dimmer_rgbw_g():
+    hass = HomeAssistant()
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->LED0000"
     object_name = "Test Light"
@@ -118,9 +119,8 @@ async def test_async_turn_on_dimmer_rgbw_g(hass):
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name, True, 5)
     obj._initialized = True
-    await hass.async_add_executor_job(lambda: None)
-    await obj.async_added_to_hass()
     obj.hass = hass
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -137,7 +137,8 @@ async def test_async_turn_on_dimmer_rgbw_g(hass):
         )
 
 @pytest.mark.asyncio
-async def test_async_turn_on_dimmer_rgbw_b(hass):
+async def test_async_turn_on_dimmer_rgbw_b():
+    hass = HomeAssistant()
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->LED0000"
     object_name = "Test Light"
@@ -145,9 +146,8 @@ async def test_async_turn_on_dimmer_rgbw_b(hass):
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name, True, 5)
     obj._initialized = True
-    await hass.async_add_executor_job(lambda: None)
-    await obj.async_added_to_hass()
     obj.hass = hass
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -164,7 +164,8 @@ async def test_async_turn_on_dimmer_rgbw_b(hass):
         )
 
 @pytest.mark.asyncio
-async def test_async_turn_on_dimmer_rgbw_w(hass):
+async def test_async_turn_on_dimmer_rgbw_w():
+    hass = HomeAssistant()
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->LED0000"
     object_name = "Test Light"
@@ -172,9 +173,8 @@ async def test_async_turn_on_dimmer_rgbw_w(hass):
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name, True, 5)
     obj._initialized = True
-    await hass.async_add_executor_job(lambda: None)
-    await obj.async_added_to_hass()
     obj.hass = hass
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -191,7 +191,8 @@ async def test_async_turn_on_dimmer_rgbw_w(hass):
         )
 
 @pytest.mark.asyncio
-async def test_async_turn_on_rgb(hass):
+async def test_async_turn_on_rgb():
+    hass = HomeAssistant()
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->LED0000"
     object_name = "Test Light"
@@ -199,9 +200,8 @@ async def test_async_turn_on_rgb(hass):
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name, True, 5)
     obj._initialized = True
-    await hass.async_add_executor_job(lambda: None)
-    await obj.async_added_to_hass()
     obj.hass = hass
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -218,7 +218,8 @@ async def test_async_turn_on_rgb(hass):
         )
 
 @pytest.mark.asyncio
-async def test_async_turn_on_rgb_zwave(hass):
+async def test_async_turn_on_rgb_zwave():
+    hass = HomeAssistant()
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ZWA0000"
     object_name = "Test Light"
@@ -226,9 +227,8 @@ async def test_async_turn_on_rgb_zwave(hass):
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name, True, 5)
     obj._initialized = True
-    await hass.async_add_executor_job(lambda: None)
-    await obj.async_added_to_hass()
     obj.hass = hass
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -245,7 +245,8 @@ async def test_async_turn_on_rgb_zwave(hass):
         )
         
 @pytest.mark.asyncio
-async def test_async_turn_on_rgb_no_rgb_color(hass):
+async def test_async_turn_on_rgb_no_rgb_color():
+    hass = HomeAssistant()
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->RGB0000"
     object_name = "Test Light"
@@ -253,9 +254,8 @@ async def test_async_turn_on_rgb_no_rgb_color(hass):
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name, True, 5)
     obj._initialized = True
-    await hass.async_add_executor_job(lambda: None)
-    await obj.async_added_to_hass()
     obj.hass = hass
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -271,7 +271,8 @@ async def test_async_turn_on_rgb_no_rgb_color(hass):
         )
 
 @pytest.mark.asyncio
-async def test_async_turn_off_dout(hass):
+async def test_async_turn_off_dout():
+    hass = HomeAssistant()
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->DOU0000"
     object_name = "Test Light"
@@ -279,9 +280,8 @@ async def test_async_turn_off_dout(hass):
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name, True, 5)
     obj._initialized = True
-    await hass.async_add_executor_job(lambda: None)
-    await obj.async_added_to_hass()
     obj.hass = hass
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -297,7 +297,8 @@ async def test_async_turn_off_dout(hass):
         )
 
 @pytest.mark.asyncio
-async def test_async_turn_off_dimmer(hass):
+async def test_async_turn_off_dimmer():
+    hass = HomeAssistant()
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->DOU0000"
     object_name = "Test Light"
@@ -305,9 +306,8 @@ async def test_async_turn_off_dimmer(hass):
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name, True, 5)
     obj._initialized = True
-    await hass.async_add_executor_job(lambda: None)
-    await obj.async_added_to_hass()
     obj.hass = hass
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -323,7 +323,8 @@ async def test_async_turn_off_dimmer(hass):
         )
 
 @pytest.mark.asyncio
-async def test_async_turn_off_dimmer_zwave(hass):
+async def test_async_turn_off_dimmer_zwave():
+    hass = HomeAssistant()
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ZWA0000"
     object_name = "Test Light"
@@ -331,9 +332,8 @@ async def test_async_turn_off_dimmer_zwave(hass):
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name, True, 5)
     obj._initialized = True
-    await hass.async_add_executor_job(lambda: None)
-    await obj.async_added_to_hass()
     obj.hass = hass
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -349,7 +349,8 @@ async def test_async_turn_off_dimmer_zwave(hass):
         )
 
 @pytest.mark.asyncio
-async def test_async_turn_off_rgb(hass):
+async def test_async_turn_off_rgb():
+    hass = HomeAssistant()
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->RGB0000"
     object_name = "Test Light"
@@ -357,9 +358,8 @@ async def test_async_turn_off_rgb(hass):
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name, True, 5)
     obj._initialized = True
-    await hass.async_add_executor_job(lambda: None)
-    await obj.async_added_to_hass()
     obj.hass = hass
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -375,7 +375,8 @@ async def test_async_turn_off_rgb(hass):
         )
 
 @pytest.mark.asyncio
-async def test_async_turn_off_rgb_led_r(hass):
+async def test_async_turn_off_rgb_led_r():
+    hass = HomeAssistant()
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->RGB0000"
     object_name = "Test Light"
@@ -383,9 +384,8 @@ async def test_async_turn_off_rgb_led_r(hass):
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name, True, 5)
     obj._initialized = True
-    await hass.async_add_executor_job(lambda: None)
-    await obj.async_added_to_hass()
     obj.hass = hass
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -401,7 +401,8 @@ async def test_async_turn_off_rgb_led_r(hass):
         )
 
 @pytest.mark.asyncio
-async def test_async_turn_off_rgb_led_g(hass):
+async def test_async_turn_off_rgb_led_g():
+    hass = HomeAssistant()
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->RGB0000"
     object_name = "Test Light"
@@ -409,9 +410,8 @@ async def test_async_turn_off_rgb_led_g(hass):
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name, True, 5)
     obj._initialized = True
-    await hass.async_add_executor_job(lambda: None)
-    await obj.async_added_to_hass()
     obj.hass = hass
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -427,7 +427,8 @@ async def test_async_turn_off_rgb_led_g(hass):
         )
 
 @pytest.mark.asyncio
-async def test_async_turn_off_rgb_led_b(hass):
+async def test_async_turn_off_rgb_led_b():
+    hass = HomeAssistant()
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->RGB0000"
     object_name = "Test Light"
@@ -435,9 +436,8 @@ async def test_async_turn_off_rgb_led_b(hass):
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name, True, 5)
     obj._initialized = True
-    await hass.async_add_executor_job(lambda: None)
-    await obj.async_added_to_hass()
     obj.hass = hass
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -453,7 +453,8 @@ async def test_async_turn_off_rgb_led_b(hass):
         )
 
 @pytest.mark.asyncio
-async def test_async_turn_off_rgb_led_w(hass):
+async def test_async_turn_off_rgb_led_w():
+    hass = HomeAssistant()
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->RGB0000"
     object_name = "Test Light"
@@ -461,9 +462,8 @@ async def test_async_turn_off_rgb_led_w(hass):
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name, True, 5)
     obj._initialized = True
-    await hass.async_add_executor_job(lambda: None)
-    await obj.async_added_to_hass()
     obj.hass = hass
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -479,7 +479,8 @@ async def test_async_turn_off_rgb_led_w(hass):
         )
 
 @pytest.mark.asyncio
-async def test_async_update_dout(hass):
+async def test_async_update_dout():
+    hass = HomeAssistant()
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->DOU0000"
     object_name = "Test Light"
@@ -487,9 +488,8 @@ async def test_async_update_dout(hass):
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name, True, 5)
     obj._initialized = True
-    await hass.async_add_executor_job(lambda: None)
-    await obj.async_added_to_hass()
     obj.hass = hass
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 1})
@@ -505,7 +505,8 @@ async def test_async_update_dout(hass):
         )
 
 @pytest.mark.asyncio
-async def test_async_update_dout_off(hass):
+async def test_async_update_dout_off():
+    hass = HomeAssistant()
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->DOU0000"
     object_name = "Test Light"
@@ -513,9 +514,8 @@ async def test_async_update_dout_off(hass):
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name, True, 5)
     obj._initialized = True
-    await hass.async_add_executor_job(lambda: None)
-    await obj.async_added_to_hass()
     obj.hass = hass
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 0})
@@ -531,7 +531,8 @@ async def test_async_update_dout_off(hass):
         )
 
 @pytest.mark.asyncio
-async def test_async_update_dimmer(hass):
+async def test_async_update_dimmer():
+    hass = HomeAssistant()
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->DIM0000"
     object_name = "Test Light"
@@ -539,9 +540,8 @@ async def test_async_update_dimmer(hass):
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name, True, 5)
     obj._initialized = True
-    await hass.async_add_executor_job(lambda: None)
-    await obj.async_added_to_hass()
     obj.hass = hass
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 1})
@@ -558,7 +558,8 @@ async def test_async_update_dimmer(hass):
         )
 
 @pytest.mark.asyncio
-async def test_async_update_dimmer_off(hass):
+async def test_async_update_dimmer_off():
+    hass = HomeAssistant()
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->DIM0000"
     object_name = "Test Light"
@@ -566,9 +567,8 @@ async def test_async_update_dimmer_off(hass):
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name, True, 5)
     obj._initialized = True
-    await hass.async_add_executor_job(lambda: None)
-    await obj.async_added_to_hass()
     obj.hass = hass
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 0})
@@ -585,7 +585,8 @@ async def test_async_update_dimmer_off(hass):
         )
 
 @pytest.mark.asyncio
-async def test_async_update_dimmer_zwave(hass):
+async def test_async_update_dimmer_zwave():
+    hass = HomeAssistant()
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ZWA0000"
     object_name = "Test Light"
@@ -593,9 +594,8 @@ async def test_async_update_dimmer_zwave(hass):
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name, True, 5)
     obj._initialized = True
-    await hass.async_add_executor_job(lambda: None)
-    await obj.async_added_to_hass()
     obj.hass = hass
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 255})
@@ -612,7 +612,8 @@ async def test_async_update_dimmer_zwave(hass):
         )
 
 @pytest.mark.asyncio
-async def test_async_update_dimmer_zwave_off(hass):
+async def test_async_update_dimmer_zwave_off():
+    hass = HomeAssistant()
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ZWA0000"
     object_name = "Test Light"
@@ -620,9 +621,8 @@ async def test_async_update_dimmer_zwave_off(hass):
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name, True, 5)
     obj._initialized = True
-    await hass.async_add_executor_job(lambda: None)
-    await obj.async_added_to_hass()
     obj.hass = hass
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 0})
@@ -639,7 +639,8 @@ async def test_async_update_dimmer_zwave_off(hass):
         )
 
 @pytest.mark.asyncio
-async def test_async_update_led_r(hass):
+async def test_async_update_led_r():
+    hass = HomeAssistant()
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->LED0000"
     object_name = "Test Light"
@@ -647,9 +648,8 @@ async def test_async_update_led_r(hass):
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name, True, 5)
     obj._initialized = True
-    await hass.async_add_executor_job(lambda: None)
-    await obj.async_added_to_hass()
     obj.hass = hass
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 255})
@@ -666,7 +666,8 @@ async def test_async_update_led_r(hass):
         )
 
 @pytest.mark.asyncio
-async def test_async_update_led_g_off(hass):
+async def test_async_update_led_g_off():
+    hass = HomeAssistant()
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->LED0000"
     object_name = "Test Light"
@@ -674,9 +675,8 @@ async def test_async_update_led_g_off(hass):
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name, True, 5)
     obj._initialized = True
-    await hass.async_add_executor_job(lambda: None)
-    await obj.async_added_to_hass()
     obj.hass = hass
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 0})
@@ -693,7 +693,8 @@ async def test_async_update_led_g_off(hass):
         )
 
 @pytest.mark.asyncio
-async def test_async_update_led_b_off(hass):
+async def test_async_update_led_b_off():
+    hass = HomeAssistant()
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->LED0000"
     object_name = "Test Light"
@@ -701,9 +702,8 @@ async def test_async_update_led_b_off(hass):
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name, True, 5)
     obj._initialized = True
-    await hass.async_add_executor_job(lambda: None)
-    await obj.async_added_to_hass()
     obj.hass = hass
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 0})
@@ -720,7 +720,8 @@ async def test_async_update_led_b_off(hass):
         )
 
 @pytest.mark.asyncio
-async def test_async_update_led_w(hass):
+async def test_async_update_led_w():
+    hass = HomeAssistant()
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->LED0000"
     object_name = "Test Light"
@@ -728,9 +729,8 @@ async def test_async_update_led_w(hass):
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name, True, 5)
     obj._initialized = True
-    await hass.async_add_executor_job(lambda: None)
-    await obj.async_added_to_hass()
     obj.hass = hass
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 255})
@@ -747,7 +747,8 @@ async def test_async_update_led_w(hass):
         )
 
 @pytest.mark.asyncio
-async def test_async_update_rgb(hass):
+async def test_async_update_rgb():
+    hass = HomeAssistant()
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->LED0000"
     object_name = "Test Light"
@@ -755,9 +756,8 @@ async def test_async_update_rgb(hass):
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name, True, 5)
     obj._initialized = True
-    await hass.async_add_executor_job(lambda: None)
-    await obj.async_added_to_hass()
     obj.hass = hass
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 1, "status_2": "#000000"})
@@ -775,7 +775,8 @@ async def test_async_update_rgb(hass):
         )
 
 @pytest.mark.asyncio
-async def test_async_update_rgb_off(hass):
+async def test_async_update_rgb_off():
+    hass = HomeAssistant()
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->LED0000"
     object_name = "Test Light"
@@ -783,9 +784,8 @@ async def test_async_update_rgb_off(hass):
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name, True, 5)
     obj._initialized = True
-    await hass.async_add_executor_job(lambda: None)
-    await obj.async_added_to_hass()
     obj.hass = hass
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 0, "status_2": "#ffffff"})
@@ -803,7 +803,8 @@ async def test_async_update_rgb_off(hass):
         )
 
 @pytest.mark.asyncio
-async def test_async_update_rgb_zwave(hass):
+async def test_async_update_rgb_zwave():
+    hass = HomeAssistant()
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ZWA0000"
     object_name = "Test Light"
@@ -811,9 +812,8 @@ async def test_async_update_rgb_zwave(hass):
     
     obj = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name, True, 5)
     obj._initialized = True
-    await hass.async_add_executor_job(lambda: None)
-    await obj.async_added_to_hass()
     obj.hass = hass
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 1, "status_2": "#ffffff"})

@@ -3,16 +3,16 @@ from aioresponses import aioresponses
 from custom_components.grenton_objects.switch import GrentonSwitch
 
 @pytest.mark.asyncio
-async def test_async_turn_on(hass):
+async def test_async_turn_on():
+    hass = HomeAssistant()
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->DOU0000"
     object_name = "Test Switch"
     
     obj = GrentonSwitch(api_endpoint, grenton_id, object_name, True, 5)
     obj._initialized = True
-    await hass.async_add_executor_job(lambda: None)
-    await obj.async_added_to_hass()
     obj.hass = hass
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -28,16 +28,16 @@ async def test_async_turn_on(hass):
         )
 
 @pytest.mark.asyncio
-async def test_async_turn_off(hass):
+async def test_async_turn_off():
+    hass = HomeAssistant()
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->DOU0000"
     object_name = "Test Switch"
     
     obj = GrentonSwitch(api_endpoint, grenton_id, object_name, True, 5)
     obj._initialized = True
-    await hass.async_add_executor_job(lambda: None)
-    await obj.async_added_to_hass()
     obj.hass = hass
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -53,16 +53,16 @@ async def test_async_turn_off(hass):
         )
 
 @pytest.mark.asyncio
-async def test_async_update(hass):
+async def test_async_update():
+    hass = HomeAssistant()
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->DOU0000"
     object_name = "Test Switch"
     
     obj = GrentonSwitch(api_endpoint, grenton_id, object_name, True, 5)
     obj._initialized = True
-    await hass.async_add_executor_job(lambda: None)
-    await obj.async_added_to_hass()
     obj.hass = hass
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 1})
@@ -78,16 +78,16 @@ async def test_async_update(hass):
         )
 
 @pytest.mark.asyncio
-async def test_async_update_off(hass):
+async def test_async_update_off():
+    hass = HomeAssistant()
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->DOU0000"
     object_name = "Test Switch"
     
     obj = GrentonSwitch(api_endpoint, grenton_id, object_name, True, 5)
     obj._initialized = True
-    await hass.async_add_executor_job(lambda: None)
-    await obj.async_added_to_hass()
     obj.hass = hass
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 0}) 

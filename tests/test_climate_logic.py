@@ -4,16 +4,16 @@ from custom_components.grenton_objects.climate import GrentonClimate
 from homeassistant.components.climate import HVACMode
 
 @pytest.mark.asyncio
-async def test_async_set_temperature(hass):
+async def test_async_set_temperature():
+    hass = HomeAssistant()
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->THE0000"
     object_name = "Test Thermostat"
     
     obj = GrentonClimate(api_endpoint, grenton_id, object_name, True, 5)
     obj._initialized = True
-    await hass.async_add_executor_job(lambda: None)
-    await obj.async_added_to_hass()
     obj.hass = hass
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -28,16 +28,16 @@ async def test_async_set_temperature(hass):
         )
 
 @pytest.mark.asyncio
-async def test_async_set_hvac_mode_heat(hass):
+async def test_async_set_hvac_mode_heat():
+    hass = HomeAssistant()
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->THE0000"
     object_name = "Test Thermostat"
     
     obj = GrentonClimate(api_endpoint, grenton_id, object_name, True, 5)
     obj._initialized = True
-    await hass.async_add_executor_job(lambda: None)
-    await obj.async_added_to_hass()
     obj.hass = hass
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -52,16 +52,16 @@ async def test_async_set_hvac_mode_heat(hass):
         )
 
 @pytest.mark.asyncio
-async def test_async_set_hvac_mode_cool(hass):
+async def test_async_set_hvac_mode_cool():
+    hass = HomeAssistant()
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->THE0000"
     object_name = "Test Thermostat"
     
     obj = GrentonClimate(api_endpoint, grenton_id, object_name, True, 5)
     obj._initialized = True
-    await hass.async_add_executor_job(lambda: None)
-    await obj.async_added_to_hass()
     obj.hass = hass
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -76,16 +76,16 @@ async def test_async_set_hvac_mode_cool(hass):
         )
 
 @pytest.mark.asyncio
-async def test_async_update(hass):
+async def test_async_update():
+    hass = HomeAssistant()
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->THE0000"
     object_name = "Test Thermostat"
     
     obj = GrentonClimate(api_endpoint, grenton_id, object_name, True, 5)
     obj._initialized = True
-    await hass.async_add_executor_job(lambda: None)
-    await obj.async_added_to_hass()
     obj.hass = hass
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 1, "status_2": 1, "status_3": 22, "status_4": 19})

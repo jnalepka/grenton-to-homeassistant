@@ -3,7 +3,8 @@ from aioresponses import aioresponses
 from custom_components.grenton_objects.cover import GrentonCover
 
 @pytest.mark.asyncio
-async def test_async_open_cover(hass):
+async def test_async_open_cover():
+    hass = HomeAssistant()
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ROL0000"
     reversed = False
@@ -11,9 +12,8 @@ async def test_async_open_cover(hass):
     
     obj = GrentonCover(api_endpoint, grenton_id, reversed, object_name, True, 5)
     obj._initialized = True
-    await hass.async_add_executor_job(lambda: None)
-    await obj.async_added_to_hass()
     obj.hass = hass
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -28,7 +28,8 @@ async def test_async_open_cover(hass):
         )
 
 @pytest.mark.asyncio
-async def test_async_close_cover(hass):
+async def test_async_close_cover():
+    hass = HomeAssistant()
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ROL0000"
     reversed = False
@@ -36,9 +37,8 @@ async def test_async_close_cover(hass):
     
     obj = GrentonCover(api_endpoint, grenton_id, reversed, object_name, True, 5)
     obj._initialized = True
-    await hass.async_add_executor_job(lambda: None)
-    await obj.async_added_to_hass()
     obj.hass = hass
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -53,7 +53,8 @@ async def test_async_close_cover(hass):
         )
 
 @pytest.mark.asyncio
-async def test_async_stop_cover(hass):
+async def test_async_stop_cover():
+    hass = HomeAssistant()
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ROL0000"
     reversed = False
@@ -61,9 +62,8 @@ async def test_async_stop_cover(hass):
     
     obj = GrentonCover(api_endpoint, grenton_id, reversed, object_name, True, 5)
     obj._initialized = True
-    await hass.async_add_executor_job(lambda: None)
-    await obj.async_added_to_hass()
     obj.hass = hass
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -78,7 +78,8 @@ async def test_async_stop_cover(hass):
         )
 
 @pytest.mark.asyncio
-async def test_async_set_cover_position(hass):
+async def test_async_set_cover_position():
+    hass = HomeAssistant()
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ROL0000"
     reversed = False
@@ -86,9 +87,8 @@ async def test_async_set_cover_position(hass):
     
     obj = GrentonCover(api_endpoint, grenton_id, reversed, object_name, True, 5)
     obj._initialized = True
-    await hass.async_add_executor_job(lambda: None)
-    await obj.async_added_to_hass()
     obj.hass = hass
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -103,7 +103,8 @@ async def test_async_set_cover_position(hass):
         )
       
 @pytest.mark.asyncio
-async def test_async_set_cover_position_reversed(hass):
+async def test_async_set_cover_position_reversed():
+    hass = HomeAssistant()
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ROL0000"
     reversed = True
@@ -111,9 +112,8 @@ async def test_async_set_cover_position_reversed(hass):
     
     obj = GrentonCover(api_endpoint, grenton_id, reversed, object_name, True, 5)
     obj._initialized = True
-    await hass.async_add_executor_job(lambda: None)
-    await obj.async_added_to_hass()
     obj.hass = hass
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -128,7 +128,8 @@ async def test_async_set_cover_position_reversed(hass):
         )
 
 @pytest.mark.asyncio
-async def test_async_set_cover_position_zwave(hass):
+async def test_async_set_cover_position_zwave():
+    hass = HomeAssistant()
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ZWA0000"
     reversed = False
@@ -136,9 +137,8 @@ async def test_async_set_cover_position_zwave(hass):
     
     obj = GrentonCover(api_endpoint, grenton_id, reversed, object_name, True, 5)
     obj._initialized = True
-    await hass.async_add_executor_job(lambda: None)
-    await obj.async_added_to_hass()
     obj.hass = hass
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -153,7 +153,8 @@ async def test_async_set_cover_position_zwave(hass):
         )
 
 @pytest.mark.asyncio
-async def test_async_set_cover_position_reversed_zwave(hass):
+async def test_async_set_cover_position_reversed_zwave():
+    hass = HomeAssistant()
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ZWA0000"
     reversed = True
@@ -161,9 +162,8 @@ async def test_async_set_cover_position_reversed_zwave(hass):
     
     obj = GrentonCover(api_endpoint, grenton_id, reversed, object_name, True, 5)
     obj._initialized = True
-    await hass.async_add_executor_job(lambda: None)
-    await obj.async_added_to_hass()
     obj.hass = hass
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -179,7 +179,8 @@ async def test_async_set_cover_position_reversed_zwave(hass):
 
 
 @pytest.mark.asyncio
-async def test_async_set_cover_tilt_position(hass):
+async def test_async_set_cover_tilt_position():
+    hass = HomeAssistant()
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ROL0000"
     reversed = False
@@ -187,9 +188,8 @@ async def test_async_set_cover_tilt_position(hass):
     
     obj = GrentonCover(api_endpoint, grenton_id, reversed, object_name, True, 5)
     obj._initialized = True
-    await hass.async_add_executor_job(lambda: None)
-    await obj.async_added_to_hass()
     obj.hass = hass
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -203,7 +203,8 @@ async def test_async_set_cover_tilt_position(hass):
         )
 
 @pytest.mark.asyncio
-async def test_async_open_cover_tilt(hass):
+async def test_async_open_cover_tilt():
+    hass = HomeAssistant()
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ROL0000"
     reversed = False
@@ -211,9 +212,8 @@ async def test_async_open_cover_tilt(hass):
     
     obj = GrentonCover(api_endpoint, grenton_id, reversed, object_name, True, 5)
     obj._initialized = True
-    await hass.async_add_executor_job(lambda: None)
-    await obj.async_added_to_hass()
     obj.hass = hass
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -227,7 +227,8 @@ async def test_async_open_cover_tilt(hass):
         )
 
 @pytest.mark.asyncio
-async def test_async_close_cover_tilt(hass):
+async def test_async_close_cover_tilt():
+    hass = HomeAssistant()
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ROL0000"
     reversed = False
@@ -235,9 +236,8 @@ async def test_async_close_cover_tilt(hass):
     
     obj = GrentonCover(api_endpoint, grenton_id, reversed, object_name, True, 5)
     obj._initialized = True
-    await hass.async_add_executor_job(lambda: None)
-    await obj.async_added_to_hass()
     obj.hass = hass
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.post(api_endpoint, status=200, payload={"status": "ok"})
@@ -251,7 +251,8 @@ async def test_async_close_cover_tilt(hass):
         )
 
 @pytest.mark.asyncio
-async def test_async_update(hass):
+async def test_async_update():
+    hass = HomeAssistant()
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ROL0000"
     reversed = False
@@ -259,9 +260,8 @@ async def test_async_update(hass):
     
     obj = GrentonCover(api_endpoint, grenton_id, reversed, object_name, True, 5)
     obj._initialized = True
-    await hass.async_add_executor_job(lambda: None)
-    await obj.async_added_to_hass()
     obj.hass = hass
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 1, "status_2": 50, "status_3": 90})
@@ -278,7 +278,8 @@ async def test_async_update(hass):
         )
 
 @pytest.mark.asyncio
-async def test_async_update_zwave(hass):
+async def test_async_update_zwave():
+    hass = HomeAssistant()
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ZWA0000"
     reversed = False
@@ -286,9 +287,8 @@ async def test_async_update_zwave(hass):
     
     obj = GrentonCover(api_endpoint, grenton_id, reversed, object_name, True, 5)
     obj._initialized = True
-    await hass.async_add_executor_job(lambda: None)
-    await obj.async_added_to_hass()
     obj.hass = hass
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 0, "status_2": 50, "status_3": 90})
@@ -305,7 +305,8 @@ async def test_async_update_zwave(hass):
         )
 
 @pytest.mark.asyncio
-async def test_async_update_reversed(hass):
+async def test_async_update_reversed():
+    hass = HomeAssistant()
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ROL0000"
     reversed = True
@@ -313,9 +314,8 @@ async def test_async_update_reversed(hass):
     
     obj = GrentonCover(api_endpoint, grenton_id, reversed, object_name, True, 5)
     obj._initialized = True
-    await hass.async_add_executor_job(lambda: None)
-    await obj.async_added_to_hass()
     obj.hass = hass
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 0, "status_2": 100, "status_3": 90})
@@ -332,7 +332,8 @@ async def test_async_update_reversed(hass):
         )
 
 @pytest.mark.asyncio
-async def test_async_update_zwave_reversed(hass):
+async def test_async_update_zwave_reversed():
+    hass = HomeAssistant()
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ZWA0000"
     reversed = True
@@ -340,9 +341,8 @@ async def test_async_update_zwave_reversed(hass):
     
     obj = GrentonCover(api_endpoint, grenton_id, reversed, object_name, True, 5)
     obj._initialized = True
-    await hass.async_add_executor_job(lambda: None)
-    await obj.async_added_to_hass()
     obj.hass = hass
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 2, "status_2": 100, "status_3": 0})

@@ -3,7 +3,8 @@ from aioresponses import aioresponses
 from custom_components.grenton_objects.sensor import GrentonSensor
 
 @pytest.mark.asyncio
-async def test_async_update_palensenstemp(hass):
+async def test_async_update_palensenstemp():
+    hass = HomeAssistant()
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->PAN0000"
     grenton_type = "DEFAULT_SENSOR"
@@ -14,9 +15,8 @@ async def test_async_update_palensenstemp(hass):
     
     obj = GrentonSensor(api_endpoint, grenton_id, grenton_type, object_name, unit_of_measurement, device_class, state_class, True, 5)
     obj._initialized = True
-    await hass.async_add_executor_job(lambda: None)
-    await obj.async_added_to_hass()
     obj.hass = hass
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 22.4})
@@ -34,7 +34,8 @@ async def test_async_update_palensenstemp(hass):
         )
 
 @pytest.mark.asyncio
-async def test_async_update_gate_feature(hass):
+async def test_async_update_gate_feature():
+    hass = HomeAssistant()
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "my_feature_123"
     grenton_type = "DEFAULT_SENSOR"
@@ -45,9 +46,8 @@ async def test_async_update_gate_feature(hass):
     
     obj = GrentonSensor(api_endpoint, grenton_id, grenton_type, object_name, unit_of_measurement, device_class, state_class, True, 5)
     obj._initialized = True
-    await hass.async_add_executor_job(lambda: None)
-    await obj.async_added_to_hass()
     obj.hass = hass
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 50.5})
@@ -65,7 +65,8 @@ async def test_async_update_gate_feature(hass):
         )
 
 @pytest.mark.asyncio
-async def test_async_update_clu_feature(hass):
+async def test_async_update_clu_feature():
+    hass = HomeAssistant()
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->my_feature_123"
     grenton_type = "DEFAULT_SENSOR"
@@ -76,9 +77,8 @@ async def test_async_update_clu_feature(hass):
     
     obj = GrentonSensor(api_endpoint, grenton_id, grenton_type, object_name, unit_of_measurement, device_class, state_class, True, 5)
     obj._initialized = True
-    await hass.async_add_executor_job(lambda: None)
-    await obj.async_added_to_hass()
     obj.hass = hass
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 50.5})
@@ -96,7 +96,8 @@ async def test_async_update_clu_feature(hass):
         )
 
 @pytest.mark.asyncio
-async def test_async_update_clu_feature_contain_obj_id(hass):
+async def test_async_update_clu_feature_contain_obj_id():
+    hass = HomeAssistant()
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->when_DOU1234_light_up"
     grenton_type = "DEFAULT_SENSOR"
@@ -107,9 +108,8 @@ async def test_async_update_clu_feature_contain_obj_id(hass):
     
     obj = GrentonSensor(api_endpoint, grenton_id, grenton_type, object_name, unit_of_measurement, device_class, state_class, True, 5)
     obj._initialized = True
-    await hass.async_add_executor_job(lambda: None)
-    await obj.async_added_to_hass()
     obj.hass = hass
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 100})
@@ -127,7 +127,8 @@ async def test_async_update_clu_feature_contain_obj_id(hass):
         )
 
 @pytest.mark.asyncio
-async def test_async_update_modbus(hass):
+async def test_async_update_modbus():
+    hass = HomeAssistant()
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->MOD0000"
     grenton_type = "MODBUS"
@@ -138,9 +139,8 @@ async def test_async_update_modbus(hass):
     
     obj = GrentonSensor(api_endpoint, grenton_id, grenton_type, object_name, unit_of_measurement, device_class, state_class, True, 5)
     obj._initialized = True
-    await hass.async_add_executor_job(lambda: None)
-    await obj.async_added_to_hass()
     obj.hass = hass
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 192349.12})
@@ -158,7 +158,8 @@ async def test_async_update_modbus(hass):
         )
 
 @pytest.mark.asyncio
-async def test_async_update_modbus_value(hass):
+async def test_async_update_modbus_value():
+    hass = HomeAssistant()
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->MOD0000"
     grenton_type = "MODBUS_VALUE"
@@ -169,9 +170,8 @@ async def test_async_update_modbus_value(hass):
     
     obj = GrentonSensor(api_endpoint, grenton_id, grenton_type, object_name, unit_of_measurement, device_class, state_class, True, 5)
     obj._initialized = True
-    await hass.async_add_executor_job(lambda: None)
-    await obj.async_added_to_hass()
     obj.hass = hass
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 0.01})
@@ -189,7 +189,8 @@ async def test_async_update_modbus_value(hass):
         )
 
 @pytest.mark.asyncio
-async def test_async_update_modbus_rtu(hass):
+async def test_async_update_modbus_rtu():
+    hass = HomeAssistant()
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->MOD0000"
     grenton_type = "MODBUS_RTU"
@@ -200,9 +201,8 @@ async def test_async_update_modbus_rtu(hass):
     
     obj = GrentonSensor(api_endpoint, grenton_id, grenton_type, object_name, unit_of_measurement, device_class, state_class, True, 5)
     obj._initialized = True
-    await hass.async_add_executor_job(lambda: None)
-    await obj.async_added_to_hass()
     obj.hass = hass
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 0.1})
@@ -220,7 +220,8 @@ async def test_async_update_modbus_rtu(hass):
         )
 
 @pytest.mark.asyncio
-async def test_async_update_modbus_client(hass):
+async def test_async_update_modbus_client():
+    hass = HomeAssistant()
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->MOD0000"
     grenton_type = "MODBUS_CLIENT"
@@ -231,9 +232,8 @@ async def test_async_update_modbus_client(hass):
     
     obj = GrentonSensor(api_endpoint, grenton_id, grenton_type, object_name, unit_of_measurement, device_class, state_class, True, 5)
     obj._initialized = True
-    await hass.async_add_executor_job(lambda: None)
-    await obj.async_added_to_hass()
     obj.hass = hass
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 192349.12})
@@ -251,7 +251,8 @@ async def test_async_update_modbus_client(hass):
         )
 
 @pytest.mark.asyncio
-async def test_async_update_modbus_server(hass):
+async def test_async_update_modbus_server():
+    hass = HomeAssistant()
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->MOD0000"
     grenton_type = "MODBUS_SERVER"
@@ -262,9 +263,8 @@ async def test_async_update_modbus_server(hass):
     
     obj = GrentonSensor(api_endpoint, grenton_id, grenton_type, object_name, unit_of_measurement, device_class, state_class, True, 5)
     obj._initialized = True
-    await hass.async_add_executor_job(lambda: None)
-    await obj.async_added_to_hass()
     obj.hass = hass
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 60})
@@ -282,7 +282,8 @@ async def test_async_update_modbus_server(hass):
         )
 
 @pytest.mark.asyncio
-async def test_async_update_modbus_slave_rtu(hass):
+async def test_async_update_modbus_slave_rtu():
+    hass = HomeAssistant()
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->MOD0000"
     grenton_type = "MODBUS_SLAVE_RTU"
@@ -293,9 +294,8 @@ async def test_async_update_modbus_slave_rtu(hass):
     
     obj = GrentonSensor(api_endpoint, grenton_id, grenton_type, object_name, unit_of_measurement, device_class, state_class, True, 5)
     obj._initialized = True
-    await hass.async_add_executor_job(lambda: None)
-    await obj.async_added_to_hass()
     obj.hass = hass
+    await obj.async_added_to_hass()
     
     with aioresponses() as m:
         m.get(api_endpoint, status=200, payload={"status": 401.1})
