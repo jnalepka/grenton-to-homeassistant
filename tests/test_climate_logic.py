@@ -4,7 +4,7 @@ from custom_components.grenton_objects.climate import GrentonClimate
 from homeassistant.components.climate import HVACMode
 
 @pytest.mark.asyncio
-async def test_async_set_temperature():
+async def test_async_set_temperature(hass):
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->THE0000"
     object_name = "Test Thermostat"
@@ -28,7 +28,7 @@ async def test_async_set_temperature():
         )
 
 @pytest.mark.asyncio
-async def test_async_set_hvac_mode_heat():
+async def test_async_set_hvac_mode_heat(hass):
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->THE0000"
     object_name = "Test Thermostat"
@@ -52,7 +52,7 @@ async def test_async_set_hvac_mode_heat():
         )
 
 @pytest.mark.asyncio
-async def test_async_set_hvac_mode_cool():
+async def test_async_set_hvac_mode_cool(hass):
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->THE0000"
     object_name = "Test Thermostat"
@@ -76,7 +76,7 @@ async def test_async_set_hvac_mode_cool():
         )
 
 @pytest.mark.asyncio
-async def test_async_update():
+async def test_async_update(hass):
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->THE0000"
     object_name = "Test Thermostat"

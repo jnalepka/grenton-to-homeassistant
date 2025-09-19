@@ -3,7 +3,7 @@ from aioresponses import aioresponses
 from custom_components.grenton_objects.cover import GrentonCover
 
 @pytest.mark.asyncio
-async def test_async_open_cover():
+async def test_async_open_cover(hass):
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ROL0000"
     reversed = False
@@ -28,7 +28,7 @@ async def test_async_open_cover():
         )
 
 @pytest.mark.asyncio
-async def test_async_close_cover():
+async def test_async_close_cover(hass):
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ROL0000"
     reversed = False
@@ -53,7 +53,7 @@ async def test_async_close_cover():
         )
 
 @pytest.mark.asyncio
-async def test_async_stop_cover():
+async def test_async_stop_cover(hass):
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ROL0000"
     reversed = False
@@ -78,7 +78,7 @@ async def test_async_stop_cover():
         )
 
 @pytest.mark.asyncio
-async def test_async_set_cover_position():
+async def test_async_set_cover_position(hass):
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ROL0000"
     reversed = False
@@ -103,7 +103,7 @@ async def test_async_set_cover_position():
         )
       
 @pytest.mark.asyncio
-async def test_async_set_cover_position_reversed():
+async def test_async_set_cover_position_reversed(hass):
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ROL0000"
     reversed = True
@@ -128,7 +128,7 @@ async def test_async_set_cover_position_reversed():
         )
 
 @pytest.mark.asyncio
-async def test_async_set_cover_position_zwave():
+async def test_async_set_cover_position_zwave(hass):
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ZWA0000"
     reversed = False
@@ -153,7 +153,7 @@ async def test_async_set_cover_position_zwave():
         )
 
 @pytest.mark.asyncio
-async def test_async_set_cover_position_reversed_zwave():
+async def test_async_set_cover_position_reversed_zwave(hass):
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ZWA0000"
     reversed = True
@@ -179,7 +179,7 @@ async def test_async_set_cover_position_reversed_zwave():
 
 
 @pytest.mark.asyncio
-async def test_async_set_cover_tilt_position():
+async def test_async_set_cover_tilt_position(hass):
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ROL0000"
     reversed = False
@@ -203,7 +203,7 @@ async def test_async_set_cover_tilt_position():
         )
 
 @pytest.mark.asyncio
-async def test_async_open_cover_tilt():
+async def test_async_open_cover_tilt(hass):
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ROL0000"
     reversed = False
@@ -227,7 +227,7 @@ async def test_async_open_cover_tilt():
         )
 
 @pytest.mark.asyncio
-async def test_async_close_cover_tilt():
+async def test_async_close_cover_tilt(hass):
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ROL0000"
     reversed = False
@@ -251,7 +251,7 @@ async def test_async_close_cover_tilt():
         )
 
 @pytest.mark.asyncio
-async def test_async_update():
+async def test_async_update(hass):
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ROL0000"
     reversed = False
@@ -278,7 +278,7 @@ async def test_async_update():
         )
 
 @pytest.mark.asyncio
-async def test_async_update_zwave():
+async def test_async_update_zwave(hass):
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ZWA0000"
     reversed = False
@@ -305,7 +305,7 @@ async def test_async_update_zwave():
         )
 
 @pytest.mark.asyncio
-async def test_async_update_reversed():
+async def test_async_update_reversed(hass):
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ROL0000"
     reversed = True
@@ -332,7 +332,7 @@ async def test_async_update_reversed():
         )
 
 @pytest.mark.asyncio
-async def test_async_update_zwave_reversed():
+async def test_async_update_zwave_reversed(hass):
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ZWA0000"
     reversed = True

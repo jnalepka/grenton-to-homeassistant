@@ -3,7 +3,7 @@ from aioresponses import aioresponses
 from custom_components.grenton_objects.light import GrentonLight
 
 @pytest.mark.asyncio
-async def test_async_turn_on_dout():
+async def test_async_turn_on_dout(hass):
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->DOU0000"
     object_name = "Test Light"
@@ -29,7 +29,7 @@ async def test_async_turn_on_dout():
         )
 
 @pytest.mark.asyncio
-async def test_async_turn_on_dimmer():
+async def test_async_turn_on_dimmer(hass):
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->DIM0000"
     object_name = "Test Light"
@@ -56,7 +56,7 @@ async def test_async_turn_on_dimmer():
         )
 
 @pytest.mark.asyncio
-async def test_async_turn_on_dimmer_zwave():
+async def test_async_turn_on_dimmer_zwave(hass):
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ZWA0000"
     object_name = "Test Light"
@@ -83,7 +83,7 @@ async def test_async_turn_on_dimmer_zwave():
         )
 
 @pytest.mark.asyncio
-async def test_async_turn_on_dimmer_rgbw_r():
+async def test_async_turn_on_dimmer_rgbw_r(hass):
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->LED0000"
     object_name = "Test Light"
@@ -110,7 +110,7 @@ async def test_async_turn_on_dimmer_rgbw_r():
         )
 
 @pytest.mark.asyncio
-async def test_async_turn_on_dimmer_rgbw_g():
+async def test_async_turn_on_dimmer_rgbw_g(hass):
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->LED0000"
     object_name = "Test Light"
@@ -137,7 +137,7 @@ async def test_async_turn_on_dimmer_rgbw_g():
         )
 
 @pytest.mark.asyncio
-async def test_async_turn_on_dimmer_rgbw_b():
+async def test_async_turn_on_dimmer_rgbw_b(hass):
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->LED0000"
     object_name = "Test Light"
@@ -164,7 +164,7 @@ async def test_async_turn_on_dimmer_rgbw_b():
         )
 
 @pytest.mark.asyncio
-async def test_async_turn_on_dimmer_rgbw_w():
+async def test_async_turn_on_dimmer_rgbw_w(hass):
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->LED0000"
     object_name = "Test Light"
@@ -191,7 +191,7 @@ async def test_async_turn_on_dimmer_rgbw_w():
         )
 
 @pytest.mark.asyncio
-async def test_async_turn_on_rgb():
+async def test_async_turn_on_rgb(hass):
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->LED0000"
     object_name = "Test Light"
@@ -218,7 +218,7 @@ async def test_async_turn_on_rgb():
         )
 
 @pytest.mark.asyncio
-async def test_async_turn_on_rgb_zwave():
+async def test_async_turn_on_rgb_zwave(hass):
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ZWA0000"
     object_name = "Test Light"
@@ -245,7 +245,7 @@ async def test_async_turn_on_rgb_zwave():
         )
         
 @pytest.mark.asyncio
-async def test_async_turn_on_rgb_no_rgb_color():
+async def test_async_turn_on_rgb_no_rgb_color(hass):
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->RGB0000"
     object_name = "Test Light"
@@ -271,7 +271,7 @@ async def test_async_turn_on_rgb_no_rgb_color():
         )
 
 @pytest.mark.asyncio
-async def test_async_turn_off_dout():
+async def test_async_turn_off_dout(hass):
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->DOU0000"
     object_name = "Test Light"
@@ -297,7 +297,7 @@ async def test_async_turn_off_dout():
         )
 
 @pytest.mark.asyncio
-async def test_async_turn_off_dimmer():
+async def test_async_turn_off_dimmer(hass):
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->DOU0000"
     object_name = "Test Light"
@@ -323,7 +323,7 @@ async def test_async_turn_off_dimmer():
         )
 
 @pytest.mark.asyncio
-async def test_async_turn_off_dimmer_zwave():
+async def test_async_turn_off_dimmer_zwave(hass):
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ZWA0000"
     object_name = "Test Light"
@@ -349,7 +349,7 @@ async def test_async_turn_off_dimmer_zwave():
         )
 
 @pytest.mark.asyncio
-async def test_async_turn_off_rgb():
+async def test_async_turn_off_rgb(hass):
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->RGB0000"
     object_name = "Test Light"
@@ -375,7 +375,7 @@ async def test_async_turn_off_rgb():
         )
 
 @pytest.mark.asyncio
-async def test_async_turn_off_rgb_led_r():
+async def test_async_turn_off_rgb_led_r(hass):
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->RGB0000"
     object_name = "Test Light"
@@ -401,7 +401,7 @@ async def test_async_turn_off_rgb_led_r():
         )
 
 @pytest.mark.asyncio
-async def test_async_turn_off_rgb_led_g():
+async def test_async_turn_off_rgb_led_g(hass):
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->RGB0000"
     object_name = "Test Light"
@@ -427,7 +427,7 @@ async def test_async_turn_off_rgb_led_g():
         )
 
 @pytest.mark.asyncio
-async def test_async_turn_off_rgb_led_b():
+async def test_async_turn_off_rgb_led_b(hass):
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->RGB0000"
     object_name = "Test Light"
@@ -453,7 +453,7 @@ async def test_async_turn_off_rgb_led_b():
         )
 
 @pytest.mark.asyncio
-async def test_async_turn_off_rgb_led_w():
+async def test_async_turn_off_rgb_led_w(hass):
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->RGB0000"
     object_name = "Test Light"
@@ -479,7 +479,7 @@ async def test_async_turn_off_rgb_led_w():
         )
 
 @pytest.mark.asyncio
-async def test_async_update_dout():
+async def test_async_update_dout(hass):
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->DOU0000"
     object_name = "Test Light"
@@ -505,7 +505,7 @@ async def test_async_update_dout():
         )
 
 @pytest.mark.asyncio
-async def test_async_update_dout_off():
+async def test_async_update_dout_off(hass):
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->DOU0000"
     object_name = "Test Light"
@@ -531,7 +531,7 @@ async def test_async_update_dout_off():
         )
 
 @pytest.mark.asyncio
-async def test_async_update_dimmer():
+async def test_async_update_dimmer(hass):
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->DIM0000"
     object_name = "Test Light"
@@ -558,7 +558,7 @@ async def test_async_update_dimmer():
         )
 
 @pytest.mark.asyncio
-async def test_async_update_dimmer_off():
+async def test_async_update_dimmer_off(hass):
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->DIM0000"
     object_name = "Test Light"
@@ -585,7 +585,7 @@ async def test_async_update_dimmer_off():
         )
 
 @pytest.mark.asyncio
-async def test_async_update_dimmer_zwave():
+async def test_async_update_dimmer_zwave(hass):
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ZWA0000"
     object_name = "Test Light"
@@ -612,7 +612,7 @@ async def test_async_update_dimmer_zwave():
         )
 
 @pytest.mark.asyncio
-async def test_async_update_dimmer_zwave_off():
+async def test_async_update_dimmer_zwave_off(hass):
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ZWA0000"
     object_name = "Test Light"
@@ -639,7 +639,7 @@ async def test_async_update_dimmer_zwave_off():
         )
 
 @pytest.mark.asyncio
-async def test_async_update_led_r():
+async def test_async_update_led_r(hass):
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->LED0000"
     object_name = "Test Light"
@@ -666,7 +666,7 @@ async def test_async_update_led_r():
         )
 
 @pytest.mark.asyncio
-async def test_async_update_led_g_off():
+async def test_async_update_led_g_off(hass):
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->LED0000"
     object_name = "Test Light"
@@ -693,7 +693,7 @@ async def test_async_update_led_g_off():
         )
 
 @pytest.mark.asyncio
-async def test_async_update_led_b_off():
+async def test_async_update_led_b_off(hass):
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->LED0000"
     object_name = "Test Light"
@@ -720,7 +720,7 @@ async def test_async_update_led_b_off():
         )
 
 @pytest.mark.asyncio
-async def test_async_update_led_w():
+async def test_async_update_led_w(hass):
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->LED0000"
     object_name = "Test Light"
@@ -747,7 +747,7 @@ async def test_async_update_led_w():
         )
 
 @pytest.mark.asyncio
-async def test_async_update_rgb():
+async def test_async_update_rgb(hass):
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->LED0000"
     object_name = "Test Light"
@@ -775,7 +775,7 @@ async def test_async_update_rgb():
         )
 
 @pytest.mark.asyncio
-async def test_async_update_rgb_off():
+async def test_async_update_rgb_off(hass):
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->LED0000"
     object_name = "Test Light"
@@ -803,7 +803,7 @@ async def test_async_update_rgb_off():
         )
 
 @pytest.mark.asyncio
-async def test_async_update_rgb_zwave():
+async def test_async_update_rgb_zwave(hass):
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ZWA0000"
     object_name = "Test Light"

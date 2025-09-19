@@ -3,7 +3,7 @@ from aioresponses import aioresponses
 from custom_components.grenton_objects.binary_sensor import GrentonBinarySensor
 
 @pytest.mark.asyncio
-async def test_async_update():
+async def test_async_update(hass):
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->DIN0000"
     object_name = "Test Binary Sensor"
@@ -28,7 +28,7 @@ async def test_async_update():
         )
 
 @pytest.mark.asyncio
-async def test_async_update_off():
+async def test_async_update_off(hass):
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->DIN0000"
     object_name = "Test Binary Sensor"

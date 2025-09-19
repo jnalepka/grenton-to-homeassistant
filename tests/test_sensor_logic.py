@@ -3,7 +3,7 @@ from aioresponses import aioresponses
 from custom_components.grenton_objects.sensor import GrentonSensor
 
 @pytest.mark.asyncio
-async def test_async_update_palensenstemp():
+async def test_async_update_palensenstemp(hass):
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->PAN0000"
     grenton_type = "DEFAULT_SENSOR"
@@ -34,7 +34,7 @@ async def test_async_update_palensenstemp():
         )
 
 @pytest.mark.asyncio
-async def test_async_update_gate_feature():
+async def test_async_update_gate_feature(hass):
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "my_feature_123"
     grenton_type = "DEFAULT_SENSOR"
@@ -65,7 +65,7 @@ async def test_async_update_gate_feature():
         )
 
 @pytest.mark.asyncio
-async def test_async_update_clu_feature():
+async def test_async_update_clu_feature(hass):
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->my_feature_123"
     grenton_type = "DEFAULT_SENSOR"
@@ -96,7 +96,7 @@ async def test_async_update_clu_feature():
         )
 
 @pytest.mark.asyncio
-async def test_async_update_clu_feature_contain_obj_id():
+async def test_async_update_clu_feature_contain_obj_id(hass):
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->when_DOU1234_light_up"
     grenton_type = "DEFAULT_SENSOR"
@@ -127,7 +127,7 @@ async def test_async_update_clu_feature_contain_obj_id():
         )
 
 @pytest.mark.asyncio
-async def test_async_update_modbus():
+async def test_async_update_modbus(hass):
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->MOD0000"
     grenton_type = "MODBUS"
@@ -158,7 +158,7 @@ async def test_async_update_modbus():
         )
 
 @pytest.mark.asyncio
-async def test_async_update_modbus_value():
+async def test_async_update_modbus_value(hass):
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->MOD0000"
     grenton_type = "MODBUS_VALUE"
@@ -189,7 +189,7 @@ async def test_async_update_modbus_value():
         )
 
 @pytest.mark.asyncio
-async def test_async_update_modbus_rtu():
+async def test_async_update_modbus_rtu(hass):
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->MOD0000"
     grenton_type = "MODBUS_RTU"
@@ -220,7 +220,7 @@ async def test_async_update_modbus_rtu():
         )
 
 @pytest.mark.asyncio
-async def test_async_update_modbus_client():
+async def test_async_update_modbus_client(hass):
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->MOD0000"
     grenton_type = "MODBUS_CLIENT"
@@ -251,7 +251,7 @@ async def test_async_update_modbus_client():
         )
 
 @pytest.mark.asyncio
-async def test_async_update_modbus_server():
+async def test_async_update_modbus_server(hass):
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->MOD0000"
     grenton_type = "MODBUS_SERVER"
@@ -282,7 +282,7 @@ async def test_async_update_modbus_server():
         )
 
 @pytest.mark.asyncio
-async def test_async_update_modbus_slave_rtu():
+async def test_async_update_modbus_slave_rtu(hass):
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->MOD0000"
     grenton_type = "MODBUS_SLAVE_RTU"
