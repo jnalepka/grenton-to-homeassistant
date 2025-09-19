@@ -5,7 +5,7 @@ from homeassistant.core import HomeAssistant
 
 @pytest.mark.asyncio
 async def test_async_update():
-    hass = HomeAssistant()
+    hass = HomeAssistant(config_dir="/tmp")
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->DIN0000"
     object_name = "Test Binary Sensor"
@@ -30,7 +30,7 @@ async def test_async_update():
 
 @pytest.mark.asyncio
 async def test_async_update_off():
-    hass = HomeAssistant()
+    hass = HomeAssistant(config_dir="/tmp")
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->DIN0000"
     object_name = "Test Binary Sensor"

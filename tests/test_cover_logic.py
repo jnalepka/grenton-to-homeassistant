@@ -5,7 +5,7 @@ from homeassistant.core import HomeAssistant
 
 @pytest.mark.asyncio
 async def test_async_open_cover():
-    hass = HomeAssistant()
+    hass = HomeAssistant(config_dir="/tmp")
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ROL0000"
     reversed = False
@@ -30,7 +30,7 @@ async def test_async_open_cover():
 
 @pytest.mark.asyncio
 async def test_async_close_cover():
-    hass = HomeAssistant()
+    hass = HomeAssistant(config_dir="/tmp")
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ROL0000"
     reversed = False
@@ -55,7 +55,7 @@ async def test_async_close_cover():
 
 @pytest.mark.asyncio
 async def test_async_stop_cover():
-    hass = HomeAssistant()
+    hass = HomeAssistant(config_dir="/tmp")
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ROL0000"
     reversed = False
@@ -80,7 +80,7 @@ async def test_async_stop_cover():
 
 @pytest.mark.asyncio
 async def test_async_set_cover_position():
-    hass = HomeAssistant()
+    hass = HomeAssistant(config_dir="/tmp")
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ROL0000"
     reversed = False
@@ -105,7 +105,7 @@ async def test_async_set_cover_position():
       
 @pytest.mark.asyncio
 async def test_async_set_cover_position_reversed():
-    hass = HomeAssistant()
+    hass = HomeAssistant(config_dir="/tmp")
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ROL0000"
     reversed = True
@@ -130,7 +130,7 @@ async def test_async_set_cover_position_reversed():
 
 @pytest.mark.asyncio
 async def test_async_set_cover_position_zwave():
-    hass = HomeAssistant()
+    hass = HomeAssistant(config_dir="/tmp")
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ZWA0000"
     reversed = False
@@ -155,7 +155,7 @@ async def test_async_set_cover_position_zwave():
 
 @pytest.mark.asyncio
 async def test_async_set_cover_position_reversed_zwave():
-    hass = HomeAssistant()
+    hass = HomeAssistant(config_dir="/tmp")
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ZWA0000"
     reversed = True
@@ -181,7 +181,7 @@ async def test_async_set_cover_position_reversed_zwave():
 
 @pytest.mark.asyncio
 async def test_async_set_cover_tilt_position():
-    hass = HomeAssistant()
+    hass = HomeAssistant(config_dir="/tmp")
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ROL0000"
     reversed = False
@@ -205,7 +205,7 @@ async def test_async_set_cover_tilt_position():
 
 @pytest.mark.asyncio
 async def test_async_open_cover_tilt():
-    hass = HomeAssistant()
+    hass = HomeAssistant(config_dir="/tmp")
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ROL0000"
     reversed = False
@@ -229,7 +229,7 @@ async def test_async_open_cover_tilt():
 
 @pytest.mark.asyncio
 async def test_async_close_cover_tilt():
-    hass = HomeAssistant()
+    hass = HomeAssistant(config_dir="/tmp")
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ROL0000"
     reversed = False
@@ -253,7 +253,7 @@ async def test_async_close_cover_tilt():
 
 @pytest.mark.asyncio
 async def test_async_update():
-    hass = HomeAssistant()
+    hass = HomeAssistant(config_dir="/tmp")
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ROL0000"
     reversed = False
@@ -280,7 +280,7 @@ async def test_async_update():
 
 @pytest.mark.asyncio
 async def test_async_update_zwave():
-    hass = HomeAssistant()
+    hass = HomeAssistant(config_dir="/tmp")
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ZWA0000"
     reversed = False
@@ -307,7 +307,7 @@ async def test_async_update_zwave():
 
 @pytest.mark.asyncio
 async def test_async_update_reversed():
-    hass = HomeAssistant()
+    hass = HomeAssistant(config_dir="/tmp")
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ROL0000"
     reversed = True
@@ -334,7 +334,7 @@ async def test_async_update_reversed():
 
 @pytest.mark.asyncio
 async def test_async_update_zwave_reversed():
-    hass = HomeAssistant()
+    hass = HomeAssistant(config_dir="/tmp")
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->ZWA0000"
     reversed = True

@@ -5,7 +5,7 @@ from homeassistant.core import HomeAssistant
 
 @pytest.mark.asyncio
 async def test_async_update_palensenstemp():
-    hass = HomeAssistant()
+    hass = HomeAssistant(config_dir="/tmp")
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->PAN0000"
     grenton_type = "DEFAULT_SENSOR"
@@ -36,7 +36,7 @@ async def test_async_update_palensenstemp():
 
 @pytest.mark.asyncio
 async def test_async_update_gate_feature():
-    hass = HomeAssistant()
+    hass = HomeAssistant(config_dir="/tmp")
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "my_feature_123"
     grenton_type = "DEFAULT_SENSOR"
@@ -67,7 +67,7 @@ async def test_async_update_gate_feature():
 
 @pytest.mark.asyncio
 async def test_async_update_clu_feature():
-    hass = HomeAssistant()
+    hass = HomeAssistant(config_dir="/tmp")
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->my_feature_123"
     grenton_type = "DEFAULT_SENSOR"
@@ -98,7 +98,7 @@ async def test_async_update_clu_feature():
 
 @pytest.mark.asyncio
 async def test_async_update_clu_feature_contain_obj_id():
-    hass = HomeAssistant()
+    hass = HomeAssistant(config_dir="/tmp")
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->when_DOU1234_light_up"
     grenton_type = "DEFAULT_SENSOR"
@@ -129,7 +129,7 @@ async def test_async_update_clu_feature_contain_obj_id():
 
 @pytest.mark.asyncio
 async def test_async_update_modbus():
-    hass = HomeAssistant()
+    hass = HomeAssistant(config_dir="/tmp")
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->MOD0000"
     grenton_type = "MODBUS"
@@ -160,7 +160,7 @@ async def test_async_update_modbus():
 
 @pytest.mark.asyncio
 async def test_async_update_modbus_value():
-    hass = HomeAssistant()
+    hass = HomeAssistant(config_dir="/tmp")
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->MOD0000"
     grenton_type = "MODBUS_VALUE"
@@ -191,7 +191,7 @@ async def test_async_update_modbus_value():
 
 @pytest.mark.asyncio
 async def test_async_update_modbus_rtu():
-    hass = HomeAssistant()
+    hass = HomeAssistant(config_dir="/tmp")
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->MOD0000"
     grenton_type = "MODBUS_RTU"
@@ -222,7 +222,7 @@ async def test_async_update_modbus_rtu():
 
 @pytest.mark.asyncio
 async def test_async_update_modbus_client():
-    hass = HomeAssistant()
+    hass = HomeAssistant(config_dir="/tmp")
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->MOD0000"
     grenton_type = "MODBUS_CLIENT"
@@ -253,7 +253,7 @@ async def test_async_update_modbus_client():
 
 @pytest.mark.asyncio
 async def test_async_update_modbus_server():
-    hass = HomeAssistant()
+    hass = HomeAssistant(config_dir="/tmp")
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->MOD0000"
     grenton_type = "MODBUS_SERVER"
@@ -284,7 +284,7 @@ async def test_async_update_modbus_server():
 
 @pytest.mark.asyncio
 async def test_async_update_modbus_slave_rtu():
-    hass = HomeAssistant()
+    hass = HomeAssistant(config_dir="/tmp")
     api_endpoint = "http://192.168.0.4/HAlistener"
     grenton_id = "CLU220000000->MOD0000"
     grenton_type = "MODBUS_SLAVE_RTU"
