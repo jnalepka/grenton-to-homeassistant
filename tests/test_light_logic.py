@@ -28,6 +28,8 @@ async def test_async_turn_on_dout():
             method='POST',
             json={"command": "CLU220000000:execute(0, 'DOU0000:set(0, 1)')"}
         )
+    if obj._unsub_interval:
+        obj._unsub_interval()
 
 @pytest.mark.asyncio
 async def test_async_turn_on_dimmer():
@@ -55,6 +57,8 @@ async def test_async_turn_on_dimmer():
             method='POST',
             json={"command": "CLU220000000:execute(0, 'DIM0000:set(0, 1.0)')"}
         )
+    if obj._unsub_interval:
+        obj._unsub_interval()
 
 @pytest.mark.asyncio
 async def test_async_turn_on_dimmer_zwave():
@@ -82,6 +86,8 @@ async def test_async_turn_on_dimmer_zwave():
             method='POST',
             json={"command": "CLU220000000:execute(0, 'ZWA0000:execute(0, 255)')"}
         )
+    if obj._unsub_interval:
+        obj._unsub_interval()
 
 @pytest.mark.asyncio
 async def test_async_turn_on_dimmer_rgbw_r():
@@ -109,6 +115,8 @@ async def test_async_turn_on_dimmer_rgbw_r():
             method='POST',
             json={"command": "CLU220000000:execute(0, 'LED0000:execute(3, 255)')"}
         )
+    if obj._unsub_interval:
+        obj._unsub_interval()
 
 @pytest.mark.asyncio
 async def test_async_turn_on_dimmer_rgbw_g():
@@ -136,6 +144,8 @@ async def test_async_turn_on_dimmer_rgbw_g():
             method='POST',
             json={"command": "CLU220000000:execute(0, 'LED0000:execute(4, 255)')"}
         )
+    if obj._unsub_interval:
+        obj._unsub_interval()
 
 @pytest.mark.asyncio
 async def test_async_turn_on_dimmer_rgbw_b():
@@ -163,6 +173,8 @@ async def test_async_turn_on_dimmer_rgbw_b():
             method='POST',
             json={"command": "CLU220000000:execute(0, 'LED0000:execute(5, 255)')"}
         )
+    if obj._unsub_interval:
+        obj._unsub_interval()
 
 @pytest.mark.asyncio
 async def test_async_turn_on_dimmer_rgbw_w():
@@ -190,6 +202,8 @@ async def test_async_turn_on_dimmer_rgbw_w():
             method='POST',
             json={"command": "CLU220000000:execute(0, 'LED0000:execute(12, 255)')"}
         )
+    if obj._unsub_interval:
+        obj._unsub_interval()
 
 @pytest.mark.asyncio
 async def test_async_turn_on_rgb():
@@ -217,6 +231,8 @@ async def test_async_turn_on_rgb():
             method='POST',
             json={"command": "CLU220000000:execute(0, 'LED0000:execute(6, \\\"#ffffff\\\")')"}
         )
+    if obj._unsub_interval:
+        obj._unsub_interval()
 
 @pytest.mark.asyncio
 async def test_async_turn_on_rgb_zwave():
@@ -244,6 +260,8 @@ async def test_async_turn_on_rgb_zwave():
             method='POST',
             json={"command": "CLU220000000:execute(0, 'ZWA0000:execute(3, \\\"#000000\\\")')"}
         )
+    if obj._unsub_interval:
+        obj._unsub_interval()
         
 @pytest.mark.asyncio
 async def test_async_turn_on_rgb_no_rgb_color():
@@ -270,6 +288,8 @@ async def test_async_turn_on_rgb_no_rgb_color():
             method='POST',
             json={"command": "CLU220000000:execute(0, 'RGB0000:execute(0, 1.0)')"}
         )
+    if obj._unsub_interval:
+        obj._unsub_interval()
 
 @pytest.mark.asyncio
 async def test_async_turn_off_dout():
@@ -296,6 +316,8 @@ async def test_async_turn_off_dout():
             method='POST',
             json={"command": "CLU220000000:execute(0, 'DOU0000:set(0, 0)')"}
         )
+    if obj._unsub_interval:
+        obj._unsub_interval()
 
 @pytest.mark.asyncio
 async def test_async_turn_off_dimmer():
@@ -322,6 +344,8 @@ async def test_async_turn_off_dimmer():
             method='POST',
             json={"command": "CLU220000000:execute(0, 'DOU0000:set(0, 0)')"}
         )
+    if obj._unsub_interval:
+        obj._unsub_interval()
 
 @pytest.mark.asyncio
 async def test_async_turn_off_dimmer_zwave():
@@ -348,6 +372,8 @@ async def test_async_turn_off_dimmer_zwave():
             method='POST',
             json={"command": "CLU220000000:execute(0, 'ZWA0000:execute(0, 0)')"}
         )
+    if obj._unsub_interval:
+        obj._unsub_interval()
 
 @pytest.mark.asyncio
 async def test_async_turn_off_rgb():
@@ -374,6 +400,8 @@ async def test_async_turn_off_rgb():
             method='POST',
             json={"command": "CLU220000000:execute(0, 'RGB0000:execute(0, 0)')"}
         )
+    if obj._unsub_interval:
+        obj._unsub_interval()
 
 @pytest.mark.asyncio
 async def test_async_turn_off_rgb_led_r():
@@ -400,6 +428,8 @@ async def test_async_turn_off_rgb_led_r():
             method='POST',
             json={"command": "CLU220000000:execute(0, 'RGB0000:execute(3, 0)')"}
         )
+    if obj._unsub_interval:
+        obj._unsub_interval()
 
 @pytest.mark.asyncio
 async def test_async_turn_off_rgb_led_g():
@@ -426,6 +456,8 @@ async def test_async_turn_off_rgb_led_g():
             method='POST',
             json={"command": "CLU220000000:execute(0, 'RGB0000:execute(4, 0)')"}
         )
+    if obj._unsub_interval:
+        obj._unsub_interval()
 
 @pytest.mark.asyncio
 async def test_async_turn_off_rgb_led_b():
@@ -452,6 +484,8 @@ async def test_async_turn_off_rgb_led_b():
             method='POST',
             json={"command": "CLU220000000:execute(0, 'RGB0000:execute(5, 0)')"}
         )
+    if obj._unsub_interval:
+        obj._unsub_interval()
 
 @pytest.mark.asyncio
 async def test_async_turn_off_rgb_led_w():
@@ -478,6 +512,8 @@ async def test_async_turn_off_rgb_led_w():
             method='POST',
             json={"command": "CLU220000000:execute(0, 'RGB0000:execute(12, 0)')"}
         )
+    if obj._unsub_interval:
+        obj._unsub_interval()
 
 @pytest.mark.asyncio
 async def test_async_update_dout():
@@ -504,6 +540,8 @@ async def test_async_update_dout():
             method='GET',
             json={"status": "return CLU220000000:execute(0, 'DOU0000:get(0)')"}
         )
+    if obj._unsub_interval:
+        obj._unsub_interval()
 
 @pytest.mark.asyncio
 async def test_async_update_dout_off():
@@ -530,6 +568,8 @@ async def test_async_update_dout_off():
             method='GET',
             json={"status": "return CLU220000000:execute(0, 'DOU0000:get(0)')"}
         )
+    if obj._unsub_interval:
+        obj._unsub_interval()
 
 @pytest.mark.asyncio
 async def test_async_update_dimmer():
@@ -557,6 +597,8 @@ async def test_async_update_dimmer():
             method='GET',
             json={"status": "return CLU220000000:execute(0, 'DIM0000:get(0)')"}
         )
+    if obj._unsub_interval:
+        obj._unsub_interval()
 
 @pytest.mark.asyncio
 async def test_async_update_dimmer_off():
@@ -584,6 +626,8 @@ async def test_async_update_dimmer_off():
             method='GET',
             json={"status": "return CLU220000000:execute(0, 'DIM0000:get(0)')"}
         )
+    if obj._unsub_interval:
+        obj._unsub_interval()
 
 @pytest.mark.asyncio
 async def test_async_update_dimmer_zwave():
@@ -611,6 +655,8 @@ async def test_async_update_dimmer_zwave():
             method='GET',
             json={"status": "return CLU220000000:execute(0, 'ZWA0000:get(0)')"}
         )
+    if obj._unsub_interval:
+        obj._unsub_interval()
 
 @pytest.mark.asyncio
 async def test_async_update_dimmer_zwave_off():
@@ -638,6 +684,8 @@ async def test_async_update_dimmer_zwave_off():
             method='GET',
             json={"status": "return CLU220000000:execute(0, 'ZWA0000:get(0)')"}
         )
+    if obj._unsub_interval:
+        obj._unsub_interval()
 
 @pytest.mark.asyncio
 async def test_async_update_led_r():
@@ -665,6 +713,8 @@ async def test_async_update_led_r():
             method='GET',
             json={"status": "return CLU220000000:execute(0, 'LED0000:get(3)')"}
         )
+    if obj._unsub_interval:
+        obj._unsub_interval()
 
 @pytest.mark.asyncio
 async def test_async_update_led_g_off():
@@ -692,6 +742,8 @@ async def test_async_update_led_g_off():
             method='GET',
             json={"status": "return CLU220000000:execute(0, 'LED0000:get(4)')"}
         )
+    if obj._unsub_interval:
+        obj._unsub_interval()
 
 @pytest.mark.asyncio
 async def test_async_update_led_b_off():
@@ -719,6 +771,8 @@ async def test_async_update_led_b_off():
             method='GET',
             json={"status": "return CLU220000000:execute(0, 'LED0000:get(5)')"}
         )
+    if obj._unsub_interval:
+        obj._unsub_interval()
 
 @pytest.mark.asyncio
 async def test_async_update_led_w():
@@ -746,6 +800,8 @@ async def test_async_update_led_w():
             method='GET',
             json={"status": "return CLU220000000:execute(0, 'LED0000:get(15)')"}
         )
+    if obj._unsub_interval:
+        obj._unsub_interval()
 
 @pytest.mark.asyncio
 async def test_async_update_rgb():
@@ -774,6 +830,8 @@ async def test_async_update_rgb():
             method='GET',
             json={"status": "return CLU220000000:execute(0, 'LED0000:get(0)')", "status_2": "return CLU220000000:execute(0, 'LED0000:get(6)')"}
         )
+    if obj._unsub_interval:
+        obj._unsub_interval()
 
 @pytest.mark.asyncio
 async def test_async_update_rgb_off():
@@ -802,6 +860,8 @@ async def test_async_update_rgb_off():
             method='GET',
             json={"status": "return CLU220000000:execute(0, 'LED0000:get(0)')", "status_2": "return CLU220000000:execute(0, 'LED0000:get(6)')"}
         )
+    if obj._unsub_interval:
+        obj._unsub_interval()
 
 @pytest.mark.asyncio
 async def test_async_update_rgb_zwave():
@@ -830,3 +890,5 @@ async def test_async_update_rgb_zwave():
             method='GET',
             json={"status": "return CLU220000000:execute(0, 'ZWA0000:get(0)')", "status_2": "return CLU220000000:execute(0, 'ZWA0000:get(3)')"}
         )
+    if obj._unsub_interval:
+        obj._unsub_interval()

@@ -27,6 +27,8 @@ async def test_async_set_temperature():
             method='POST',
             json={"command": "CLU220000000:execute(0, 'THE0000:set(8, 0)')", "command_2": f"CLU220000000:execute(0, 'THE0000:set(3, 20)')"}
         )
+    if obj._unsub_interval:
+        obj._unsub_interval()
 
 @pytest.mark.asyncio
 async def test_async_set_hvac_mode_heat():
@@ -51,6 +53,8 @@ async def test_async_set_hvac_mode_heat():
             method='POST',
             json={"command": "CLU220000000:execute(0, 'THE0000:execute(0, 0)')", "command_2": f"CLU220000000:execute(0, 'THE0000:set(7, 0)')"}
         )
+    if obj._unsub_interval:
+        obj._unsub_interval()
 
 @pytest.mark.asyncio
 async def test_async_set_hvac_mode_cool():
@@ -75,6 +79,8 @@ async def test_async_set_hvac_mode_cool():
             method='POST',
             json={"command": "CLU220000000:execute(0, 'THE0000:execute(0, 0)')", "command_2": f"CLU220000000:execute(0, 'THE0000:set(7, 1)')"}
         )
+    if obj._unsub_interval:
+        obj._unsub_interval()
 
 @pytest.mark.asyncio
 async def test_async_update():
@@ -102,3 +108,5 @@ async def test_async_update():
             method='GET',
             json={"status": "return CLU220000000:execute(0, 'THE0000:get(6)')", "status_2": "return CLU220000000:execute(0, 'THE0000:get(7)')", "status_3": "return CLU220000000:execute(0, 'THE0000:get(12)')", "status_4": "return CLU220000000:execute(0, 'THE0000:get(14)')"}
         )
+    if obj._unsub_interval:
+        obj._unsub_interval()

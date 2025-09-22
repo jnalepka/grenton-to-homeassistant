@@ -27,6 +27,8 @@ async def test_async_open_cover():
             method='POST',
             json={"command": "CLU220000000:execute(0, 'ROL0000:execute(0, 0)')"}
         )
+    if obj._unsub_interval:
+        obj._unsub_interval()
 
 @pytest.mark.asyncio
 async def test_async_close_cover():
@@ -52,6 +54,8 @@ async def test_async_close_cover():
             method='POST',
             json={"command": "CLU220000000:execute(0, 'ROL0000:execute(1, 0)')"}
         )
+    if obj._unsub_interval:
+        obj._unsub_interval()
 
 @pytest.mark.asyncio
 async def test_async_stop_cover():
@@ -77,6 +81,8 @@ async def test_async_stop_cover():
             method='POST',
             json={"command": "CLU220000000:execute(0, 'ROL0000:execute(3, 0)')"}
         )
+    if obj._unsub_interval:
+        obj._unsub_interval()
 
 @pytest.mark.asyncio
 async def test_async_set_cover_position():
@@ -102,6 +108,8 @@ async def test_async_set_cover_position():
             method='POST',
             json={"command": "CLU220000000:execute(0, 'ROL0000:execute(10, 100)')"}
         )
+    if obj._unsub_interval:
+        obj._unsub_interval()
       
 @pytest.mark.asyncio
 async def test_async_set_cover_position_reversed():
@@ -127,6 +135,8 @@ async def test_async_set_cover_position_reversed():
             method='POST',
             json={"command": "CLU220000000:execute(0, 'ROL0000:execute(10, 0)')"}
         )
+    if obj._unsub_interval:
+        obj._unsub_interval()
 
 @pytest.mark.asyncio
 async def test_async_set_cover_position_zwave():
@@ -152,6 +162,8 @@ async def test_async_set_cover_position_zwave():
             method='POST',
             json={"command": "CLU220000000:execute(0, 'ZWA0000:execute(7, 100)')"}
         )
+    if obj._unsub_interval:
+        obj._unsub_interval()
 
 @pytest.mark.asyncio
 async def test_async_set_cover_position_reversed_zwave():
@@ -177,6 +189,8 @@ async def test_async_set_cover_position_reversed_zwave():
             method='POST',
             json={"command": "CLU220000000:execute(0, 'ZWA0000:execute(7, 0)')"}
         )
+    if obj._unsub_interval:
+        obj._unsub_interval()
 
 
 @pytest.mark.asyncio
@@ -202,6 +216,8 @@ async def test_async_set_cover_tilt_position():
             method='POST',
             json={"command": "CLU220000000:execute(0, 'ROL0000:execute(9, 90)')"}
         )
+    if obj._unsub_interval:
+        obj._unsub_interval()
 
 @pytest.mark.asyncio
 async def test_async_open_cover_tilt():
@@ -226,6 +242,8 @@ async def test_async_open_cover_tilt():
             method='POST',
             json={"command": "CLU220000000:execute(0, 'ROL0000:execute(9, 90)')"}
         )
+    if obj._unsub_interval:
+        obj._unsub_interval()
 
 @pytest.mark.asyncio
 async def test_async_close_cover_tilt():
@@ -250,6 +268,8 @@ async def test_async_close_cover_tilt():
             method='POST',
             json={"command": "CLU220000000:execute(0, 'ROL0000:execute(9, 0)')"}
         )
+    if obj._unsub_interval:
+        obj._unsub_interval()
 
 @pytest.mark.asyncio
 async def test_async_update():
@@ -277,6 +297,8 @@ async def test_async_update():
             method='GET',
             json={"status": "return CLU220000000:execute(0, 'ROL0000:get(0)')", "status_2": "return CLU220000000:execute(0, 'ROL0000:get(7)')", "status_3": "return CLU220000000:execute(0, 'ROL0000:get(8)')"}
         )
+    if obj._unsub_interval:
+        obj._unsub_interval()
 
 @pytest.mark.asyncio
 async def test_async_update_zwave():
@@ -304,6 +326,8 @@ async def test_async_update_zwave():
             method='GET',
             json={"status": "return CLU220000000:execute(0, 'ZWA0000:get(2)')", "status_2": "return CLU220000000:execute(0, 'ZWA0000:get(4)')", "status_3": "return CLU220000000:execute(0, 'ZWA0000:get(6)')"}
         )
+    if obj._unsub_interval:
+        obj._unsub_interval()
 
 @pytest.mark.asyncio
 async def test_async_update_reversed():
@@ -331,6 +355,8 @@ async def test_async_update_reversed():
             method='GET',
             json={"status": "return CLU220000000:execute(0, 'ROL0000:get(0)')", "status_2": "return CLU220000000:execute(0, 'ROL0000:get(7)')", "status_3": "return CLU220000000:execute(0, 'ROL0000:get(8)')"}
         )
+    if obj._unsub_interval:
+        obj._unsub_interval()
 
 @pytest.mark.asyncio
 async def test_async_update_zwave_reversed():
@@ -358,3 +384,5 @@ async def test_async_update_zwave_reversed():
             method='GET',
             json={"status": "return CLU220000000:execute(0, 'ZWA0000:get(2)')", "status_2": "return CLU220000000:execute(0, 'ZWA0000:get(4)')", "status_3": "return CLU220000000:execute(0, 'ZWA0000:get(6)')"}
         )
+    if obj._unsub_interval:
+        obj._unsub_interval()

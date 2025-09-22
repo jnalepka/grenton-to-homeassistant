@@ -27,6 +27,8 @@ async def test_async_update():
             method='GET',
             json={"status": "return CLU220000000:execute(0, 'DIN0000:get(0)')"}
         )
+    if obj._unsub_interval:
+        obj._unsub_interval()
 
 @pytest.mark.asyncio
 async def test_async_update_off():
@@ -52,3 +54,5 @@ async def test_async_update_off():
             method='GET',
             json={"status": "return CLU220000000:execute(0, 'DIN0000:get(0)')"}
         )
+    if obj._unsub_interval:
+        obj._unsub_interval()

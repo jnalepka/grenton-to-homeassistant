@@ -33,6 +33,8 @@ async def test_async_update_palensenstemp():
             method='GET',
             json={"status": "return CLU220000000:execute(0, 'PAN0000:get(0)')"}
         )
+    if obj._unsub_interval:
+        obj._unsub_interval()
 
 @pytest.mark.asyncio
 async def test_async_update_gate_feature():
@@ -64,6 +66,8 @@ async def test_async_update_gate_feature():
             method='GET',
             json={"status": "return getVar(\"my_feature_123\")"}
         )
+    if obj._unsub_interval:
+        obj._unsub_interval()
 
 @pytest.mark.asyncio
 async def test_async_update_clu_feature():
@@ -95,6 +99,8 @@ async def test_async_update_clu_feature():
             method='GET',
             json={"status": "return CLU220000000:execute(0, 'getVar(\"my_feature_123\")')"}
         )
+    if obj._unsub_interval:
+        obj._unsub_interval()
 
 @pytest.mark.asyncio
 async def test_async_update_clu_feature_contain_obj_id():
@@ -126,6 +132,8 @@ async def test_async_update_clu_feature_contain_obj_id():
             method='GET',
             json={"status": "return CLU220000000:execute(0, 'getVar(\"when_DOU1234_light_up\")')"}
         )
+    if obj._unsub_interval:
+        obj._unsub_interval()
 
 @pytest.mark.asyncio
 async def test_async_update_modbus():
@@ -157,6 +165,8 @@ async def test_async_update_modbus():
             method='GET',
             json={"status": "return CLU220000000:execute(0, 'MOD0000:get(14)')"}
         )
+    if obj._unsub_interval:
+        obj._unsub_interval()
 
 @pytest.mark.asyncio
 async def test_async_update_modbus_value():
@@ -188,6 +198,8 @@ async def test_async_update_modbus_value():
             method='GET',
             json={"status": "return CLU220000000:execute(0, 'MOD0000:get(20)')"}
         )
+    if obj._unsub_interval:
+        obj._unsub_interval()
 
 @pytest.mark.asyncio
 async def test_async_update_modbus_rtu():
@@ -219,6 +231,8 @@ async def test_async_update_modbus_rtu():
             method='GET',
             json={"status": "return CLU220000000:execute(0, 'MOD0000:get(22)')"}
         )
+    if obj._unsub_interval:
+        obj._unsub_interval()
 
 @pytest.mark.asyncio
 async def test_async_update_modbus_client():
@@ -250,6 +264,8 @@ async def test_async_update_modbus_client():
             method='GET',
             json={"status": "return CLU220000000:execute(0, 'MOD0000:get(19)')"}
         )
+    if obj._unsub_interval:
+        obj._unsub_interval()
 
 @pytest.mark.asyncio
 async def test_async_update_modbus_server():
@@ -281,6 +297,8 @@ async def test_async_update_modbus_server():
             method='GET',
             json={"status": "return CLU220000000:execute(0, 'MOD0000:get(10)')"}
         )
+    if obj._unsub_interval:
+        obj._unsub_interval()
 
 @pytest.mark.asyncio
 async def test_async_update_modbus_slave_rtu():
@@ -312,3 +330,5 @@ async def test_async_update_modbus_slave_rtu():
             method='GET',
             json={"status": "return CLU220000000:execute(0, 'MOD0000:get(10)')"}
         )
+    if obj._unsub_interval:
+        obj._unsub_interval()

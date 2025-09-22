@@ -27,6 +27,8 @@ async def test_async_turn_on():
             method='POST',
             json={"command": "CLU220000000:execute(0, 'DOU0000:set(0, 1)')"}
         )
+    if obj._unsub_interval:
+        obj._unsub_interval()
 
 @pytest.mark.asyncio
 async def test_async_turn_off():
@@ -52,6 +54,8 @@ async def test_async_turn_off():
             method='POST',
             json={"command": "CLU220000000:execute(0, 'DOU0000:set(0, 0)')"}
         )
+    if obj._unsub_interval:
+        obj._unsub_interval()
 
 @pytest.mark.asyncio
 async def test_async_update():
@@ -77,6 +81,8 @@ async def test_async_update():
             method='GET',
             json={"status": "return CLU220000000:execute(0, 'DOU0000:get(0)')"}
         )
+    if obj._unsub_interval:
+        obj._unsub_interval()
 
 @pytest.mark.asyncio
 async def test_async_update_off():
@@ -102,3 +108,5 @@ async def test_async_update_off():
             method='GET',
             json={"status": "return CLU220000000:execute(0, 'DOU0000:get(0)')"}
         )
+    if obj._unsub_interval:
+        obj._unsub_interval()
