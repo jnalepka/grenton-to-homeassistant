@@ -11,8 +11,13 @@ def create_obj(grenton_id="CLU220000000->THE0000", status="ok", captured_command
     )
     obj._initialized = True
 
+    class MockLoop:
+        def time(self):
+            return 123.456
+
     class MockHass:
         def async_add_job(self, *args, **kwargs): pass
+        loop = MockLoop()
     obj.hass = MockHass()
     obj.async_write_ha_state = lambda: None
 
@@ -41,3 +46,5 @@ async def test_async_set_temperature(monkeypatch):
     assert captured_command["value"] == {
         "command": "CLU220000000:execute(0, 'THE0000:set(8, 0)')", "command_2": f"CLU220000000:execute(0, 'THE0000:set(3, 20)')"
     }
+    assert obj._target_temperature == 20
+    assert obj._last_command_time == 123.456
