@@ -13,10 +13,11 @@ async def test_command_generation_and_state(monkeypatch):
     )
     sensor._initialized = True
 
-    # Dodaj mock hass
+    # Mock hass i metoda async_write_ha_state
     class MockHass:
         def async_add_job(self, *args, **kwargs): pass
     sensor.hass = MockHass()
+    sensor.async_write_ha_state = lambda: None  # <-- kluczowa linia
 
     captured_command = {}
 
