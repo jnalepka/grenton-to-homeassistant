@@ -2,7 +2,7 @@ import pytest
 from custom_components.grenton_objects.climate import GrentonClimate
 from homeassistant.components.climate import HVACMode
 
-def create_obj(grenton_id="CLU220000000->THE0000", status="ok", status_2="ok", status_3="ok", status_4="ok", captured_command=None):
+def create_obj(grenton_id="CLU220000000->THE0000", response_data={"status": 1}, captured_command=None):
     obj = GrentonClimate(
         api_endpoint="http://fake-api",
         grenton_id=grenton_id,
@@ -23,7 +23,7 @@ def create_obj(grenton_id="CLU220000000->THE0000", status="ok", status_2="ok", s
     obj.async_write_ha_state = lambda: None
 
     class FakeResponse:
-        async def json(self): return {"status": status, "status_2": status_2, "status_3": status_3, "status_4": status_4}
+        async def json(self): return response_data
         def raise_for_status(self): pass
         async def __aenter__(self): return self
         async def __aexit__(self, *args): pass
@@ -44,7 +44,7 @@ def create_obj(grenton_id="CLU220000000->THE0000", status="ok", status_2="ok", s
 @pytest.mark.asyncio
 async def test_async_set_temperature(monkeypatch):
     captured_command = {}
-    obj, FakeSession = create_obj(status="ok", captured_command=captured_command)
+    obj, FakeSession = create_obj(response_data={"status": "ok"}, captured_command=captured_command)
     monkeypatch.setattr("aiohttp.ClientSession", lambda: FakeSession())
     await obj.async_set_temperature(temperature=20)
 
@@ -58,7 +58,7 @@ async def test_async_set_temperature(monkeypatch):
 @pytest.mark.asyncio
 async def test_async_set_hvac_mode_heat(monkeypatch):
     captured_command = {}
-    obj, FakeSession = create_obj(status="ok", captured_command=captured_command)
+    obj, FakeSession = create_obj(response_data={"status": "ok"}, captured_command=captured_command)
     monkeypatch.setattr("aiohttp.ClientSession", lambda: FakeSession())
     await obj.async_set_hvac_mode(HVACMode.HEAT)
 
@@ -72,7 +72,7 @@ async def test_async_set_hvac_mode_heat(monkeypatch):
 @pytest.mark.asyncio
 async def test_async_set_hvac_mode_cool(monkeypatch):
     captured_command = {}
-    obj, FakeSession = create_obj(status="ok", captured_command=captured_command)
+    obj, FakeSession = create_obj(response_data={"status": "ok"}, captured_command=captured_command)
     monkeypatch.setattr("aiohttp.ClientSession", lambda: FakeSession())
     await obj.async_set_hvac_mode(HVACMode.COOL)
 
@@ -86,7 +86,7 @@ async def test_async_set_hvac_mode_cool(monkeypatch):
 @pytest.mark.asyncio
 async def test_async_update(monkeypatch):
     captured_command = {}
-    obj, FakeSession = create_obj(status=1, status_2=1, status_3=22, status_4=19, captured_command=captured_command)
+    obj, FakeSession = create_obj(response_data={"status": 1, "status_2": 1, "status_3": 22, "status_4": 19}, captured_command=captured_command)
     monkeypatch.setattr("aiohttp.ClientSession", lambda: FakeSession())
     await obj.async_update()
 

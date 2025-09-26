@@ -2,7 +2,7 @@ import pytest
 from custom_components.grenton_objects.binary_sensor import GrentonBinarySensor
 from homeassistant.const import STATE_ON, STATE_OFF
 
-def create_obj(grenton_id="CLU220000000->DIN0000", status=1, captured_command=None):
+def create_obj(grenton_id="CLU220000000->DIN0000", response_data={"status": 1}, captured_command=None):
     obj = GrentonBinarySensor(
         api_endpoint="http://fake-api",
         grenton_id=grenton_id,
@@ -18,7 +18,7 @@ def create_obj(grenton_id="CLU220000000->DIN0000", status=1, captured_command=No
     obj.async_write_ha_state = lambda: None
 
     class FakeResponse:
-        async def json(self): return {"status": status}
+        async def json(self): return response_data
         def raise_for_status(self): pass
         async def __aenter__(self): return self
         async def __aexit__(self, *args): pass
@@ -26,6 +26,9 @@ def create_obj(grenton_id="CLU220000000->DIN0000", status=1, captured_command=No
     class FakeSession:
         async def __aenter__(self): return self
         async def __aexit__(self, *args): pass
+        def post(self, url, json):
+            captured_command["value"] = json
+            return FakeResponse()
         def get(self, url, json):
             if captured_command is not None:
                 captured_command["value"] = json
@@ -36,7 +39,7 @@ def create_obj(grenton_id="CLU220000000->DIN0000", status=1, captured_command=No
 @pytest.mark.asyncio
 async def test_async_update(monkeypatch):
     captured_command = {}
-    obj, FakeSession = create_obj(status=1, captured_command=captured_command)
+    obj, FakeSession = create_obj(response_data={"status": 1}, captured_command=captured_command)
     monkeypatch.setattr("aiohttp.ClientSession", lambda: FakeSession())
     await obj.async_update()
 
@@ -50,7 +53,7 @@ async def test_async_update(monkeypatch):
 @pytest.mark.asyncio
 async def test_async_update_off(monkeypatch):
     captured_command = {}
-    obj, FakeSession = create_obj(status=0, captured_command=captured_command)
+    obj, FakeSession = create_obj(response_data={"status": 0}, captured_command=captured_command)
     monkeypatch.setattr("aiohttp.ClientSession", lambda: FakeSession())
     await obj.async_update()
 
