@@ -1,7 +1,5 @@
 import pytest
 from custom_components.grenton_objects.climate import GrentonClimate
-from homeassistant.const import STATE_ON, STATE_OFF
-from homeassistant.components.climate import HVACMode
 
 def create_obj(grenton_id="CLU220000000->THE0000", status="ok", captured_command=None):
     obj = GrentonClimate(
@@ -38,7 +36,7 @@ async def test_async_set_temperature(monkeypatch):
     captured_command = {}
     obj, FakeSession = create_obj(status="ok", captured_command=captured_command)
     monkeypatch.setattr("aiohttp.ClientSession", lambda: FakeSession())
-    await obj.async_update()
+    await obj.async_set_temperature(temperature=20)
 
     assert captured_command["value"] == {
         "command": "CLU220000000:execute(0, 'THE0000:set(8, 0)')", "command_2": f"CLU220000000:execute(0, 'THE0000:set(3, 20)')"
