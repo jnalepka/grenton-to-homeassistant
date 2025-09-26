@@ -44,7 +44,7 @@ async def test_async_update(monkeypatch):
         "status": "return CLU220000000:execute(0, 'DIN0000:get(0)')"
     }
     assert sensor._state == STATE_ON
-    assert sensor.is_on is False
+    assert sensor.is_on is True
 
 @pytest.mark.asyncio
 async def test_async_update_off(monkeypatch):
@@ -85,7 +85,7 @@ async def test_async_update_off(monkeypatch):
     await sensor.async_update()
 
     assert captured_command["value"] == {
-        "status": "return CLU220000000:execute(0, 'DIN0000:get(0)')"
+        "status": "return CLU220000000:execute(0, 'DIN0000:get(1)')"
     }
     assert sensor._state == STATE_OFF
-    assert sensor.is_on is True
+    assert sensor.is_on is False
