@@ -87,8 +87,7 @@ async def test_async_stop_cover(monkeypatch):
     assert captured_command["value"] == {
         "command": "CLU220000000:execute(0, 'ROL0000:execute(3, 0)')"
     }
-    assert obj.is_closed
-    assert obj._state == STATE_CLOSED
+    assert obj._state == STATE_OPEN
     assert obj._last_command_time == 123.456
     assert obj.unique_id == "grenton_ROL0000"
 
@@ -117,7 +116,37 @@ async def test_async_set_cover_position_reversed(monkeypatch):
     assert captured_command["value"] == {
         "command": "CLU220000000:execute(0, 'ROL0000:execute(10, 0)')"
     }
-    assert obj.is_closing
-    assert obj._state == STATE_CLOSING
+    assert obj.is_opening
+    assert obj._state == STATE_OPENING
     assert obj._last_command_time == 123.456
     assert obj.unique_id == "grenton_ROL0000"
+
+@pytest.mark.asyncio
+async def test_async_set_cover_position_zwave(monkeypatch):
+    captured_command = {}
+    obj, FakeSession = create_obj(grenton_id="CLU220000000->ZWA0000", response_data={"status": "ok"}, captured_command=captured_command)
+    monkeypatch.setattr("aiohttp.ClientSession", lambda: FakeSession())
+    await obj.async_set_cover_position(position=100)
+
+    assert captured_command["value"] == {
+        "command": "CLU220000000:execute(0, 'ZWA0000:execute(7, 100)')"
+    }
+    assert obj.is_opening
+    assert obj._state == STATE_OPENING
+    assert obj._last_command_time == 123.456
+    assert obj.unique_id == "grenton_ZWA0000"
+
+@pytest.mark.asyncio
+async def test_async_set_cover_position_reversed_zwave(monkeypatch):
+    captured_command = {}
+    obj, FakeSession = create_obj(grenton_id="CLU220000000->ZWA0000", response_data={"status": "ok"}, captured_command=captured_command, reversed = True)
+    monkeypatch.setattr("aiohttp.ClientSession", lambda: FakeSession())
+    await obj.async_set_cover_position(position=100)
+
+    assert captured_command["value"] == {
+        "command": "CLU220000000:execute(0, 'ZWA0000:execute(7, 0)')"
+    }
+    assert obj.is_opening
+    assert obj._state == STATE_OPENING
+    assert obj._last_command_time == 123.456
+    assert obj.unique_id == "grenton_ZWA0000"
