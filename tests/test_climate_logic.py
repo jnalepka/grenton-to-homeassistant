@@ -93,7 +93,7 @@ async def test_async_update(monkeypatch):
     assert captured_command["value"] == {
         "status": "return CLU220000000:execute(0, 'THE0000:get(6)')", "status_2": "return CLU220000000:execute(0, 'THE0000:get(7)')", "status_3": "return CLU220000000:execute(0, 'THE0000:get(12)')", "status_4": "return CLU220000000:execute(0, 'THE0000:get(14)')"
     }
-    assert obj._last_command_time == 123.456
+    assert obj._last_command_time == None
     assert obj.unique_id == "grenton_THE0000"
     assert obj._hvac_mode == HVACMode.COOL
     assert obj.target_temperature == 22
