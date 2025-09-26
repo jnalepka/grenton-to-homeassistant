@@ -2,7 +2,7 @@ import pytest
 from custom_components.grenton_objects.button import GrentonScript
 
 def create_sensor(grenton_id="my_script", status="ok", captured_command=None):
-    sensor = GrentonBinarySensor(
+    sensor = GrentonScript(
         api_endpoint="http://fake-api",
         grenton_id=grenton_id,
         object_name="Test Script"
