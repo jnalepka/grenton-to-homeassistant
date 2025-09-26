@@ -30,4 +30,4 @@ jobs:
 
       - name: Run tests
         run: echo "Tests skipped"
-        #run: pytest tests/
+        run: pytest tests_new/
