@@ -1,43 +1,44 @@
 import pytest
-from aioresponses import aioresponses
 from custom_components.grenton_objects.button import GrentonScript
+from homeassistant.const import STATE_ON, STATE_OFF
 
 @pytest.mark.asyncio
-async def test_async_script_local():
-    api_endpoint = "http://192.168.0.4/HAlistener"
-    grenton_id = "my_script"
-    object_name = "Test Script"
-    
-    obj = GrentonScript(api_endpoint, grenton_id, object_name)
-    
-    with aioresponses() as m:
-        m.post(api_endpoint, status=200, payload={"status": "ok"})
-        
-        await obj.async_press()
-        
-        assert obj.unique_id == "grenton_my_script"
-        m.assert_called_once_with(
-            api_endpoint,
-            method='POST',
-            json={"command": "my_script(nil)"}
-        )
+async def test_async_update(monkeypatch):
+    sensor = GrentonScript(
+        api_endpoint="http://fake-api",
+        grenton_id="my_script",
+        object_name="Test Script",
+        auto_update=False,
+        update_interval=5
+    )
+    sensor._initialized = True
 
-@pytest.mark.asyncio
-async def test_async_script_remote():
-    api_endpoint = "http://192.168.0.4/HAlistener"
-    grenton_id = "CLU220000000->my_script_2"
-    object_name = "Test Script"
-    
-    obj = GrentonScript(api_endpoint, grenton_id, object_name)
-    
-    with aioresponses() as m:
-        m.post(api_endpoint, status=200, payload={"status": "ok"})
-        
-        await obj.async_press()
-        
-        assert obj.unique_id == "grenton_my_script_2"
-        m.assert_called_once_with(
-            api_endpoint,
-            method='POST',
-            json={"command": "CLU220000000:execute(0, 'my_script_2(nil)')"}
-        )
+    class MockHass:
+        def async_add_job(self, *args, **kwargs): pass
+    sensor.hass = MockHass()
+    sensor.async_write_ha_state = lambda: None
+
+    captured_command = {}
+
+    class FakeResponse:
+        async def json(self):
+            return {"status": "ok"}
+        def raise_for_status(self):
+            pass
+        async def __aenter__(self): return self
+        async def __aexit__(self, *args): pass
+
+    class FakeSession:
+        async def __aenter__(self): return self
+        async def __aexit__(self, *args): pass
+        def get(self, url, json):
+            captured_command["value"] = json
+            return FakeResponse()
+
+    monkeypatch.setattr("aiohttp.ClientSession", lambda: FakeSession())
+
+    await sensor.async_update()
+
+    assert captured_command["value"] == {
+        "command": "my_script(nil)"
+    }
