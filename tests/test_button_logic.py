@@ -7,7 +7,6 @@ def create_sensor(grenton_id="my_script", status="ok", captured_command=None):
         grenton_id=grenton_id,
         object_name="Test Script"
     )
-    sensor._initialized = True
 
     class MockHass:
         def async_add_job(self, *args, **kwargs): pass
@@ -35,6 +34,7 @@ async def test_async_script_local(monkeypatch):
     captured_command = {}
     sensor, FakeSession = create_sensor(status="ok", captured_command=captured_command)
     monkeypatch.setattr("aiohttp.ClientSession", lambda: FakeSession())
+    await sensor.async_press()
 
     assert captured_command["value"] == {
         "command": "my_script(nil)"
@@ -46,6 +46,7 @@ async def test_async_script_remote(monkeypatch):
     captured_command = {}
     sensor, FakeSession = create_sensor(grenton_id="CLU220000000->my_script_2", status="ok", captured_command=captured_command)
     monkeypatch.setattr("aiohttp.ClientSession", lambda: FakeSession())
+    await sensor.async_press()
 
     assert captured_command["value"] == {
         "command": "CLU220000000:execute(0, 'my_script_2(nil)')"
