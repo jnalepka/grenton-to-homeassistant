@@ -13,6 +13,11 @@ async def test_command_generation_and_state(monkeypatch):
     )
     sensor._initialized = True
 
+    # Dodaj mock hass
+    class MockHass:
+        def async_add_job(self, *args, **kwargs): pass
+    sensor.hass = MockHass()
+
     captured_command = {}
 
     class FakeResponse:
