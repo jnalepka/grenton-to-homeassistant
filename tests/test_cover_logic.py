@@ -7,11 +7,11 @@ from homeassistant.const import (
     STATE_OPENING
 )
 
-def create_obj(grenton_id="CLU220000000->ROL0000", response_data={"status": "ok"}, captured_command=None):
+def create_obj(grenton_id="CLU220000000->ROL0000", response_data={"status": "ok"}, captured_command=None, reversed = False):
     obj = GrentonCover(
         api_endpoint="http://fake-api",
         grenton_id=grenton_id,
-        reversed = False,
+        reversed = reversed,
         object_name="Test obj",
         auto_update=False,
         update_interval=5
@@ -71,6 +71,51 @@ async def test_async_close_cover(monkeypatch):
 
     assert captured_command["value"] == {
         "command": "CLU220000000:execute(0, 'ROL0000:execute(1, 0)')"
+    }
+    assert obj.is_closing
+    assert obj._state == STATE_CLOSING
+    assert obj._last_command_time == 123.456
+    assert obj.unique_id == "grenton_ROL0000"
+
+@pytest.mark.asyncio
+async def test_async_stop_cover(monkeypatch):
+    captured_command = {}
+    obj, FakeSession = create_obj(response_data={"status": "ok"}, captured_command=captured_command)
+    monkeypatch.setattr("aiohttp.ClientSession", lambda: FakeSession())
+    await obj.async_stop_cover()
+
+    assert captured_command["value"] == {
+        "command": "CLU220000000:execute(0, 'ROL0000:execute(3, 0)')"
+    }
+    assert obj.is_closed
+    assert obj._state == STATE_CLOSED
+    assert obj._last_command_time == 123.456
+    assert obj.unique_id == "grenton_ROL0000"
+
+@pytest.mark.asyncio
+async def test_async_set_cover_position(monkeypatch):
+    captured_command = {}
+    obj, FakeSession = create_obj(response_data={"status": "ok"}, captured_command=captured_command)
+    monkeypatch.setattr("aiohttp.ClientSession", lambda: FakeSession())
+    await obj.async_set_cover_position(position=100)
+
+    assert captured_command["value"] == {
+        "command": "CLU220000000:execute(0, 'ROL0000:execute(10, 100)')"
+    }
+    assert obj.is_opening
+    assert obj._state == STATE_OPENING
+    assert obj._last_command_time == 123.456
+    assert obj.unique_id == "grenton_ROL0000"
+
+@pytest.mark.asyncio
+async def test_async_set_cover_position_reversed(monkeypatch):
+    captured_command = {}
+    obj, FakeSession = create_obj(response_data={"status": "ok"}, captured_command=captured_command, reversed = True)
+    monkeypatch.setattr("aiohttp.ClientSession", lambda: FakeSession())
+    await obj.async_set_cover_position(position=100)
+
+    assert captured_command["value"] == {
+        "command": "CLU220000000:execute(0, 'ROL0000:execute(10, 0)')"
     }
     assert obj.is_closing
     assert obj._state == STATE_CLOSING
