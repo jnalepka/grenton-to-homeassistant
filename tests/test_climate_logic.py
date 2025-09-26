@@ -34,6 +34,10 @@ def create_obj(grenton_id="CLU220000000->THE0000", status="ok", status_2="ok", s
         def post(self, url, json):
             captured_command["value"] = json
             return FakeResponse()
+        def get(self, url, json):
+            if captured_command is not None:
+                captured_command["value"] = json
+            return FakeResponse()
 
     return obj, FakeSession
 
