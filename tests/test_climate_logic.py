@@ -2,7 +2,7 @@ import pytest
 from custom_components.grenton_objects.climate import GrentonClimate
 from homeassistant.components.climate import HVACMode
 
-def create_obj(grenton_id="CLU220000000->THE0000", response_data={"status": 1}, captured_command=None):
+def create_obj(grenton_id="CLU220000000->THE0000", response_data={"status": "ok"}, captured_command=None):
     obj = GrentonClimate(
         api_endpoint="http://fake-api",
         grenton_id=grenton_id,
