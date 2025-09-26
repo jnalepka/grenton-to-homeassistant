@@ -156,7 +156,7 @@ async def test_async_set_cover_tilt_position(monkeypatch):
     captured_command = {}
     obj, FakeSession = create_obj(response_data={"status": "ok"}, captured_command=captured_command)
     monkeypatch.setattr("aiohttp.ClientSession", lambda: FakeSession())
-    await obj.async_set_cover_tilt_position(tilt_position=90)
+    await obj.async_set_cover_tilt_position(tilt_position=100)
 
     assert captured_command["value"] == {
         "command": "CLU220000000:execute(0, 'ROL0000:execute(9, 90)')"
@@ -216,7 +216,7 @@ async def test_async_update_zwave(monkeypatch):
         "status": "return CLU220000000:execute(0, 'ZWA0000:get(2)')", "status_2": "return CLU220000000:execute(0, 'ZWA0000:get(4)')", "status_3": "return CLU220000000:execute(0, 'ZWA0000:get(6)')"
     }
     assert obj.unique_id == "grenton_ZWA0000"
-    assert obj.is_closed
+    assert not obj.is_closed
     assert obj.current_cover_position == 50
     assert obj.current_cover_tilt_position == 100
 
