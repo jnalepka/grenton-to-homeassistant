@@ -60,11 +60,7 @@ class GrentonClimate(ClimateEntity):
         self._hvac_modes = [HVACMode.OFF, HVACMode.HEAT, HVACMode.COOL]
         self._unique_id = f"grenton_{grenton_id.split('->')[1]}"
         self._temperature_unit = UnitOfTemperature.CELSIUS
-        self._supported_features = (
-            ClimateEntityFeature.TURN_ON |
-            ClimateEntityFeature.TURN_OFF |
-            ClimateEntityFeature.TARGET_TEMPERATURE
-        )
+        self._supported_features = ClimateEntityFeature.TARGET_TEMPERATURE
         self._last_command_time = None
         self._auto_update = auto_update
         self._update_interval = update_interval
