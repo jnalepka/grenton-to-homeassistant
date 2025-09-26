@@ -29,5 +29,4 @@ jobs:
         run: echo "PYTHONPATH=$PWD" >> $GITHUB_ENV
 
       - name: Run tests
-        run: echo "Tests skipped"
         run: pytest tests_new/
