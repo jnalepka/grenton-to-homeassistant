@@ -14,7 +14,6 @@ def create_sensor(grenton_id="my_script", status="ok", captured_command=None):
     sensor.async_write_ha_state = lambda: None
 
     class FakeResponse:
-        async def json(self): return {"status": status}
         def raise_for_status(self): pass
         async def __aenter__(self): return self
         async def __aexit__(self, *args): pass
@@ -22,9 +21,8 @@ def create_sensor(grenton_id="my_script", status="ok", captured_command=None):
     class FakeSession:
         async def __aenter__(self): return self
         async def __aexit__(self, *args): pass
-        def get(self, url, json):
-            if captured_command is not None:
-                captured_command["value"] = json
+        def post(self, url, json):
+            captured_command["value"] = json
             return FakeResponse()
 
     return sensor, FakeSession
