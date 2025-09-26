@@ -1,5 +1,5 @@
 import pytest
-from custom_components.your_component.binary_sensor import GrentonBinarySensor
+from custom_components.grenton_objects.binary_sensor import GrentonBinarySensor
 from homeassistant.const import STATE_ON
 
 @pytest.mark.asyncio
