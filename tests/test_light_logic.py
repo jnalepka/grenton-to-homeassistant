@@ -223,7 +223,7 @@ async def test_async_turn_off_dimmer(monkeypatch):
     await obj.async_turn_off()
 
     assert captured_command["value"] == {
-        "command": "CLU220000000:execute(0, 'DOU0000:set(0, 0)')"
+        "command": "CLU220000000:execute(0, 'DIM0000:set(0, 0)')"
     }
     assert not obj.is_on
     assert obj._state == STATE_OFF
@@ -323,14 +323,195 @@ async def test_async_turn_off_rgb_led_w(monkeypatch):
 @pytest.mark.asyncio
 async def test_async_update_dout(monkeypatch):
     captured_command = {}
-    obj, FakeSession = create_obj(grenton_id="CLU220000000->DOU0000", grenton_type = "DOUT", response_data={"status": "ok"}, captured_command=captured_command)
+    obj, FakeSession = create_obj(grenton_id="CLU220000000->DOU0000", grenton_type = "DOUT", response_data={"status": 1}, captured_command=captured_command)
     monkeypatch.setattr("aiohttp.ClientSession", lambda: FakeSession())
     await obj.async_update()
 
     assert captured_command["value"] == {
-        "command": "CLU220000000:execute(0, 'DOU0000:execute(12, 0)')"
+        "status": "return CLU220000000:execute(0, 'DOU0000:get(0)')"
+    }
+    assert obj.is_on
+    assert obj._state == STATE_ON
+    assert obj.unique_id == "grenton_DOU0000"
+
+@pytest.mark.asyncio
+async def test_async_update_dout_off(monkeypatch):
+    captured_command = {}
+    obj, FakeSession = create_obj(grenton_id="CLU220000000->DOU0000", grenton_type = "DOUT", response_data={"status": 0}, captured_command=captured_command)
+    monkeypatch.setattr("aiohttp.ClientSession", lambda: FakeSession())
+    await obj.async_update()
+
+    assert captured_command["value"] == {
+        "status": "return CLU220000000:execute(0, 'DOU0000:get(0)')"
     }
     assert not obj.is_on
     assert obj._state == STATE_OFF
-    assert obj._last_command_time == 123.456
     assert obj.unique_id == "grenton_DOU0000"
+
+@pytest.mark.asyncio
+async def test_async_update_dimmer(monkeypatch):
+    captured_command = {}
+    obj, FakeSession = create_obj(grenton_id="CLU220000000->DIM0000", grenton_type = "DIMMER", response_data={"status": 1}, captured_command=captured_command)
+    monkeypatch.setattr("aiohttp.ClientSession", lambda: FakeSession())
+    await obj.async_update()
+
+    assert captured_command["value"] == {
+        "status": "return CLU220000000:execute(0, 'DIM0000:get(0)')"
+    }
+    assert obj.is_on
+    assert obj._state == STATE_ON
+    assert obj.brightness == 255
+    assert obj.unique_id == "grenton_DIM0000"
+
+@pytest.mark.asyncio
+async def test_async_update_dimmer_off(monkeypatch):
+    captured_command = {}
+    obj, FakeSession = create_obj(grenton_id="CLU220000000->DIM0000", grenton_type = "DIMMER", response_data={"status": 0}, captured_command=captured_command)
+    monkeypatch.setattr("aiohttp.ClientSession", lambda: FakeSession())
+    await obj.async_update()
+
+    assert captured_command["value"] == {
+        "status": "return CLU220000000:execute(0, 'DIM0000:get(0)')"
+    }
+    assert not obj.is_on
+    assert obj._state == STATE_OFF
+    assert obj.brightness == 0
+    assert obj.unique_id == "grenton_DIM0000"
+
+@pytest.mark.asyncio
+async def test_async_update_dimmer_zwave(monkeypatch):
+    captured_command = {}
+    obj, FakeSession = create_obj(grenton_id="CLU220000000->ZWA0000", grenton_type = "DIMMER", response_data={"status": 255}, captured_command=captured_command)
+    monkeypatch.setattr("aiohttp.ClientSession", lambda: FakeSession())
+    await obj.async_update()
+
+    assert captured_command["value"] == {
+        "status": "return CLU220000000:execute(0, 'ZWA0000:get(0)')"
+    }
+    assert obj.is_on
+    assert obj._state == STATE_ON
+    assert obj.brightness == 255
+    assert obj.unique_id == "grenton_ZWA0000"
+
+@pytest.mark.asyncio
+async def test_async_update_dimmer_zwave_off(monkeypatch):
+    captured_command = {}
+    obj, FakeSession = create_obj(grenton_id="CLU220000000->ZWA0000", grenton_type = "DIMMER", response_data={"status": 0}, captured_command=captured_command)
+    monkeypatch.setattr("aiohttp.ClientSession", lambda: FakeSession())
+    await obj.async_update()
+
+    assert captured_command["value"] == {
+        "status": "return CLU220000000:execute(0, 'ZWA0000:get(0)')"
+    }
+    assert not obj.is_on
+    assert obj._state == STATE_OFF
+    assert obj.brightness == 0
+    assert obj.unique_id == "grenton_ZWA0000"
+
+@pytest.mark.asyncio
+async def test_async_update_led_r(monkeypatch):
+    captured_command = {}
+    obj, FakeSession = create_obj(grenton_id="CLU220000000->LED0000", grenton_type = "LED_R", response_data={"status": 255}, captured_command=captured_command)
+    monkeypatch.setattr("aiohttp.ClientSession", lambda: FakeSession())
+    await obj.async_update()
+
+    assert captured_command["value"] == {
+        "status": "return CLU220000000:execute(0, 'LED0000:get(3)')"
+    }
+    assert obj.is_on
+    assert obj._state == STATE_ON
+    assert obj.brightness == 255
+    assert obj.unique_id == "grenton_LED0000_LED_R"
+
+@pytest.mark.asyncio
+async def test_async_update_led_g_off(monkeypatch):
+    captured_command = {}
+    obj, FakeSession = create_obj(grenton_id="CLU220000000->LED0000", grenton_type = "LED_G", response_data={"status": 0}, captured_command=captured_command)
+    monkeypatch.setattr("aiohttp.ClientSession", lambda: FakeSession())
+    await obj.async_update()
+
+    assert captured_command["value"] == {
+        "status": "return CLU220000000:execute(0, 'LED0000:get(4)')"
+    }
+    assert not obj.is_on
+    assert obj._state == STATE_OFF
+    assert obj.brightness == 0
+    assert obj.unique_id == "grenton_LED0000_LED_G"
+
+@pytest.mark.asyncio
+async def test_async_update_led_b_off(monkeypatch):
+    captured_command = {}
+    obj, FakeSession = create_obj(grenton_id="CLU220000000->LED0000", grenton_type = "LED_B", response_data={"status": 0}, captured_command=captured_command)
+    monkeypatch.setattr("aiohttp.ClientSession", lambda: FakeSession())
+    await obj.async_update()
+
+    assert captured_command["value"] == {
+        "status": "return CLU220000000:execute(0, 'LED0000:get(5)')"
+    }
+    assert not obj.is_on
+    assert obj._state == STATE_OFF
+    assert obj.brightness == 0
+    assert obj.unique_id == "grenton_LED0000_LED_B"
+
+@pytest.mark.asyncio
+async def test_async_update_led_w(monkeypatch):
+    captured_command = {}
+    obj, FakeSession = create_obj(grenton_id="CLU220000000->LED0000", grenton_type = "LED_W", response_data={"status": 255}, captured_command=captured_command)
+    monkeypatch.setattr("aiohttp.ClientSession", lambda: FakeSession())
+    await obj.async_update()
+
+    assert captured_command["value"] == {
+        "status": "return CLU220000000:execute(0, 'LED0000:get(15)')"
+    }
+    assert not obj.is_on
+    assert obj._state == STATE_OFF
+    assert obj.brightness == 0
+    assert obj.unique_id == "grenton_LED0000_LED_W"
+
+@pytest.mark.asyncio
+async def test_async_update_rgb(monkeypatch):
+    captured_command = {}
+    obj, FakeSession = create_obj(grenton_id="CLU220000000->LED0000", grenton_type = "RGB", response_data={"status": 1, "status_2": "#000000"}, captured_command=captured_command)
+    monkeypatch.setattr("aiohttp.ClientSession", lambda: FakeSession())
+    await obj.async_update()
+
+    assert captured_command["value"] == {
+        "status": "return CLU220000000:execute(0, 'LED0000:get(0)')", "status_2": "return CLU220000000:execute(0, 'LED0000:get(6)')"
+    }
+    assert obj.is_on
+    assert obj._state == STATE_ON
+    assert obj.brightness == 255
+    assert obj.rgb_color == [0, 0, 0]
+    assert obj.unique_id == "grenton_LED0000"
+
+@pytest.mark.asyncio
+async def test_async_update_rgb_off(monkeypatch):
+    captured_command = {}
+    obj, FakeSession = create_obj(grenton_id="CLU220000000->LED0000", grenton_type = "RGB", response_data={"status": 0, "status_2": "#ffffff"}, captured_command=captured_command)
+    monkeypatch.setattr("aiohttp.ClientSession", lambda: FakeSession())
+    await obj.async_update()
+
+    assert captured_command["value"] == {
+        "status": "return CLU220000000:execute(0, 'LED0000:get(0)')", "status_2": "return CLU220000000:execute(0, 'LED0000:get(6)')"
+    }
+    assert not obj.is_on
+    assert obj._state == STATE_OFF
+    assert obj.brightness == 0
+    assert obj.rgb_color == [255, 255, 255]
+    assert obj.unique_id == "grenton_LED0000"
+
+@pytest.mark.asyncio
+async def test_async_update_rgb_zwave(monkeypatch):
+    captured_command = {}
+    obj, FakeSession = create_obj(grenton_id="CLU220000000->ZWA0000", grenton_type = "RGB", response_data={"status": 1, "status_2": "#ffffff"}, captured_command=captured_command)
+    monkeypatch.setattr("aiohttp.ClientSession", lambda: FakeSession())
+    await obj.async_update()
+
+    assert captured_command["value"] == {
+        "status": "return CLU220000000:execute(0, 'ZWA0000:get(0)')", "status_2": "return CLU220000000:execute(0, 'ZWA0000:get(3)')"
+    }
+    assert obj.is_on
+    assert obj._state == STATE_ON
+    assert obj.brightness == 255
+    assert obj.rgb_color == [255, 255, 255]
+    assert obj.unique_id == "grenton_ZWA0000"
