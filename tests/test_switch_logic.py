@@ -61,7 +61,7 @@ async def test_async_turn_off(monkeypatch):
     captured_command = {}
     obj, FakeSession = create_obj(grenton_id="CLU220000000->DOU0000", response_data={"status": "ok"}, captured_command=captured_command)
     monkeypatch.setattr("aiohttp.ClientSession", lambda: FakeSession())
-    await obj.async_turn_on()
+    await obj.async_turn_off()
 
     assert captured_command["value"] == {
         "command": "CLU220000000:execute(0, 'DOU0000:set(0, 0)')"
@@ -76,7 +76,7 @@ async def test_async_update(monkeypatch):
     captured_command = {}
     obj, FakeSession = create_obj(grenton_id="CLU220000000->DOU0000", response_data={"status": 1}, captured_command=captured_command)
     monkeypatch.setattr("aiohttp.ClientSession", lambda: FakeSession())
-    await obj.async_turn_on()
+    await obj.async_update()
 
     assert captured_command["value"] == {
         "status": "return CLU220000000:execute(0, 'DOU0000:get(0)')"
@@ -90,7 +90,7 @@ async def test_async_update_off(monkeypatch):
     captured_command = {}
     obj, FakeSession = create_obj(grenton_id="CLU220000000->DOU0000", response_data={"status": 0}, captured_command=captured_command)
     monkeypatch.setattr("aiohttp.ClientSession", lambda: FakeSession())
-    await obj.async_turn_on()
+    await obj.async_update()
 
     assert captured_command["value"] == {
         "status": "return CLU220000000:execute(0, 'DOU0000:get(0)')"
