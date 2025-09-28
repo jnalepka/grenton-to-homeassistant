@@ -463,9 +463,9 @@ async def test_async_update_led_w(monkeypatch):
     assert captured_command["value"] == {
         "status": "return CLU220000000:execute(0, 'LED0000:get(15)')"
     }
-    assert not obj.is_on
-    assert obj._state == STATE_OFF
-    assert obj.brightness == 0
+    assert obj.is_on
+    assert obj._state == STATE_ON
+    assert obj.brightness == 255
     assert obj.unique_id == "grenton_LED0000_LED_W"
 
 @pytest.mark.asyncio
