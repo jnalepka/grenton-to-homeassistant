@@ -1,5 +1,5 @@
 import pytest
-from custom_components.grenton_objects.binary_sensor import GrentonSensor
+from custom_components.grenton_objects.sensor import GrentonSensor
 
 def create_obj(grenton_id="CLU220000000->DIN0000", grenton_type = "DEFAULT_SENSOR", unit_of_measurement = "°C", device_class = "temperature", state_class = "measurement", response_data={"status": 1}, captured_command=None):
     obj = GrentonSensor(
