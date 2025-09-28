@@ -12,8 +12,13 @@ def create_obj(grenton_id="CLU220000000->DIN0000", response_data={"status": 1}, 
     )
     obj._initialized = True
 
+    class MockLoop:
+        def time(self):
+            return 123.456
+
     class MockHass:
         def async_add_job(self, *args, **kwargs): pass
+        loop = MockLoop()
     obj.hass = MockHass()
     obj.async_write_ha_state = lambda: None
 
@@ -48,6 +53,7 @@ async def test_async_turn_on(monkeypatch):
     }
     assert obj._state == STATE_ON
     assert obj.is_on is True
+    assert obj._last_command_time == 123.456
     assert obj.unique_id == "grenton_DOU0000"
 
 @pytest.mark.asyncio
@@ -62,6 +68,7 @@ async def test_async_turn_off(monkeypatch):
     }
     assert obj._state == STATE_OFF
     assert not obj.is_on is True
+    assert obj._last_command_time == 123.456
     assert obj.unique_id == "grenton_DOU0000"
 
 @pytest.mark.asyncio
