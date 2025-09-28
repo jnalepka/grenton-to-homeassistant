@@ -1,15 +1,14 @@
 """
 ==================================================
 Author: Jan Nalepka
-Script version: 2.2
-Date: 26.12.2024
+Script version: 3.0
+Date: 15.09.2025
 Repository: https://github.com/jnalepka/grenton-to-homeassistant
 ==================================================
 """
 
 import aiohttp
 from .const import (
-    DOMAIN,
     CONF_API_ENDPOINT,
     CONF_GRENTON_ID,
     CONF_OBJECT_NAME,
@@ -21,10 +20,12 @@ from .const import (
     CONF_GRENTON_TYPE_LED_R,
     CONF_GRENTON_TYPE_LED_G,
     CONF_GRENTON_TYPE_LED_B,
-    CONF_GRENTON_TYPE_LED_W
+    CONF_GRENTON_TYPE_LED_W,
+    CONF_AUTO_UPDATE,
+    CONF_UPDATE_INTERVAL, 
+    DEFAULT_UPDATE_INTERVAL
 )
 import logging
-import json
 import voluptuous as vol
 from homeassistant.components.light import (
     LightEntity, 
@@ -33,6 +34,10 @@ from homeassistant.components.light import (
 )
 from homeassistant.const import (STATE_ON, STATE_OFF)
 from homeassistant.util import color as color_util
+from datetime import timedelta
+from homeassistant.helpers.event import async_track_time_interval
+import asyncio
+import random
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -44,17 +49,17 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
 })
 
 async def async_setup_entry(hass, config_entry, async_add_entities):
-    device = config_entry.data
+    api_endpoint = config_entry.options.get(CONF_API_ENDPOINT, config_entry.data.get(CONF_API_ENDPOINT))
+    grenton_id = config_entry.data.get(CONF_GRENTON_ID)
+    grenton_type = config_entry.data.get(CONF_GRENTON_TYPE, CONF_GRENTON_TYPE_UNKNOWN)
+    object_name = config_entry.data.get(CONF_OBJECT_NAME, "Grenton Light")
+    auto_update = config_entry.options.get(CONF_AUTO_UPDATE, True)
+    update_interval = config_entry.options.get(CONF_UPDATE_INTERVAL, DEFAULT_UPDATE_INTERVAL)
     
-    api_endpoint = device.get(CONF_API_ENDPOINT)
-    grenton_id = device.get(CONF_GRENTON_ID)
-    grenton_type = device.get(CONF_GRENTON_TYPE, CONF_GRENTON_TYPE_UNKNOWN)
-    object_name = device.get(CONF_OBJECT_NAME, "Grenton Light")
-    
-    async_add_entities([GrentonLight(api_endpoint, grenton_id, grenton_type, object_name)], True)
+    async_add_entities([GrentonLight(api_endpoint, grenton_id, grenton_type, object_name, auto_update, update_interval)], True)
 
 class GrentonLight(LightEntity):
-    def __init__(self, api_endpoint, grenton_id, grenton_type, object_name):
+    def __init__(self, api_endpoint, grenton_id, grenton_type, object_name, auto_update, update_interval):
         self._grenton_id = grenton_id
         self._api_endpoint = api_endpoint
         self._grenton_type = grenton_type
@@ -64,6 +69,10 @@ class GrentonLight(LightEntity):
         self._brightness = None
         self._rgb_color = None
         self._last_command_time = None
+        self._auto_update = auto_update
+        self._update_interval = update_interval
+        self._unsub_interval = None
+        self._initialized = False
         
         grenton_id_part_0, grenton_id_part_1 = self._grenton_id.split('->')
         
@@ -102,6 +111,22 @@ class GrentonLight(LightEntity):
             self._supported_color_modes.add(ColorMode.RGB)
         else:
             self._supported_color_modes.add(ColorMode.ONOFF)
+
+    async def async_added_to_hass(self):
+        await asyncio.sleep(random.uniform(0, self._update_interval))  # rozproszenie startu
+        self._initialized = True
+        if self._auto_update:
+            self._unsub_interval = async_track_time_interval(
+                self.hass, self._update_callback, timedelta(seconds=self._update_interval)
+            )
+            await self.async_update()
+
+    async def async_will_remove_from_hass(self):
+        if self._unsub_interval:
+            self._unsub_interval()
+
+    async def _update_callback(self, now):
+        await self.async_update()
 
     @property
     def name(self):
@@ -143,6 +168,10 @@ class GrentonLight(LightEntity):
     @property
     def rgb_color(self):
         return self._rgb_color
+    
+    @property
+    def should_poll(self):
+        return False
         
     def _generate_command(self, command_type, grenton_id_part_0, grenton_id_part_1, action, xml_index, param):
         return {
@@ -191,6 +220,7 @@ class GrentonLight(LightEntity):
                 command = self._generate_command("command", grenton_id_part_0, grenton_id_part_1, "set", 0, 1)
             self._state = STATE_ON
             self._last_command_time = self.hass.loop.time() if self.hass is not None else None
+            self.async_write_ha_state()
             
             async with aiohttp.ClientSession() as session:
                 async with session.post(f"{self._api_endpoint}", json=command) as response:
@@ -219,6 +249,7 @@ class GrentonLight(LightEntity):
             command = self._generate_command("command", grenton_id_part_0, grenton_id_part_1, config["action"], config["index"], 0)
             self._state = STATE_OFF
             self._last_command_time = self.hass.loop.time() if self.hass is not None else None
+            self.async_write_ha_state()
             
             async with aiohttp.ClientSession() as session:
                 async with session.post(f"{self._api_endpoint}", json=command) as response:
@@ -227,6 +258,9 @@ class GrentonLight(LightEntity):
             _LOGGER.error(f"Failed to turn off the light: {ex}")
 
     async def async_update(self):
+        if not self._initialized:
+            return
+        
         if self._last_command_time and self.hass.loop.time() - self._last_command_time < 2:
             return
             
@@ -268,6 +302,7 @@ class GrentonLight(LightEntity):
                     
                     if self._grenton_type == CONF_GRENTON_TYPE_RGB:
                         self._rgb_color = color_util.rgb_hex_to_rgb_list(data.get("status_2").strip("#"))
+                    self.async_write_ha_state()
         except aiohttp.ClientError as ex:
             _LOGGER.error(f"Failed to update the light state: {ex}")
             self._state = None

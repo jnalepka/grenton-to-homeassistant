@@ -1,22 +1,23 @@
 """
 ==================================================
 Author: Jan Nalepka
-Script version: 2.3
-Date: 19.04.2025
+Script version: 3.0
+Date: 15.09.2025
 Repository: https://github.com/jnalepka/grenton-to-homeassistant
 ==================================================
 """
 
 import aiohttp
 from .const import (
-    DOMAIN,
     CONF_API_ENDPOINT,
     CONF_GRENTON_ID,
     CONF_OBJECT_NAME,
-    CONF_REVERSED
+    CONF_REVERSED,
+    CONF_AUTO_UPDATE,
+    CONF_UPDATE_INTERVAL, 
+    DEFAULT_UPDATE_INTERVAL
 )
 import logging
-import json
 import voluptuous as vol
 from homeassistant.components.cover import (
     CoverEntity,
@@ -29,6 +30,10 @@ from homeassistant.const import (
     STATE_OPEN,
     STATE_OPENING
 )
+from datetime import timedelta
+from homeassistant.helpers.event import async_track_time_interval
+import asyncio
+import random
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -40,17 +45,17 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
 })
 
 async def async_setup_entry(hass, config_entry, async_add_entities):
-    device = config_entry.data
-    
-    api_endpoint = device.get(CONF_API_ENDPOINT)
-    grenton_id = device.get(CONF_GRENTON_ID)
-    reversed = device.get(CONF_REVERSED)
-    object_name = device.get(CONF_OBJECT_NAME)
+    api_endpoint = config_entry.options.get(CONF_API_ENDPOINT, config_entry.data.get(CONF_API_ENDPOINT))
+    grenton_id = config_entry.data.get(CONF_GRENTON_ID)
+    reversed = config_entry.data.get(CONF_REVERSED)
+    object_name = config_entry.data.get(CONF_OBJECT_NAME)
+    auto_update = config_entry.options.get(CONF_AUTO_UPDATE, True)
+    update_interval = config_entry.options.get(CONF_UPDATE_INTERVAL, DEFAULT_UPDATE_INTERVAL)
 
-    async_add_entities([GrentonCover(api_endpoint, grenton_id, reversed, object_name)], True)
+    async_add_entities([GrentonCover(api_endpoint, grenton_id, reversed, object_name, auto_update, update_interval)], True)
 
 class GrentonCover(CoverEntity):
-    def __init__(self, api_endpoint, grenton_id, reversed, object_name):
+    def __init__(self, api_endpoint, grenton_id, reversed, object_name, auto_update, update_interval):
         self._device_class = CoverDeviceClass.BLIND
         self._api_endpoint = api_endpoint
         self._grenton_id = grenton_id
@@ -61,6 +66,26 @@ class GrentonCover(CoverEntity):
         self._current_cover_tilt_position = 0
         self._unique_id = f"grenton_{grenton_id.split('->')[1]}"
         self._last_command_time = None
+        self._auto_update = auto_update
+        self._update_interval = update_interval
+        self._unsub_interval = None
+        self._initialized = False
+
+    async def async_added_to_hass(self):
+        await asyncio.sleep(random.uniform(0, self._update_interval))  # rozproszenie startu
+        self._initialized = True
+        if self._auto_update:
+            self._unsub_interval = async_track_time_interval(
+                self.hass, self._update_callback, timedelta(seconds=self._update_interval)
+            )
+            await self.async_update()
+
+    async def async_will_remove_from_hass(self):
+        if self._unsub_interval:
+            self._unsub_interval()
+
+    async def _update_callback(self, now):
+        await self.async_update()
 
     @property
     def name(self):
@@ -89,6 +114,10 @@ class GrentonCover(CoverEntity):
     @property
     def unique_id(self):
         return self._unique_id
+    
+    @property
+    def should_poll(self):
+        return False
 
     async def async_open_cover(self, **kwargs):
         try:
@@ -96,6 +125,7 @@ class GrentonCover(CoverEntity):
             command = {"command": f"{grenton_id_part_0}:execute(0, '{grenton_id_part_1}:execute(0, 0)')"}
             self._state = STATE_OPENING
             self._last_command_time = self.hass.loop.time() if self.hass is not None else None
+            self.async_write_ha_state()
             
             async with aiohttp.ClientSession() as session:
                 async with session.post(f"{self._api_endpoint}", json=command) as response:
@@ -109,6 +139,7 @@ class GrentonCover(CoverEntity):
             command = {"command": f"{grenton_id_part_0}:execute(0, '{grenton_id_part_1}:execute(1, 0)')"}
             self._state = STATE_CLOSING
             self._last_command_time = self.hass.loop.time() if self.hass is not None else None
+            self.async_write_ha_state()
             
             async with aiohttp.ClientSession() as session:
                 async with session.post(f"{self._api_endpoint}", json=command) as response:
@@ -122,6 +153,7 @@ class GrentonCover(CoverEntity):
             command = {"command": f"{grenton_id_part_0}:execute(0, '{grenton_id_part_1}:execute(3, 0)')"}
             self._state = STATE_OPEN
             self._last_command_time = self.hass.loop.time() if self.hass is not None else None
+            self.async_write_ha_state()
             
             async with aiohttp.ClientSession() as session:
                 async with session.post(f"{self._api_endpoint}", json=command) as response:
@@ -151,6 +183,7 @@ class GrentonCover(CoverEntity):
                 else:
                     self._state = STATE_CLOSING
             self._last_command_time = self.hass.loop.time() if self.hass is not None else None
+            self.async_write_ha_state()
             
             async with aiohttp.ClientSession() as session:
                 async with session.post(f"{self._api_endpoint}", json=command) as response:
@@ -166,6 +199,7 @@ class GrentonCover(CoverEntity):
             tilt_position = int(tilt_position * 90 / 100)
             command = {"command": f"{grenton_id_part_0}:execute(0, '{grenton_id_part_1}:execute(9, {tilt_position})')"}
             self._last_command_time = self.hass.loop.time() if self.hass is not None else None
+            self.async_write_ha_state()
             
             async with aiohttp.ClientSession() as session:
                 async with session.post(f"{self._api_endpoint}", json=command) as response:
@@ -178,6 +212,7 @@ class GrentonCover(CoverEntity):
             grenton_id_part_0, grenton_id_part_1 = self._grenton_id.split('->')
             command = {"command": f"{grenton_id_part_0}:execute(0, '{grenton_id_part_1}:execute(9, 90)')"}
             self._last_command_time = self.hass.loop.time() if self.hass is not None else None
+            self.async_write_ha_state()
             
             async with aiohttp.ClientSession() as session:
                 async with session.post(f"{self._api_endpoint}", json=command) as response:
@@ -190,6 +225,7 @@ class GrentonCover(CoverEntity):
             grenton_id_part_0, grenton_id_part_1 = self._grenton_id.split('->')
             command = {"command": f"{grenton_id_part_0}:execute(0, '{grenton_id_part_1}:execute(9, 0)')"}
             self._last_command_time = self.hass.loop.time() if self.hass is not None else None
+            self.async_write_ha_state()
             
             async with aiohttp.ClientSession() as session:
                 async with session.post(f"{self._api_endpoint}", json=command) as response:
@@ -198,6 +234,9 @@ class GrentonCover(CoverEntity):
             _LOGGER.error(f"Failed to close the cover tilt: {ex}")
 
     async def async_update(self):
+        if not self._initialized:
+            return
+        
         if self._last_command_time and self.hass.loop.time() - self._last_command_time < 2:
             return
             
@@ -229,6 +268,7 @@ class GrentonCover(CoverEntity):
                         self._state = STATE_CLOSING
                     self._current_cover_position = position
                     self._current_cover_tilt_position = int(data.get("status_3") * 100 / 90)
+                    self.async_write_ha_state()
         except aiohttp.ClientError as ex:
             _LOGGER.error(f"Failed to update the cover state: {ex}")
             self._state = None

@@ -119,8 +119,8 @@ GATE_HTTP->HA_Listener_Integration->SendResponse()
 | MODBUS_CLIENT                          | CLU501000001->MOD1234     | Sensor                  |  grenton_type = MODBUS_CLIENT , device_class=?  | SENSOR        |
 | MODBUS_SERVER                          | CLU501000001->MOD1234     | Sensor                  |  grenton_type = MODBUS_SERVER, device_class=?  | SENSOR        |
 | MODBUS_SLAVE_RTU                       | CLU501000001->MOD1234     | Sensor                  |  grenton_type = MODBUS_SLAVE_RTU, device_class=?  | SENSOR        |
-| GATE HTTP Script (integration clu)    | Script_name   (Without GATE-> !!)      | Sensor |  grenton_type = DEFAULT_SENSOR, device_class=?  | SENSOR        |
-| OTHER CLU Script                      | CLU221000001->Script_name  | Script                  |                         | BUTTON        |
+| GATE HTTP Script (integration clu)    | Script_name   (Without GATE-> !!)      | Script               |               | BUTTON        |
+| OTHER CLU Script                      | CLU221000001->Script_name              | Script               |               | BUTTON        |
 
 #### Supported sensor device class:
 

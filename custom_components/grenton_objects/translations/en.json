@@ -1,0 +1,167 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Add Grenton Object",
+        "description": "Note! To ensure proper operation, it is necessary to create a virtual HTTP Listener object in Grenton (see manual: https://github.com/jnalepka/grenton-to-homeassistant).",
+        "data": {
+          "device_type": "Device Type"
+        }
+      },
+      "light_config": {
+        "title": "Device Type: Light",
+        "description": "Note! Ensure that the IP address and Path in the URL are correct.\n\nNote! Enter the full Grenton object ID, which can be found in the object properties under the name, in the Id field.\n\nNote! If you want to control a single channel from an RGBW object, select the appropriate LED_R/G/B/W type.",
+        "data": {
+          "name": "Object Name",
+          "api_endpoint": "URL to Grenton HTTP Listener",
+          "grenton_id": "Grenton Object ID",
+          "grenton_type": "Grenton Object Type"
+        }
+      },
+      "switch_config": {
+        "title": "Device Type: Switch",
+        "description": "Note! Ensure that the IP address and Path in the URL are correct.\n\nNote! Enter the full Grenton object ID, which can be found in the object properties under the name, in the Id field.",
+        "data": {
+          "name": "Object Name",
+          "api_endpoint": "URL to Grenton HTTP Listener",
+          "grenton_id": "Grenton Object ID"
+        }
+      },
+      "cover_config": {
+        "title": "Device Type: Cover",
+        "description": "Note! Ensure that the IP address and Path in the URL are correct.\n\nNote! Enter the full Grenton object ID, which can be found in the object properties under the name, in the Id field.\n\nNote! If the object's ReversePosition=Yes, select the reversed direction option.",
+        "data": {
+          "name": "Object Name",
+          "api_endpoint": "URL to Grenton HTTP Listener",
+          "grenton_id": "Grenton Object ID",
+          "reversed": "Reversed Direction"
+        }
+      },
+      "climate_config": {
+        "title": "Device Type: Climate",
+        "description": "Note! Ensure that the IP address and Path in the URL are correct.\n\nNote! Enter the full Grenton object ID, which can be found in the object properties under the name, in the Id field.",
+        "data": {
+          "name": "Object Name",
+          "api_endpoint": "URL to Grenton HTTP Listener",
+          "grenton_id": "Grenton Object ID"
+        }
+      },
+      "sensor_config": {
+        "title": "Device Type: Sensor",
+        "description": "Note! Ensure that the IP address and Path in the URL are correct.\n\nNote! Enter the full Grenton object ID, which can be found in the object properties under the name, in the Id field.\n\nNote! When retrieving a user feature value, if it is located on the GATE HTTP (where the HTTP Listener is), enter only the feature name (without the CLU-> prefix); otherwise, enter the full ID (CLU->user_feature).\n\nNote! If retrieving a value from a MODBUS object, pay special attention to selecting the correct Grenton object type.",
+        "data": {
+          "name": "Object Name",
+          "api_endpoint": "URL to Grenton HTTP Listener",
+          "grenton_id": "Grenton Object ID",
+          "grenton_type": "Grenton Object Type",
+          "device_class": "Data Type",
+          "state_class": "Data Interpretation in Statistics"
+        }
+      },
+      "binary_sensor_config": {
+        "title": "Device Type: Binary Sensor 0/1",
+        "description": "Note! Ensure that the IP address and Path in the URL are correct.\n\nNote! Enter the full Grenton object ID, which can be found in the object properties under the name, in the Id field.",
+        "data": {
+          "name": "Object Name",
+          "api_endpoint": "URL to Grenton HTTP Listener",
+          "grenton_id": "Grenton Object ID"
+        }
+      },
+      "button_config": {
+        "title": "Device Type: User Script",
+        "description": "Note! Ensure that the IP address and Path in the URL are correct.\n\nNote! Enter the full Grenton object ID, which can be found in the object properties under the name, in the Id field.\n\nNote! If the script is located on the GATE HTTP (where the HTTP Listener is), enter only the script name (without the CLU-> prefix); otherwise, enter the full ID (CLU->script_name).",
+        "data": {
+          "name": "Object Name",
+          "api_endpoint": "URL to Grenton HTTP Listener",
+          "grenton_id": "Grenton Object ID"
+        }
+      }
+    },
+    "error": {
+      "min_value": "The value must be at least {min}.",
+      "max_value": "The value can be at most {max}."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Grenton Object Options",
+        "description": "Note! If automatic updates are disabled, Home Assistant will not automatically retrieve the state from Grenton; manual updates will be required (see manual).",
+        "data": {
+          "api_endpoint": "URL to Grenton HTTP Listener",
+          "auto_update": "Automatic Object Updates",
+          "update_interval": "Refresh interval (in seconds)"
+        }
+      }
+    }
+  },
+  "selector": {
+    "device_type": {
+      "options": {
+        "light": "Light – DOUT / DIMMER / LED / ZWAVE",
+        "switch": "Switch – DOUT / ZWAVE",
+        "cover": "Cover – ROLLER_SHUTTER / ZWAVE",
+        "climate": "Climate – THERMOSTAT",
+        "sensor": "Sensor – ONE_WIRE / TEMPERATURE / ANALOG IN / MODBUS / ZWAVE / User Feature",
+        "binary_sensor": "Binary Sensor 0/1 – DIN / BINARY_SENSOR / ZWAVE",
+        "button": "User Script"
+      }
+    },
+    "device_class": {
+      "options": {
+        "apparent_power": "Apparent Power (VA)",
+        "atmospheric_pressure": "Atmospheric Pressure (cbar, bar, hPa, mmHg, inHg, kPa, mbar, Pa, psi)",
+        "battery": "Battery (%)",
+        "carbon_dioxide": "Carbon Dioxide (ppm)",
+        "carbon_monoxide": "Carbon Monoxide (ppm)",
+        "current": "Current (A, mA)",
+        "distance": "Distance (km, m, cm, mm, mi, yd, in)",
+        "duration": "Duration (d, h, min, s, ms)",
+        "energy": "Energy (Wh, kWh, MWh, MJ, GJ)",
+        "energy_storage": "Energy Storage (Wh, kWh, MWh, MJ, GJ)",
+        "frequency": "Frequency (Hz, kHz, MHz, GHz)",
+        "gas": "Gas (m³, ft³, CCF)",
+        "humidity": "Humidity (%)",
+        "illuminance": "Illuminance (lx)",
+        "irradiance": "Irradiance (W/m², BTU/(h⋅ft²))",
+        "moisture": "Moisture (%)",
+        "nitrogen_dioxide": "Nitrogen Dioxide (µg/m³)",
+        "nitrogen_monoxide": "Nitrogen Monoxide (µg/m³)",
+        "nitrous_oxide": "Nitrous Oxide (µg/m³)",
+        "ozone": "Ozone (µg/m³)",
+        "ph": "pH (no unit)",
+        "pm1": "PM1 (µg/m³)",
+        "pm10": "PM10 (µg/m³)",
+        "pm25": "PM2.5 (µg/m³)",
+        "power": "Power (W, kW)",
+        "power_factor": "Power Factor (%, no unit)",
+        "precipitation": "Precipitation (cm, in, mm)",
+        "precipitation_intensity": "Precipitation Intensity (in/d, in/h, mm/d, mm/h)",
+        "pressure": "Pressure (cbar, bar, hPa, mmHg, inHg, kPa, mbar, Pa, psi)",
+        "reactive_power": "Reactive Power (var)",
+        "signal_strength": "Signal Strength (dB, dBm)",
+        "sound_pressure": "Sound Pressure (dB, dBA)",
+        "speed": "Speed (ft/s, in/d, in/h, km/h, kn, m/s, mph, mm/d)",
+        "sulphur_dioxide": "Sulphur Dioxide (µg/m³)",
+        "temperature": "Temperature (°C, °F, K)",
+        "timestamp": "Timestamp (no unit)",
+        "volatile_organic_compounds": "Volatile Organic Compounds (µg/m³)",
+        "volatile_organic_compounds_parts": "Volatile Organic Compounds Parts (ppm, ppb)",
+        "voltage": "Voltage (V, mV)",
+        "volume": "Volume (L, mL, gal, fl. oz., m³, ft³, CCF)",
+        "volume_flow_rate": "Volume Flow Rate (m³/h, ft³/min, L/min, gal/min)",
+        "volume_storage": "Volume Storage (L, mL, gal, fl. oz., m³, ft³, CCF)",
+        "water": "Water (L, gal, m³, ft³, CCF)",
+        "weight": "Weight (kg, g, mg, µg, oz, lb, st)",
+        "wind_speed": "Wind Speed (ft/s, km/h, kn, m/s, mph)"
+      }
+    },
+    "state_class": {
+      "options": {
+        "measurement": "Measurement (e.g., current temperature)",
+        "total": "Total (e.g., monthly energy consumption)",
+        "total_increasing": "Total Increasing (e.g., energy meter or odometer)"
+      }
+    }
+  }
+}

@@ -1,8 +1,8 @@
 """
 ==================================================
 Author: Jan Nalepka
-Script version: 2.1
-Date: 16.12.2024
+Script version: 3.0
+Date: 15.09.2025
 Repository: https://github.com/jnalepka/grenton-to-homeassistant
 ==================================================
 """
@@ -17,47 +17,21 @@ from .const import (
     CONF_OBJECT_NAME,
     CONF_GRENTON_TYPE,
     CONF_GRENTON_TYPE_DOUT,
-    CONF_GRENTON_TYPE_DIMMER,
-    CONF_GRENTON_TYPE_RGB,
-    CONF_GRENTON_TYPE_LED_R,
-    CONF_GRENTON_TYPE_LED_G,
-    CONF_GRENTON_TYPE_LED_B,
-    CONF_GRENTON_TYPE_LED_W,
     CONF_GRENTON_TYPE_DEFAULT_SENSOR,
-    CONF_GRENTON_TYPE_MODBUS_RTU,
-    CONF_GRENTON_TYPE_MODBUS_VALUE,
-    CONF_GRENTON_TYPE_MODBUS,
-    CONF_GRENTON_TYPE_MODBUS_CLIENT,
-    CONF_GRENTON_TYPE_MODBUS_SERVER,
-    CONF_GRENTON_TYPE_MODBUS_SLAVE_RTU,
     CONF_DEVICE_CLASS,
     CONF_STATE_CLASS,
     CONF_REVERSED,
-    CONF_DEVICE_TYPE,
-    CONF_DEVICE_TYPE_LIGHT,
-    CONF_DEVICE_TYPE_SWITCH,
-    CONF_DEVICE_TYPE_COVER,
-    CONF_DEVICE_TYPE_CLIMATE,
-    CONF_DEVICE_TYPE_SENSOR,
-    CONF_DEVICE_TYPE_BINARY_SENSOR,
-    CONF_DEVICE_TYPE_BUTTON
+    DEVICE_TYPE_OPTIONS,
+    DEVICE_CLASS_OPTIONS,
+    STATE_CLASS_OPTIONS,
+    LIGHT_GRENTON_TYPE_OPTIONS,
+    SENSOR_GRENTON_TYPE_OPTIONS
 )
-import logging
+from .options_flow import GrentonOptionsFlowHandler
+from homeassistant.helpers.selector import SelectSelector, SelectSelectorConfig
 
-_LOGGER = logging.getLogger(__name__)
-
-DEVICE_TYPES = {
-    CONF_DEVICE_TYPE_LIGHT: "Light",
-    CONF_DEVICE_TYPE_SWITCH: "Switch",
-    CONF_DEVICE_TYPE_COVER: "Cover",
-    CONF_DEVICE_TYPE_CLIMATE: "Climate",
-    CONF_DEVICE_TYPE_SENSOR: "Sensor",
-    CONF_DEVICE_TYPE_BINARY_SENSOR: "Binary sensor",
-    CONF_DEVICE_TYPE_BUTTON: "Script"
-}
 
 class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
-
     VERSION = 1
     def __init__(self):
         self.device_type = None
@@ -68,126 +42,218 @@ class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             return self.async_show_form(
                 step_id="user",
                 data_schema=vol.Schema({
-                    vol.Required(CONF_DEVICE_TYPE): vol.In(DEVICE_TYPES)
+                    vol.Required("device_type"): SelectSelector(
+                        SelectSelectorConfig(
+                            options=DEVICE_TYPE_OPTIONS,
+                            translation_key="device_type"
+                        )
+                    )
                 })
             )
 
-        self.device_type = user_input[CONF_DEVICE_TYPE]
-        return await self.async_step_device_config()
+        self.device_type = user_input["device_type"]
+        if self.device_type == "light":
+            return await self.async_step_light_config()
+        elif self.device_type == "switch":
+            return await self.async_step_switch_config()
+        elif self.device_type == "cover":
+            return await self.async_step_cover_config()
+        elif self.device_type == "climate":
+            return await self.async_step_climate_config()
+        elif self.device_type == "sensor":
+            return await self.async_step_sensor_config()
+        elif self.device_type == "binary_sensor":
+            return await self.async_step_binary_sensor_config()
+        elif self.device_type == "button":
+            return await self.async_step_button_config()
+        
+    def _persist_last_inputs(self, user_input: dict) -> None:
+        self.hass.data[f"{DOMAIN}_last_api_endpoint"] = user_input[CONF_API_ENDPOINT]
 
-    async def async_step_device_config(self, user_input=None):
+        grenton_id = user_input.get(CONF_GRENTON_ID)
+        if grenton_id and "->" in grenton_id:
+            self.hass.data[f"{DOMAIN}_last_grenton_clu_id"] = grenton_id.split("->")[0]
+
+    async def async_step_light_config(self, user_input=None):
         if user_input is None:
             return self.async_show_form(
-                step_id="device_config",
+                step_id="light_config",
                 data_schema=self._get_device_schema()
             )
 
-        self.hass.data[f"{DOMAIN}_last_api_endpoint"] = user_input[CONF_API_ENDPOINT]
-        self.hass.data[f"{DOMAIN}_last_grenton_clu_id"] = user_input[CONF_GRENTON_ID].split("->")[0]
+        self._persist_last_inputs(user_input)
 
         return self.async_create_entry(title=user_input[CONF_OBJECT_NAME], data={
-            CONF_DEVICE_TYPE: self.device_type,
+            "device_type": self.device_type,
+            CONF_API_ENDPOINT: user_input[CONF_API_ENDPOINT],
+            CONF_GRENTON_ID: user_input[CONF_GRENTON_ID],
+            CONF_OBJECT_NAME: user_input[CONF_OBJECT_NAME],
+            CONF_GRENTON_TYPE: user_input.get(CONF_GRENTON_TYPE, None)
+        })
+    
+    async def async_step_switch_config(self, user_input=None):
+        if user_input is None:
+            return self.async_show_form(
+                step_id="switch_config",
+                data_schema=self._get_device_schema()
+            )
+
+        self._persist_last_inputs(user_input)
+
+        return self.async_create_entry(title=user_input[CONF_OBJECT_NAME], data={
+            "device_type": self.device_type,
+            CONF_API_ENDPOINT: user_input[CONF_API_ENDPOINT],
+            CONF_GRENTON_ID: user_input[CONF_GRENTON_ID],
+            CONF_OBJECT_NAME: user_input[CONF_OBJECT_NAME]
+        })
+    
+    async def async_step_cover_config(self, user_input=None):
+        if user_input is None:
+            return self.async_show_form(
+                step_id="cover_config",
+                data_schema=self._get_device_schema()
+            )
+
+        self._persist_last_inputs(user_input)
+
+        return self.async_create_entry(title=user_input[CONF_OBJECT_NAME], data={
+            "device_type": self.device_type,
+            CONF_API_ENDPOINT: user_input[CONF_API_ENDPOINT],
+            CONF_GRENTON_ID: user_input[CONF_GRENTON_ID],
+            CONF_OBJECT_NAME: user_input[CONF_OBJECT_NAME],
+            CONF_REVERSED: user_input.get(CONF_REVERSED, None)
+        })
+    
+    async def async_step_climate_config(self, user_input=None):
+        if user_input is None:
+            return self.async_show_form(
+                step_id="climate_config",
+                data_schema=self._get_device_schema()
+            )
+
+        self._persist_last_inputs(user_input)
+
+        return self.async_create_entry(title=user_input[CONF_OBJECT_NAME], data={
+            "device_type": self.device_type,
+            CONF_API_ENDPOINT: user_input[CONF_API_ENDPOINT],
+            CONF_GRENTON_ID: user_input[CONF_GRENTON_ID],
+            CONF_OBJECT_NAME: user_input[CONF_OBJECT_NAME]
+        })
+    
+    async def async_step_sensor_config(self, user_input=None):
+        if user_input is None:
+            return self.async_show_form(
+                step_id="sensor_config",
+                data_schema=self._get_device_schema()
+            )
+
+        self._persist_last_inputs(user_input)
+
+        return self.async_create_entry(title=user_input[CONF_OBJECT_NAME], data={
+            "device_type": self.device_type,
             CONF_API_ENDPOINT: user_input[CONF_API_ENDPOINT],
             CONF_GRENTON_ID: user_input[CONF_GRENTON_ID],
             CONF_OBJECT_NAME: user_input[CONF_OBJECT_NAME],
             CONF_GRENTON_TYPE: user_input.get(CONF_GRENTON_TYPE, None),
             CONF_DEVICE_CLASS: user_input.get(CONF_DEVICE_CLASS, None),
-            CONF_STATE_CLASS: user_input.get(CONF_STATE_CLASS, None),
-            CONF_REVERSED: user_input.get(CONF_REVERSED, None)
+            CONF_STATE_CLASS: user_input.get(CONF_STATE_CLASS, None)
+        })
+    
+    async def async_step_binary_sensor_config(self, user_input=None):
+        if user_input is None:
+            return self.async_show_form(
+                step_id="binary_sensor_config",
+                data_schema=self._get_device_schema()
+            )
+
+        self._persist_last_inputs(user_input)
+
+        return self.async_create_entry(title=user_input[CONF_OBJECT_NAME], data={
+            "device_type": self.device_type,
+            CONF_API_ENDPOINT: user_input[CONF_API_ENDPOINT],
+            CONF_GRENTON_ID: user_input[CONF_GRENTON_ID],
+            CONF_OBJECT_NAME: user_input[CONF_OBJECT_NAME]
+        })
+    
+    async def async_step_button_config(self, user_input=None):
+        if user_input is None:
+            return self.async_show_form(
+                step_id="button_config",
+                data_schema=self._get_device_schema()
+            )
+
+        self._persist_last_inputs(user_input)
+
+        return self.async_create_entry(title=user_input[CONF_OBJECT_NAME], data={
+            "device_type": self.device_type,
+            CONF_API_ENDPOINT: user_input[CONF_API_ENDPOINT],
+            CONF_GRENTON_ID: user_input[CONF_GRENTON_ID],
+            CONF_OBJECT_NAME: user_input[CONF_OBJECT_NAME]
         })
         
     def _get_device_schema(self):
         last_api_endpoint = self.hass.data.get(f"{DOMAIN}_last_api_endpoint", "http://192.168.0.4/HAlistener")
         last_grenton_clu_id = self.hass.data.get(f"{DOMAIN}_last_grenton_clu_id", "CLU220000000")
-        if self.device_type == CONF_DEVICE_TYPE_LIGHT:
+        if self.device_type == "light":
             return vol.Schema({
                 vol.Required(CONF_OBJECT_NAME): str,
                 vol.Required(CONF_API_ENDPOINT, default=last_api_endpoint): str,
                 vol.Required(CONF_GRENTON_ID, default=last_grenton_clu_id+"->DOU0000"): str,
-                vol.Required(CONF_GRENTON_TYPE, default=CONF_GRENTON_TYPE_DOUT): vol.In([CONF_GRENTON_TYPE_DOUT, CONF_GRENTON_TYPE_DIMMER, CONF_GRENTON_TYPE_RGB, CONF_GRENTON_TYPE_LED_R, CONF_GRENTON_TYPE_LED_G, CONF_GRENTON_TYPE_LED_B, CONF_GRENTON_TYPE_LED_W]),
+                vol.Required(CONF_GRENTON_TYPE, default=CONF_GRENTON_TYPE_DOUT): vol.In(LIGHT_GRENTON_TYPE_OPTIONS),
             })
-        elif self.device_type == CONF_DEVICE_TYPE_SWITCH:
+        elif self.device_type == "switch":
             return vol.Schema({
                 vol.Required(CONF_OBJECT_NAME): str,
                 vol.Required(CONF_API_ENDPOINT, default=last_api_endpoint): str,
                 vol.Required(CONF_GRENTON_ID, default=last_grenton_clu_id+"->DOU0000"): str,
             })
-        elif self.device_type == CONF_DEVICE_TYPE_COVER:
+        elif self.device_type == "cover":
             return vol.Schema({
                 vol.Required(CONF_OBJECT_NAME): str,
                 vol.Required(CONF_API_ENDPOINT, default=last_api_endpoint): str,
                 vol.Required(CONF_GRENTON_ID, default=last_grenton_clu_id+"->ROL0000"): str,
                 vol.Optional(CONF_REVERSED, default=False): bool,
             })
-        elif self.device_type == CONF_DEVICE_TYPE_CLIMATE:
+        elif self.device_type == "climate":
             return vol.Schema({
                 vol.Required(CONF_OBJECT_NAME): str,
                 vol.Required(CONF_API_ENDPOINT, default=last_api_endpoint): str,
                 vol.Required(CONF_GRENTON_ID, default=last_grenton_clu_id+"->THE0000"): str,
             })
-        elif self.device_type == CONF_DEVICE_TYPE_SENSOR:
+        elif self.device_type == "sensor":
             return vol.Schema({
                 vol.Required(CONF_OBJECT_NAME): str,
                 vol.Required(CONF_API_ENDPOINT, default=last_api_endpoint): str,
                 vol.Required(CONF_GRENTON_ID, default=last_grenton_clu_id+"->PAN0000"): str,
-                vol.Optional(CONF_GRENTON_TYPE, default=CONF_GRENTON_TYPE_DEFAULT_SENSOR): vol.In([CONF_GRENTON_TYPE_DEFAULT_SENSOR, CONF_GRENTON_TYPE_MODBUS_RTU, CONF_GRENTON_TYPE_MODBUS_VALUE, CONF_GRENTON_TYPE_MODBUS, CONF_GRENTON_TYPE_MODBUS_CLIENT, CONF_GRENTON_TYPE_MODBUS_SERVER, CONF_GRENTON_TYPE_MODBUS_SLAVE_RTU]),
-                vol.Optional(CONF_DEVICE_CLASS, default="temperature"): vol.In([
-                    "apparent_power",
-                    "atmospheric_pressure",
-                    "battery",
-                    "carbon_dioxide",
-                    "carbon_monoxide",
-                    "current",
-                    "distance",
-                    "duration",
-                    "energy",
-                    "energy_storage",
-                    "frequency",
-                    "gas",
-                    "humidity",
-                    "illuminance",
-                    "irradiance",
-                    "moisture",
-                    "nitrogen_dioxide",
-                    "nitrogen_monoxide",
-                    "nitrous_oxide",
-                    "ozone",
-                    "ph",
-                    "pm1",
-                    "pm10",
-                    "pm25",
-                    "power",
-                    "power_factor",
-                    "precipitation",
-                    "precipitation_intensity",
-                    "pressure",
-                    "reactive_power",
-                    "signal_strength",
-                    "sound_pressure",
-                    "speed",
-                    "sulphur_dioxide",
-                    "temperature",
-                    "volatile_organic_compounds",
-                    "volatile_organic_compounds_parts",
-                    "voltage",
-                    "volume",
-                    "volume_flow_rate",
-                    "volume_storage",
-                    "water",
-                    "weight",
-                    "wind_speed"
-                ]),
-                vol.Optional(CONF_STATE_CLASS, default="measurement"): vol.In(["measurement", "total", "total_increasing"])
+                vol.Optional(CONF_GRENTON_TYPE, default=CONF_GRENTON_TYPE_DEFAULT_SENSOR): vol.In(SENSOR_GRENTON_TYPE_OPTIONS),
+                vol.Optional(CONF_DEVICE_CLASS, default="temperature"): vol.In(DEVICE_CLASS_OPTIONS),
+                vol.Optional(CONF_DEVICE_CLASS, default="temperature"): SelectSelector(
+                    SelectSelectorConfig(
+                        options=DEVICE_CLASS_OPTIONS,
+                        translation_key="device_class"
+                    )
+                ),
+                vol.Optional(CONF_STATE_CLASS, default="measurement"): SelectSelector(
+                    SelectSelectorConfig(
+                        options=STATE_CLASS_OPTIONS,
+                        translation_key="state_class"
+                    )
+                ),
             })
-        elif self.device_type == CONF_DEVICE_TYPE_BINARY_SENSOR:
+        elif self.device_type == "binary_sensor":
             return vol.Schema({
                 vol.Required(CONF_OBJECT_NAME): str,
                 vol.Required(CONF_API_ENDPOINT, default=last_api_endpoint): str,
                 vol.Required(CONF_GRENTON_ID, default=last_grenton_clu_id+"->DIN0000"): str
             })
-        elif self.device_type == CONF_DEVICE_TYPE_BUTTON:
+        elif self.device_type == "button":
             return vol.Schema({
                 vol.Required(CONF_OBJECT_NAME): str,
                 vol.Required(CONF_API_ENDPOINT, default=last_api_endpoint): str,
-                vol.Required(CONF_GRENTON_ID, default="script_name (script on GateHTTP) or "+last_grenton_clu_id+"->script_name"): str
+                vol.Required(CONF_GRENTON_ID, default=last_grenton_clu_id+"->script_name"): str
             })
+    
+    @staticmethod
+    @callback
+    def async_get_options_flow(config_entry: config_entries.ConfigEntry) -> GrentonOptionsFlowHandler:
+        return GrentonOptionsFlowHandler()

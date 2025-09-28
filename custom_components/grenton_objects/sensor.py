@@ -1,15 +1,14 @@
 """
 ==================================================
 Author: Jan Nalepka
-Script version: 2.1
-Date: 11.12.2024
+Script version: 3.0
+Date: 15.09.2025
 Repository: https://github.com/jnalepka/grenton-to-homeassistant
 ==================================================
 """
 
 import aiohttp
 from .const import (
-    DOMAIN,
     CONF_API_ENDPOINT,
     CONF_GRENTON_ID,
     CONF_OBJECT_NAME,
@@ -23,18 +22,23 @@ from .const import (
     CONF_GRENTON_TYPE_MODBUS,
     CONF_GRENTON_TYPE_MODBUS_CLIENT,
     CONF_GRENTON_TYPE_MODBUS_SERVER,
-    CONF_GRENTON_TYPE_MODBUS_SLAVE_RTU
+    CONF_GRENTON_TYPE_MODBUS_SLAVE_RTU,
+    CONF_AUTO_UPDATE,
+    CONF_UPDATE_INTERVAL, 
+    DEFAULT_UPDATE_INTERVAL
 )
 import logging
-import json
 import voluptuous as vol
 import re
 from homeassistant.components.sensor import (
     SensorEntity,
     PLATFORM_SCHEMA
 )
-
 from homeassistant.const import UnitOfTemperature
+from datetime import timedelta
+from homeassistant.helpers.event import async_track_time_interval
+import asyncio
+import random
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -96,21 +100,21 @@ DEFAULT_UNITS = {
 }
     
 async def async_setup_entry(hass, config_entry, async_add_entities):
-    device = config_entry.data
-
-    api_endpoint = device.get(CONF_API_ENDPOINT)
-    grenton_id = device.get(CONF_GRENTON_ID)
-    grenton_type = device.get(CONF_GRENTON_TYPE)
-    object_name = device.get(CONF_OBJECT_NAME)
-    device_class = device.get(CONF_DEVICE_CLASS)
+    api_endpoint = config_entry.options.get(CONF_API_ENDPOINT, config_entry.data.get(CONF_API_ENDPOINT))
+    grenton_id = config_entry.data.get(CONF_GRENTON_ID)
+    grenton_type = config_entry.data.get(CONF_GRENTON_TYPE)
+    object_name = config_entry.data.get(CONF_OBJECT_NAME)
+    device_class = config_entry.data.get(CONF_DEVICE_CLASS)
     unit_of_measurement = DEFAULT_UNITS.get(device_class, None)
-    state_class = device.get(CONF_STATE_CLASS)
+    state_class = config_entry.data.get(CONF_STATE_CLASS)
+    auto_update = config_entry.options.get(CONF_AUTO_UPDATE, True)
+    update_interval = config_entry.options.get(CONF_UPDATE_INTERVAL, DEFAULT_UPDATE_INTERVAL)
     
-    async_add_entities([GrentonSensor(api_endpoint, grenton_id, grenton_type, object_name, unit_of_measurement, device_class, state_class)], True)
+    async_add_entities([GrentonSensor(api_endpoint, grenton_id, grenton_type, object_name, unit_of_measurement, device_class, state_class, auto_update, update_interval)], True)
     
     
 class GrentonSensor(SensorEntity):
-    def __init__(self, api_endpoint, grenton_id, grenton_type, object_name, unit_of_measurement, device_class, state_class):
+    def __init__(self, api_endpoint, grenton_id, grenton_type, object_name, unit_of_measurement, device_class, state_class, auto_update, update_interval):
         self._api_endpoint = api_endpoint
         self._grenton_id = grenton_id
         self._grenton_type = grenton_type
@@ -120,6 +124,26 @@ class GrentonSensor(SensorEntity):
         self._native_unit_of_measurement = unit_of_measurement
         self._device_class = device_class
         self._state_class = state_class
+        self._auto_update = auto_update
+        self._update_interval = update_interval
+        self._unsub_interval = None
+        self._initialized = False
+
+    async def async_added_to_hass(self):
+        await asyncio.sleep(random.uniform(0, self._update_interval))  # rozproszenie startu
+        self._initialized = True
+        if self._auto_update:
+            self._unsub_interval = async_track_time_interval(
+                self.hass, self._update_callback, timedelta(seconds=self._update_interval)
+            )
+            await self.async_update()
+
+    async def async_will_remove_from_hass(self):
+        if self._unsub_interval:
+            self._unsub_interval()
+
+    async def _update_callback(self, now):
+        await self.async_update()
 
     @property
     def name(self):
@@ -144,8 +168,15 @@ class GrentonSensor(SensorEntity):
     @property
     def state_class(self):
         return self._state_class
+    
+    @property
+    def should_poll(self):
+        return False
 
     async def async_update(self):
+        if not self._initialized:
+            return
+
         try:
             if len(self._grenton_id.split('->')) == 1:
                 command = {"status": f"return getVar(\"{self._grenton_id}\")"}
@@ -168,6 +199,7 @@ class GrentonSensor(SensorEntity):
                     response.raise_for_status()
                     data = await response.json()
                     self._native_value = data.get("status")
+                    self.async_write_ha_state()
         except aiohttp.ClientError as ex:
             _LOGGER.error(f"Failed to update the sensor value: {ex}")
             self._native_value = None

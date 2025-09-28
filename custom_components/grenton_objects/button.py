@@ -1,8 +1,8 @@
 """
 ==================================================
 Author: Jan Nalepka
-Script version: 2.1
-Date: 11.12.2024
+Script version: 3.0
+Date: 15.09.2025
 Repository: https://github.com/jnalepka/grenton-to-homeassistant
 ==================================================
 """
@@ -13,7 +13,6 @@ import voluptuous as vol
 from homeassistant.components.button import ButtonEntity
 from homeassistant.helpers.entity import Entity
 from .const import (
-    DOMAIN,
     CONF_API_ENDPOINT,
     CONF_GRENTON_ID,
     CONF_OBJECT_NAME
@@ -28,10 +27,9 @@ PLATFORM_SCHEMA = vol.Schema({
 })
 
 async def async_setup_entry(hass, config_entry, async_add_entities):
-    device = config_entry.data
-    api_endpoint = device.get(CONF_API_ENDPOINT)
-    grenton_id = device.get(CONF_GRENTON_ID)
-    object_name = device.get(CONF_OBJECT_NAME)
+    api_endpoint = config_entry.options.get(CONF_API_ENDPOINT, config_entry.data.get(CONF_API_ENDPOINT))
+    grenton_id = config_entry.data.get(CONF_GRENTON_ID)
+    object_name = config_entry.data.get(CONF_OBJECT_NAME)
     
     async_add_entities([GrentonScript(api_endpoint, grenton_id, object_name)], True)
     
@@ -66,6 +64,6 @@ class GrentonScript(ButtonEntity):
             async with aiohttp.ClientSession() as session:
                 async with session.post(self._api_endpoint, json=command) as response:
                     response.raise_for_status()
-                    _LOGGER.info(f"Script {self._object_name} executed successfully.")
+                    _LOGGER.info(f"Script {self._object_name} executed successfully (Grenton).")
         except aiohttp.ClientError as ex:
             _LOGGER.error(f"Failed to execute script {self._object_name}: {ex}")
