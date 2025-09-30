@@ -36,8 +36,6 @@ from homeassistant.const import (STATE_ON, STATE_OFF)
 from homeassistant.util import color as color_util
 from datetime import timedelta
 from homeassistant.helpers.event import async_track_time_interval
-import asyncio
-import random
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -113,7 +111,6 @@ class GrentonLight(LightEntity):
             self._supported_color_modes.add(ColorMode.ONOFF)
 
     async def async_added_to_hass(self):
-        await asyncio.sleep(random.uniform(0, self._update_interval))  # rozproszenie startu
         self._initialized = True
         if self._auto_update:
             self._unsub_interval = async_track_time_interval(
