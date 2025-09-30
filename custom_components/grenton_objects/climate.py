@@ -27,8 +27,6 @@ from homeassistant.components.climate import (
 from homeassistant.const import UnitOfTemperature
 from datetime import timedelta
 from homeassistant.helpers.event import async_track_time_interval
-import asyncio
-import random
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -68,7 +66,6 @@ class GrentonClimate(ClimateEntity):
         self._initialized = False
 
     async def async_added_to_hass(self):
-        await asyncio.sleep(random.uniform(0, self._update_interval))  # rozproszenie startu
         self._initialized = True
         if self._auto_update:
             self._unsub_interval = async_track_time_interval(
