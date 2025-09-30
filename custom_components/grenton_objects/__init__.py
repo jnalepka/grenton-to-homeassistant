@@ -13,6 +13,9 @@ from homeassistant.helpers.typing import ConfigType
 from .const import DOMAIN
 from homeassistant.exceptions import ServiceValidationError
 import voluptuous as vol
+from homeassistant.helpers import config_validation as cv
+
+CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
 
 SERVICE_SET_STATE_SCHEMA = vol.Schema({
     vol.Required("entity_id"): str,
