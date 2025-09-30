@@ -1,0 +1,21 @@
+set_state:
+  name: Ustaw stan encji Grenton
+  description: Ręcznie ustawia stan encji Grenton jako ON (1) lub OFF (0).
+  fields:
+    entity_id:
+      name: Encja
+      description: Encja, której stan ma zostać zmieniony.
+      required: true
+      selector:
+        entity:
+          domain: binary_sensor
+    state:
+      name: Stan docelowy
+      description: Wartość stanu (1 = ON, 0 = OFF).
+      required: true
+      selector:
+        number:
+          min: 0
+          max: 1
+          step: 1
+          mode: slider
