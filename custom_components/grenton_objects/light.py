@@ -136,16 +136,20 @@ class GrentonLight(LightEntity):
         self._state = STATE_ON if state == 1 else STATE_OFF
         self.async_write_ha_state()
 
-    async def async_force_brightness(self, brightness: int):
+    async def async_force_brightness(self, brightness: float):
         self._state = STATE_OFF if brightness == 0 else STATE_ON
         grenton_id_part_0, grenton_id_part_1 = self._grenton_id.split('->')
         if self._grenton_type == CONF_GRENTON_TYPE_RGB or self._grenton_type == CONF_GRENTON_TYPE_DIMMER:
             if self._grenton_type == CONF_GRENTON_TYPE_DIMMER and grenton_id_part_1.startswith("ZWA"):
                 self._brightness = brightness
             else:
-                self._brightness =brightness * 255
+                self._brightness = brightness * 255
         elif self._grenton_type == CONF_GRENTON_TYPE_LED_R or self._grenton_type == CONF_GRENTON_TYPE_LED_G or self._grenton_type == CONF_GRENTON_TYPE_LED_B or self._grenton_type == CONF_GRENTON_TYPE_LED_W:
             self._brightness = brightness
+        self.async_write_ha_state()
+
+    async def async_force_rgb(self, hex: str):
+        self._rgb_color = color_util.rgb_hex_to_rgb_list(hex.strip("#"))
         self.async_write_ha_state()
 
     @property

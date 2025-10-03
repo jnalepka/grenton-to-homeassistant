@@ -30,15 +30,18 @@ SERVICE_SET_BRIGHTNESS_SCHEMA = vol.Schema({
     )
 })
 
+SERVICE_SET_RGB_SCHEMA = vol.Schema({
+    vol.Required("entity_id"): str,
+    vol.Required("hex"): vol.Match(r"^#[0-9A-Fa-f]{6}$")
+})
+
 async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     async def handle_set_state(call: ServiceCall) -> None:
         entity_id = call.data["entity_id"]
         state = call.data["state"]
-
         entity = hass.data.get(DOMAIN, {}).get("entities", {}).get(entity_id)
         if entity is None:
             raise ServiceValidationError(f"Encja {entity_id} nie została znaleziona")
-
         try:
             await entity.async_force_state(state)
         except Exception as err:
@@ -49,30 +52,38 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     async def handle_set_brightness(call: ServiceCall) -> None:
         entity_id = call.data["entity_id"]
         brightness = call.data["brightness"]
-
         entity = hass.data.get(DOMAIN, {}).get("entities", {}).get(entity_id)
         if entity is None:
             raise ServiceValidationError(f"Encja {entity_id} nie została znaleziona")
-
         try:
             await entity.async_force_brightness(brightness)
         except Exception as err:
             raise ServiceValidationError(
                 f"Nie udało się ustawić jasności dla encji {entity_id}: {err}"
             ) from err
+        
+    async def handle_set_rgb(call: ServiceCall) -> None:
+        entity_id = call.data["entity_id"]
+        hex = call.data["hex"]
+        entity = hass.data.get(DOMAIN, {}).get("entities", {}).get(entity_id)
+        if entity is None:
+            raise ServiceValidationError(f"Encja {entity_id} nie została znaleziona")
+        try:
+            await entity.async_force_rgb(hex)
+        except Exception as err:
+            raise ServiceValidationError(
+                f"Nie udało się ustawić rgb hex dla encji {entity_id}: {err}"
+            ) from err
 
-    hass.services.async_register(
-        DOMAIN,
-        "set_state",
-        handle_set_state,
-        schema=SERVICE_SET_STATE_SCHEMA
-    )
-    hass.services.async_register(
-        DOMAIN,
-        "set_brightness",
-        handle_set_brightness,
-        schema=SERVICE_SET_BRIGHTNESS_SCHEMA
-    )
+    services = [
+    ("set_state", handle_set_state, SERVICE_SET_STATE_SCHEMA),
+    ("set_brightness", handle_set_brightness, SERVICE_SET_BRIGHTNESS_SCHEMA),
+    ("set_rgb", handle_set_rgb, SERVICE_SET_RGB_SCHEMA),
+]
+
+    for name, handler, schema in services:
+        hass.services.async_register(DOMAIN, name, handler, schema=schema)
+        
     return True
 
 async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> bool:
