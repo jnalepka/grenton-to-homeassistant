@@ -45,7 +45,7 @@ SERVICE_SET_VALUE_SCHEMA = vol.Schema({
 
 SERVICE_SET_COVER_SCHEMA = vol.Schema({
     vol.Required("entity_id"): str,
-    vol.Required("status"): vol.In([0, 1, 2, 3, 4]),
+    vol.Required("state"): vol.In([0, 1, 2, 3, 4]),
     vol.Required("position"): vol.All(
         vol.Coerce(int),
         vol.Range(min=0, max=100)
@@ -111,14 +111,14 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
         
     async def handle_set_cover(call: ServiceCall) -> None:
         entity_id = call.data["entity_id"]
-        status = call.data["status"]
+        state = call.data["state"]
         position = call.data["position"]
         lamel  = call.data.get("lamel")
         entity = hass.data.get(DOMAIN, {}).get("entities", {}).get(entity_id)
         if entity is None:
             raise ServiceValidationError(f"Encja {entity_id} nie została znaleziona")
         try:
-            await entity.async_force_cover(status, position, lamel)
+            await entity.async_force_cover(state, position, lamel)
         except Exception as err:
             raise ServiceValidationError(
                 f"Nie udało się ustawić roller shuttera dla encji {entity_id}: {err}"
