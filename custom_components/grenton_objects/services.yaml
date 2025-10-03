@@ -100,7 +100,7 @@ set_cover:
       selector:
         entity:
           domain:
-            - sensor
+            - cover
     state:
       name: Stan ruchu rolety
       description: Wartość stanu ruchu rolety.
