@@ -1,4 +1,4 @@
 pytest
 aioresponses
 pytest-homeassistant-custom-component
-homeassistant==2024.3.3
+homeassistant==2025.9.4
