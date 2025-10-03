@@ -91,7 +91,7 @@ class GrentonCover(CoverEntity):
     async def _update_callback(self, now):
         await self.async_update()
 
-    async def async_force_state(self, state: int, position: int, lamel: int):
+    async def async_force_cover(self, state: int, position: int, lamel: int):
         if self._reversed:
             position = 100 - position
         self._state = STATE_CLOSED if position == 0 else STATE_OPEN
