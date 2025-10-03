@@ -22,6 +22,14 @@ SERVICE_SET_STATE_SCHEMA = vol.Schema({
     vol.Required("state"): vol.In([0, 1])
 })
 
+SERVICE_SET_BRIGHTNESS_SCHEMA = vol.Schema({
+    vol.Required("entity_id"): str,
+    vol.Required("brightness"): vol.All(
+        vol.Coerce(float),
+        vol.Range(min=0.0, max=1.0)
+    )
+})
+
 async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     async def handle_set_state(call: ServiceCall) -> None:
         entity_id = call.data["entity_id"]
@@ -37,12 +45,33 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
             raise ServiceValidationError(
                 f"Nie udało się ustawić stanu dla encji {entity_id}: {err}"
             ) from err
+        
+    async def handle_set_brightness(call: ServiceCall) -> None:
+        entity_id = call.data["entity_id"]
+        brightness = call.data["brightness"]
+
+        entity = hass.data.get(DOMAIN, {}).get("entities", {}).get(entity_id)
+        if entity is None:
+            raise ServiceValidationError(f"Encja {entity_id} nie została znaleziona")
+
+        try:
+            await entity.async_force_brightness(brightness)
+        except Exception as err:
+            raise ServiceValidationError(
+                f"Nie udało się ustawić jasności dla encji {entity_id}: {err}"
+            ) from err
 
     hass.services.async_register(
         DOMAIN,
         "set_state",
         handle_set_state,
         schema=SERVICE_SET_STATE_SCHEMA
+    )
+    hass.services.async_register(
+        DOMAIN,
+        "set_brightness",
+        handle_set_brightness,
+        schema=SERVICE_SET_BRIGHTNESS_SCHEMA
     )
     return True
 
