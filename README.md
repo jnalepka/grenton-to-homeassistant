@@ -189,4 +189,9 @@ By default, Home Assistant automatically refreshes entities every 30 seconds. If
 
 4. Save and restart Home Assistant.
 
+# Grenton object services
 
+| HA device_type                     |  service               | parameters               |
+|------------------------------------|------------------------|--------------------------|
+| Binary Sensor 0/1                  |  set_state             | state [0 (off), 1 (on)]  |
+| Switch                             |  set_state             | state [0 (off), 1 (on)]  |

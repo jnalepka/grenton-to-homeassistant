@@ -26,8 +26,6 @@ from homeassistant.components.binary_sensor import (
 from homeassistant.const import (STATE_ON, STATE_OFF)
 from datetime import timedelta
 from homeassistant.helpers.event import async_track_time_interval
-import asyncio
-import random
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -65,7 +63,6 @@ class GrentonBinarySensor(BinarySensorEntity):
         self._initialized = False
 
     async def async_added_to_hass(self):
-        await asyncio.sleep(random.uniform(0, self._update_interval))  # rozproszenie startu
         self._initialized = True
         if self._auto_update:
             self._unsub_interval = async_track_time_interval(
