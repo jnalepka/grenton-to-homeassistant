@@ -14,10 +14,6 @@ from .const import DOMAIN
 from homeassistant.exceptions import ServiceValidationError
 import voluptuous as vol
 from homeassistant.helpers import config_validation as cv
-from homeassistant.exceptions import HomeAssistantError
-
-class ServiceValidationError(HomeAssistantError):
-    """Raised when service input is invalid or entity is missing."""
 
 CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
 
