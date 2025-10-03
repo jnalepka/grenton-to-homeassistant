@@ -88,3 +88,46 @@ set_value:
           max: 999999999
           step: 0.01
           mode: box
+
+set_cover:
+  name: Ustaw roletę (stan, pozycję i lamele) encji Grenton
+  description: Ręcznie ustawia wartość encji rolet Grenton dla stanu, pozycji i lameli (opcjonalnie), zgodnie z cechami użytkownika Grenton.
+  fields:
+    entity_id:
+      name: Encja
+      description: Encja, której stan ma zostać zmieniony.
+      required: true
+      selector:
+        entity:
+          domain:
+            - sensor
+    state:
+      name: Stan ruchu rolety
+      description: Wartość stanu ruchu rolety.
+      required: true
+      selector:
+        number:
+          min: 0
+          max: 4
+          step: 1
+          mode: box
+    position:
+      name: Pozycja rolety
+      description: Wartość pozycji rolety od 0 do 100%.
+      required: true
+      selector:
+        number:
+          min: 0
+          max: 100
+          step: 1
+          mode: box
+    state:
+      name: Pozycja lameli
+      description: Wartość lameli rolety od 0 do 90°.
+      required: true
+      selector:
+        number:
+          min: 0
+          max: 90
+          step: 1
+          mode: box

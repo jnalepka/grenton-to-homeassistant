@@ -38,9 +38,22 @@ SERVICE_SET_RGB_SCHEMA = vol.Schema({
 SERVICE_SET_VALUE_SCHEMA = vol.Schema({
     vol.Required("entity_id"): str,
     vol.Required("value"): vol.All(
-    vol.Coerce(float),
-    vol.Range(min=-999999999, max=999999999)
-)
+        vol.Coerce(float),
+        vol.Range(min=-999999999, max=999999999)
+    )
+})
+
+SERVICE_SET_COVER_SCHEMA = vol.Schema({
+    vol.Required("entity_id"): str,
+    vol.Required("status"): vol.In([0, 1, 2, 3, 4]),
+    vol.Required("position"): vol.All(
+        vol.Coerce(int),
+        vol.Range(min=0, max=100)
+    ),
+    vol.Optional("lamel"): vol.All(
+        vol.Coerce(int),
+        vol.Range(min=0, max=90)
+    )
 })
 
 async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
@@ -95,12 +108,28 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
             raise ServiceValidationError(
                 f"Nie udało się ustawić wartości dla encji {entity_id}: {err}"
             ) from err
+        
+    async def handle_set_cover(call: ServiceCall) -> None:
+        entity_id = call.data["entity_id"]
+        status = call.data["status"]
+        position = call.data["position"]
+        lamel  = call.data.get("lamel")
+        entity = hass.data.get(DOMAIN, {}).get("entities", {}).get(entity_id)
+        if entity is None:
+            raise ServiceValidationError(f"Encja {entity_id} nie została znaleziona")
+        try:
+            await entity.async_force_cover(status, position, lamel)
+        except Exception as err:
+            raise ServiceValidationError(
+                f"Nie udało się ustawić roller shuttera dla encji {entity_id}: {err}"
+            ) from err
 
     services = [
     ("set_state", handle_set_state, SERVICE_SET_STATE_SCHEMA),
     ("set_brightness", handle_set_brightness, SERVICE_SET_BRIGHTNESS_SCHEMA),
     ("set_rgb", handle_set_rgb, SERVICE_SET_RGB_SCHEMA),
     ("set_value", handle_set_value, SERVICE_SET_VALUE_SCHEMA),
+    ("set_cover", handle_set_cover, SERVICE_SET_COVER_SCHEMA),
 ]
 
     for name, handler, schema in services:

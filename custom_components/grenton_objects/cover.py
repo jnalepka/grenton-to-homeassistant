@@ -1,8 +1,8 @@
 """
 ==================================================
 Author: Jan Nalepka
-Script version: 3.0
-Date: 15.09.2025
+Script version: 3.1
+Date: 01.10.2025
 Repository: https://github.com/jnalepka/grenton-to-homeassistant
 ==================================================
 """
@@ -15,7 +15,8 @@ from .const import (
     CONF_REVERSED,
     CONF_AUTO_UPDATE,
     CONF_UPDATE_INTERVAL, 
-    DEFAULT_UPDATE_INTERVAL
+    DEFAULT_UPDATE_INTERVAL,
+    DOMAIN
 )
 import logging
 import voluptuous as vol
@@ -32,8 +33,6 @@ from homeassistant.const import (
 )
 from datetime import timedelta
 from homeassistant.helpers.event import async_track_time_interval
-import asyncio
-import random
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -52,7 +51,13 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
     auto_update = config_entry.options.get(CONF_AUTO_UPDATE, True)
     update_interval = config_entry.options.get(CONF_UPDATE_INTERVAL, DEFAULT_UPDATE_INTERVAL)
 
-    async_add_entities([GrentonCover(api_endpoint, grenton_id, reversed, object_name, auto_update, update_interval)], True)
+    entity = GrentonCover(api_endpoint, grenton_id, reversed, object_name, auto_update, update_interval)
+    async_add_entities([entity], True)
+
+    if DOMAIN not in hass.data:
+        hass.data[DOMAIN] = {"entities": {}}
+
+    hass.data[DOMAIN]["entities"][entity.entity_id] = entity
 
 class GrentonCover(CoverEntity):
     def __init__(self, api_endpoint, grenton_id, reversed, object_name, auto_update, update_interval):
@@ -72,7 +77,6 @@ class GrentonCover(CoverEntity):
         self._initialized = False
 
     async def async_added_to_hass(self):
-        await asyncio.sleep(random.uniform(0, self._update_interval))  # rozproszenie startu
         self._initialized = True
         if self._auto_update:
             self._unsub_interval = async_track_time_interval(
@@ -86,6 +90,19 @@ class GrentonCover(CoverEntity):
 
     async def _update_callback(self, now):
         await self.async_update()
+
+    async def async_force_state(self, status: int, position: int, lamel: int):
+        if self._reversed:
+            position = 100 - position
+        self._state = STATE_CLOSED if position == 0 else STATE_OPEN
+        if status == 1:
+            self._state = STATE_OPENING
+        elif status == 2:
+            self._state = STATE_CLOSING
+        self._current_cover_position = position
+        if lamel is not None:
+            self._current_cover_tilt_position = int(lamel * 100 / 90)
+        self.async_write_ha_state()
 
     @property
     def name(self):
