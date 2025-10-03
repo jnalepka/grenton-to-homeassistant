@@ -11,6 +11,7 @@ set_state:
           domain:
             - binary_sensor
             - switch
+            - light
     state:
       name: Stan docelowy
       description: Wartość stanu (1 = ON, 0 = OFF).
