@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        ha-version: ["2025.10.0"]
+        ha-version: ["2024.3.3"]
 
     steps:
       - name: Checkout code
