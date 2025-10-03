@@ -35,6 +35,14 @@ SERVICE_SET_RGB_SCHEMA = vol.Schema({
     vol.Required("hex"): vol.Match(r"^#[0-9A-Fa-f]{6}$")
 })
 
+SERVICE_SET_VALUE_SCHEMA = vol.Schema({
+    vol.Required("entity_id"): str,
+    vol.Required("value"): vol.All(
+    vol.Coerce(float),
+    vol.Range(min=-999999999, max=999999999)
+)
+})
+
 async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     async def handle_set_state(call: ServiceCall) -> None:
         entity_id = call.data["entity_id"]
@@ -74,11 +82,25 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
             raise ServiceValidationError(
                 f"Nie udało się ustawić rgb hex dla encji {entity_id}: {err}"
             ) from err
+        
+    async def handle_set_value(call: ServiceCall) -> None:
+        entity_id = call.data["entity_id"]
+        value = call.data["value"]
+        entity = hass.data.get(DOMAIN, {}).get("entities", {}).get(entity_id)
+        if entity is None:
+            raise ServiceValidationError(f"Encja {entity_id} nie została znaleziona")
+        try:
+            await entity.async_force_value(value)
+        except Exception as err:
+            raise ServiceValidationError(
+                f"Nie udało się ustawić wartości dla encji {entity_id}: {err}"
+            ) from err
 
     services = [
     ("set_state", handle_set_state, SERVICE_SET_STATE_SCHEMA),
     ("set_brightness", handle_set_brightness, SERVICE_SET_BRIGHTNESS_SCHEMA),
     ("set_rgb", handle_set_rgb, SERVICE_SET_RGB_SCHEMA),
+    ("set_value", handle_set_value, SERVICE_SET_VALUE_SCHEMA),
 ]
 
     for name, handler, schema in services:

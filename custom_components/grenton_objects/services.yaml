@@ -65,3 +65,26 @@ set_rgb:
       selector:
         text:
           multiline: false
+
+set_value:
+  name: Ustaw wartość sensora encji Grenton
+  description: Ręcznie ustawia wartość encji sensora Grenton.
+  fields:
+    entity_id:
+      name: Encja
+      description: Encja, której stan ma zostać zmieniony.
+      required: true
+      selector:
+        entity:
+          domain:
+            - sensor
+    value:
+      name: Wartość
+      description: Wartość sensora.
+      required: true
+      selector:
+        number:
+          min: -999999999
+          max: 999999999
+          step: 0.01
+          mode: box
