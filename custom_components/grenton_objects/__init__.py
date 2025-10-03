@@ -14,6 +14,10 @@ from .const import DOMAIN
 from homeassistant.exceptions import ServiceValidationError
 import voluptuous as vol
 from homeassistant.helpers import config_validation as cv
+from homeassistant.exceptions import HomeAssistantError
+
+class ServiceValidationError(HomeAssistantError):
+    """Raised when service input is invalid or entity is missing."""
 
 CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
 
@@ -31,7 +35,12 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
         if entity is None:
             raise ServiceValidationError(f"Encja {entity_id} nie została znaleziona")
 
-        await entity.async_force_state(state)
+        try:
+            await entity.async_force_state(state)
+        except Exception as err:
+            raise ServiceValidationError(
+                f"Nie udało się ustawić stanu dla encji {entity_id}: {err}"
+            ) from err
 
     hass.services.async_register(
         DOMAIN,
