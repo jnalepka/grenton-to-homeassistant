@@ -26,7 +26,7 @@ SERVICE_SET_BRIGHTNESS_SCHEMA = vol.Schema({
     vol.Required("entity_id"): str,
     vol.Required("brightness"): vol.All(
         vol.Coerce(float),
-        vol.Range(min=0.0, max=1.0)
+        vol.Range(min=0.0, max=255.0)
     )
 })
 
