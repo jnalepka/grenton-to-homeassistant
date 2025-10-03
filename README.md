@@ -116,3 +116,4 @@ GATE_HTTP->HA_Listener_Integration->SendResponse()
 | Light                              |  set_brightness        | brightness [0.00 (0%, off), 1.00 or 255 (100%)]   |
 | Light                              |  set_rgb               | hex [#RRGGBB]                                     |
 | Sensor                             |  set_value             | value [-999999999.99 to 999999999.99]             |
+| Cover                              |  set_cover             | state [1-4], position [0-100%], lamel (optional, 0-90°) |

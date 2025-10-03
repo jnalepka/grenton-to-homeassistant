@@ -121,7 +121,7 @@ set_cover:
           max: 100
           step: 1
           mode: box
-    state:
+    lamel:
       name: Pozycja lameli
       description: Wartość lameli rolety od 0 do 90°.
       required: true
