@@ -1,8 +1,8 @@
 """
 ==================================================
 Author: Jan Nalepka
-Script version: 3.0
-Date: 15.09.2025
+Script version: 3.1
+Date: 01.10.2025
 Repository: https://github.com/jnalepka/grenton-to-homeassistant
 ==================================================
 """
@@ -25,7 +25,8 @@ from .const import (
     CONF_GRENTON_TYPE_MODBUS_SLAVE_RTU,
     CONF_AUTO_UPDATE,
     CONF_UPDATE_INTERVAL, 
-    DEFAULT_UPDATE_INTERVAL
+    DEFAULT_UPDATE_INTERVAL,
+    DOMAIN
 )
 import logging
 import voluptuous as vol
@@ -108,7 +109,13 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
     auto_update = config_entry.options.get(CONF_AUTO_UPDATE, True)
     update_interval = config_entry.options.get(CONF_UPDATE_INTERVAL, DEFAULT_UPDATE_INTERVAL)
     
-    async_add_entities([GrentonSensor(api_endpoint, grenton_id, grenton_type, object_name, unit_of_measurement, device_class, state_class, auto_update, update_interval)], True)
+    entity = GrentonSensor(api_endpoint, grenton_id, grenton_type, object_name, unit_of_measurement, device_class, state_class, auto_update, update_interval)
+    async_add_entities([entity], True)
+
+    if DOMAIN not in hass.data:
+        hass.data[DOMAIN] = {"entities": {}}
+
+    hass.data[DOMAIN]["entities"][entity.entity_id] = entity
     
     
 class GrentonSensor(SensorEntity):
@@ -141,6 +148,10 @@ class GrentonSensor(SensorEntity):
 
     async def _update_callback(self, now):
         await self.async_update()
+
+    async def async_force_value(self, value: float):
+        self._native_value = value
+        self.async_write_ha_state()
 
     @property
     def name(self):
