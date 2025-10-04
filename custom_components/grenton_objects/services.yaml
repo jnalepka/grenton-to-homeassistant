@@ -124,10 +124,89 @@ set_cover:
     lamel:
       name: Pozycja lameli
       description: Wartość lameli rolety od 0 do 90°.
-      required: true
+      required: false
       selector:
         number:
           min: 0
           max: 90
           step: 1
+          mode: box
+
+set_therm_state:
+  name: Ustaw stan termostatu encji Grenton
+  description: Ręcznie ustawia wartość encji termostatu Grenton dla stanu i trybu pracy grzania/chłodzenia (opcjonalnie, domyślnie grzania).
+  fields:
+    entity_id:
+      name: Encja
+      description: Encja, której stan ma zostać zmieniony.
+      required: true
+      selector:
+        entity:
+          domain:
+            - climate
+    state:
+      name: Stan włączenia termostatu
+      description: Wartość włączenia termostatu.
+      required: true
+      selector:
+        number:
+          min: 0
+          max: 1
+          step: 1
+          mode: box
+    direction:
+      name: Tryb pracy termostatu
+      description: Tryb pracy termostatu (ControlDirection) (0 = normalny/grzanie, 1 = odwrócony/chłodzenie). Domyślny tryb pracy to grzanie.
+      required: false
+      selector:
+        number:
+          min: 0
+          max: 1
+          step: 1
+          mode: box
+
+set_therm_target_temp:
+  name: Ustaw docelową temperaturę termostatu encji Grenton
+  description: Ręcznie ustawia wartość encji termostatu Grenton dla temperatury docelowej (TargetTemp).
+  fields:
+    entity_id:
+      name: Encja
+      description: Encja, której stan ma zostać zmieniony.
+      required: true
+      selector:
+        entity:
+          domain:
+            - climate
+    value:
+      name: Wartość docelowej temperatury
+      description: Wartość docelowej temperatury (TargetTemp).
+      required: true
+      selector:
+        number:
+          min: -999999999
+          max: 999999999
+          step: 0.01
+          mode: box
+
+set_therm_current_temp:
+  name: Ustaw aktualną temperaturę termostatu encji Grenton
+  description: Ręcznie ustawia wartość encji termostatu Grenton dla temperatury aktualnej (CurrentTemp).
+  fields:
+    entity_id:
+      name: Encja
+      description: Encja, której stan ma zostać zmieniony.
+      required: true
+      selector:
+        entity:
+          domain:
+            - climate
+    value:
+      name: Wartość aktualnej temperatury
+      description: Wartość aktualnej temperatury (CurrentTemp).
+      required: true
+      selector:
+        number:
+          min: -999999999
+          max: 999999999
+          step: 0.01
           mode: box

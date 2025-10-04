@@ -56,6 +56,21 @@ SERVICE_SET_COVER_SCHEMA = vol.Schema({
     )
 })
 
+SERVICE_SET_THERM_STATE_SCHEMA = vol.Schema({
+    vol.Required("entity_id"): str,
+    vol.Required("state"): vol.In([0, 1]),
+    vol.Optional("direction"): vol.In([0, 1])
+})
+
+SERVICE_SET_THERM_TEMP_SCHEMA = vol.Schema({
+    vol.Required("entity_id"): str,
+    vol.Required("temp"): vol.All(
+        vol.Coerce(float),
+        vol.Range(min=-999999999, max=999999999)
+    )
+})
+
+
 async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     async def handle_set_state(call: ServiceCall) -> None:
         entity_id = call.data["entity_id"]
@@ -123,6 +138,46 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
             raise ServiceValidationError(
                 f"Nie udało się ustawić roller shuttera dla encji {entity_id}: {err}"
             ) from err
+        
+    async def handle_set_therm_state(call: ServiceCall) -> None:
+        entity_id = call.data["entity_id"]
+        state = call.data["state"]
+        direction = call.data.get("direction", 0)
+        entity = hass.data.get(DOMAIN, {}).get("entities", {}).get(entity_id)
+        if entity is None:
+            raise ServiceValidationError(f"Encja {entity_id} nie została znaleziona")
+        try:
+            await entity.async_force_therm_state(state, direction)
+        except Exception as err:
+            raise ServiceValidationError(
+                f"Nie udało się ustawić stanu termostatu dla encji {entity_id}: {err}"
+            ) from err
+        
+    async def handle_set_therm_target_temp(call: ServiceCall) -> None:
+        entity_id = call.data["entity_id"]
+        temp = call.data["temp"]
+        entity = hass.data.get(DOMAIN, {}).get("entities", {}).get(entity_id)
+        if entity is None:
+            raise ServiceValidationError(f"Encja {entity_id} nie została znaleziona")
+        try:
+            await entity.async_force_therm_target_temp(temp)
+        except Exception as err:
+            raise ServiceValidationError(
+                f"Nie udało się ustawić docelowej temperatury termostatu dla encji {entity_id}: {err}"
+            ) from err
+    
+    async def handle_set_therm_current_temp(call: ServiceCall) -> None:
+        entity_id = call.data["entity_id"]
+        temp = call.data["temp"]
+        entity = hass.data.get(DOMAIN, {}).get("entities", {}).get(entity_id)
+        if entity is None:
+            raise ServiceValidationError(f"Encja {entity_id} nie została znaleziona")
+        try:
+            await entity.async_force_therm_current_temp(temp)
+        except Exception as err:
+            raise ServiceValidationError(
+                f"Nie udało się ustawić aktualnej temperatury termostatu dla encji {entity_id}: {err}"
+            ) from err
 
     services = [
     ("set_state", handle_set_state, SERVICE_SET_STATE_SCHEMA),
@@ -130,6 +185,9 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     ("set_rgb", handle_set_rgb, SERVICE_SET_RGB_SCHEMA),
     ("set_value", handle_set_value, SERVICE_SET_VALUE_SCHEMA),
     ("set_cover", handle_set_cover, SERVICE_SET_COVER_SCHEMA),
+    ("set_therm_state", handle_set_therm_state, SERVICE_SET_THERM_STATE_SCHEMA),
+    ("set_therm_target_temp", handle_set_therm_target_temp, SERVICE_SET_THERM_TEMP_SCHEMA),
+    ("set_therm_current_temp", handle_set_therm_current_temp, SERVICE_SET_THERM_TEMP_SCHEMA),
 ]
 
     for name, handler, schema in services:

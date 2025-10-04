@@ -116,4 +116,7 @@ GATE_HTTP->HA_Listener_Integration->SendResponse()
 | Light                              |  set_brightness        | brightness [0.00 (0%, off), 1.00 or 255 (100%)]   |
 | Light                              |  set_rgb               | hex [#RRGGBB]                                     |
 | Sensor                             |  set_value             | value [-999999999.99 to 999999999.99]             |
-| Cover                              |  set_cover             | state [0-4], position [0-100%], lamel (optional, 0-90°) |
+| Cover                              |  set_cover             | state [0-4], position [0-100%], lamel (optional) [0-90°] |
+| Climate                            |  set_therm_state       | state [0 (off), 1 (on)], direction (optional) [0 (normal/heat), 1 (reverse/cool)] |
+| Climate                            |  set_therm_target_temp | temp (target temp)                                |
+| Climate                            |  set_therm_current_temp | temp (current temp)                              |
