@@ -16,7 +16,7 @@ If you like what I do, buy me a `coffee`!
     <img src="https://img.shields.io/static/v1?label=Donate&message=%E2%9D%A4&logo=GitHub&color=%23fe8e86" alt="Donate" width="130" height="30">
 </a>
 
-## License
+# License
 
 This project is free for personal and non-commercial use.  
 Commercial use requires the author's prior written permission.  
@@ -26,12 +26,12 @@ The full license text can be found in the [LICENSE](LICENSE) file.
 
 # Installation
 
-## Option 1 – Using HASC (recommended)
+### Option 1 – Using HASC (recommended)
 
 The best way to install is by using the Home Assistant Community Store (HACS). [Downloading HACS](https://www.hacs.xyz/docs/use/download/download/).
 After installing HACS, search for and install Grenton Objects.
 
-## Option 2 – Manual install (not recommended)
+### Option 2 – Manual install (not recommended)
 
 To install manually, copy the grenton_objects folder along with all its contents into the custom_components folder of your Home Assistant setup. This folder is typically found within the /config directory.
 
@@ -42,7 +42,7 @@ To install manually, copy the grenton_objects folder along with all its contents
 2. Type and select "Grenton Objects".
 3. Add your Grenton object.
 
-# Supported Grenton objects
+### Supported Grenton objects
 
 - Light – DOUT / DIMMER / LED / ZWAVE
 - Switch – DOUT / ZWAVE
