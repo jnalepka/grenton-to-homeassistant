@@ -1,15 +1,14 @@
 
 <img src="https://github.com/user-attachments/assets/08571ca3-a9b2-404b-820f-dccc688f62e8" width="600"/>
 
-# Grenton to Home Assistant
-
-
-![image](https://github.com/user-attachments/assets/4cab82f8-548c-4b96-ae29-daaea8c5c11e)
-
+# Grenton to Home Assistant (custom integration)
 
 A Home Assistant custom integration for presenting and controlling Grenton objects.
 
 This integration creates objects in Home Assistant based on selected objects from Grenton. The HTTP Gate module is required, as well as the creation of a virtual HttpListener object and a script, according to the instructions. After providing the identifiers of Grenton objects, they will appear in Home Assistant. It is possible to display statuses and control Grenton devices.
+
+![image](https://github.com/user-attachments/assets/4cab82f8-548c-4b96-ae29-daaea8c5c11e)
+
 
 If you like what I do, buy me a `coffee`!
 
@@ -17,17 +16,48 @@ If you like what I do, buy me a `coffee`!
     <img src="https://img.shields.io/static/v1?label=Donate&message=%E2%9D%A4&logo=GitHub&color=%23fe8e86" alt="Donate" width="130" height="30">
 </a>
 
+## License
 
-<br>Watch the video how to use this integration: https://www.youtube.com/watch?v=uhjFG1vz1Ro
+This project is free for personal and non-commercial use.  
+Commercial use requires the author's prior written permission.  
+The full license text can be found in the [LICENSE](LICENSE) file.
+
+**Note:** Starting from version 3.0.0, this license applies.  
 
 # Installation
 
-If you're using [HACS](https://hacs.xyz/), is to the easiest way is to install Grenton Objects through it.
+## Option 1 – Using HASC (recommended)
+
+The best way to install is by using the Home Assistant Community Store (HACS). [Downloading HACS](https://www.hacs.xyz/docs/use/download/download/).
+After installing HACS, search for and install Grenton Objects.
+
+## Option 2 – Manual install (not recommended)
 
 To install manually, copy the grenton_objects folder along with all its contents into the custom_components folder of your Home Assistant setup. This folder is typically found within the /config directory.
 
 
-# Requirement on the Grenton side
+# How to use
+
+1. Open `Settings` -> `Devices & services` -> `+Add integration`.
+2. Type and select "Grenton Objects".
+3. Add your Grenton object.
+
+# Supported Grenton objects
+
+- Light – DOUT / DIMMER / LED / ZWAVE
+- Switch – DOUT / ZWAVE
+- Cover – ROLLER_SHUTTER / ZWAVE
+- Climate – THERMOSTAT
+- Sensor – ONE_WIRE / TEMPERATURE / ANALOG IN / MODBUS / ZWAVE / User Feature
+- Binary Sensor 0/1 – DIN / BINARY_SENSOR / ZWAVE
+- User Scripts
+
+# Simple updates
+
+If you only add a small number of objects (up to about 20), the basic method of updating states from Grenton is enough.
+You just need a little configuration on the Grenton side, shown below.
+
+## Requirement on the Grenton side
 
 1. Create a `HTTPListener` virtual object on GateHTTP named `HA_Listener_Integration` and configure it as follows:
    * Path - `/HAlistener` (You can edit it if you want)
@@ -90,103 +120,26 @@ GATE_HTTP->HA_Listener_Integration->SendResponse()
 ![image](https://github.com/jnalepka/GrentonHomeAssistantIntegration/assets/70645322/25a94dee-a43a-4b32-a3f2-83c455652688)
 
 
-# Adding Grenton objects to Home Assistant
+# Advanced updates
 
-1. Open `Settings` -> `Devices & services` -> `+Add integration`.
-2. Type and select "Grenton Objects".
-3. Add your Grenton object.
+If you add a larger number of Grenton objects (>20) and want the state updates to run in a more controlled way, you can go to the object settings in HA: Settings -> Devices & services -> Grenton Objects.
+For each object, click the settings icon to adjust the `Refresh interval` (how often HA asks for values), or disable the `Automatic Object Updates` and set it up manually using services.
 
-# Supported Grenton objects
+## Calling services in Grenton
 
-| Grenton Object                         | grenton_id (example)           | HA device_type           |    Other settings        |  HA functions         |
-|----------------------------------------|--------------------------|--------------------------|-----------------------|-----------------------|
-| DOUT / ZWAVE_DOUT (simple switch)      | CLU221000001->DOU1234    | Switch                   |                          | ON/OFF                |
-| DOUT / ZWAVE_DOUT (light)              | CLU221000001->DOU1234    | Light                    |  grenton_type = DOUT     | ON/OFF    |
-| DIMMER                                 | CLU221000001->DIM1234    | Light                    |  grenton_type = DIMMER   | ON/OFF, BRIGHTNESS    |
-| DIMMER SINGLE ZWAVE_LED                | CLU221000001->ZWA1234    | Light                    |  grenton_type = DIMMER   | ON/OFF, BRIGHTNESS    |
-| DIMMER RGBW_Red, RGBW_Green, RGBW_Blue, RGBW_White | CLU221000001->LED1234    | Light                    |  grenton_type = LED_R/G/B/W   | ON/OFF, BRIGHTNESS    |
-| RGBW                                   | CLU221000001->LED1234    | Light                    |  grenton_type = RGB      | ON/OFF, BRIGHTNESS, RGB   |
-| ROLLER_SHUTTER / ZWAVE_ROLLER_SHUTTER  | CLU221000001->ROL1234    | Cover                    |  if ReversePosition=Yes, check reversed     | UP/DOWN, POSITION, TILT POSITION     |
-| THERMOSTAT                             | CLU221000001->THE1234    | Climate                  |                          | TEMPERATURE CONTROL   |
-| DIN / ZWAVE_DIN / ZWAVE_BINARY_SENSOR  | CLU221000001->DIN1234    | Binary Sensor            |                          | BINARY SENSOR         |
-| ONE_WIRE / TEMPERATURE_SENSOR /  PANELSENSTEMP   |  CLU221000001->ONE1234     | Sensor       |  grenton_type = DEFAULT_SENSOR, device_class=temperature  | SENSOR        |
-| ANALOG IN                              | CLU221000001->ANA1234    | Sensor                   |  grenton_type = DEFAULT_SENSOR, device_class=?  | SENSOR        |
-| GATE HTTP User feature (where the script is)    | My_feature   (Without GATE-> !!)      | Sensor |  grenton_type = DEFAULT_SENSOR, device_class=?  | SENSOR        |
-| CLU User feature                       | CLU221000001->My_feature  | Sensor                  |  grenton_type = DEFAULT_SENSOR, device_class=?  | SENSOR        |
-| MODBUS (Virtual object TYPE!)          | CLU501000001->MOD1234     | Sensor                  |   grenton_type = MODBUS, device_class=?  | SENSOR        |
-| MODBUS_VALUE (Virtual object TYPE!)    | CLU501000001->MOD1234     | Sensor                  |  grenton_type = MODBUS_VALUE, device_class=?  | SENSOR        |
-| MODBUS_RTU                             | CLU501000001->MOD1234     | Sensor                  |  grenton_type = MODBUS_RTU, device_class=?  | SENSOR        |
-| MODBUS_CLIENT                          | CLU501000001->MOD1234     | Sensor                  |  grenton_type = MODBUS_CLIENT , device_class=?  | SENSOR        |
-| MODBUS_SERVER                          | CLU501000001->MOD1234     | Sensor                  |  grenton_type = MODBUS_SERVER, device_class=?  | SENSOR        |
-| MODBUS_SLAVE_RTU                       | CLU501000001->MOD1234     | Sensor                  |  grenton_type = MODBUS_SLAVE_RTU, device_class=?  | SENSOR        |
-| GATE HTTP Script (integration clu)    | Script_name   (Without GATE-> !!)      | Script               |               | BUTTON        |
-| OTHER CLU Script                      | CLU221000001->Script_name              | Script               |               | BUTTON        |
+todo
 
-#### Supported sensor device class:
+## Grenton object services
 
-- `device_class`, `unit_of_measurement`, `state_class` - More information https://developers.home-assistant.io/docs/core/entity/sensor
-
-| device_class                            | unit_of_measurement         |
-|----------------------------------------|--------------------------|
-| `apparent_power`                       | VA                       |
-| `atmospheric_pressure`                 | cbar, bar, hPa, mmHg, inHg, kPa, mbar, Pa, psi |
-| `battery`                              | %                        |
-| `carbon_dioxide`                       | ppm                      |
-| `carbon_monoxide`                      | ppm                      |
-| `current`                              | A, mA                    |
-| `distance`                             | km, m, cm, mm, mi, yd, in |
-| `duration`                             | d, h, min, s, ms         |
-| `energy`                               | Wh, kWh, MWh, MJ, GJ     |
-| `energy_storage`                       | Wh, kWh, MWh, MJ, GJ     |
-| `frequency`                            | Hz, kHz, MHz, GHz        |
-| `gas`                                  | m³, ft³, CCF             |
-| `humidity`                             | %                        |
-| `illuminance`                          | lx                       |
-| `irradiance`                           | W/m², BTU/(h⋅ft²)        |
-| `moisture`                             | %                        |
-| `nitrogen_dioxide`                     | µg/m³                    |
-| `nitrogen_monoxide`                    | µg/m³                    |
-| `nitrous_oxide`                        | µg/m³                    |
-| `ozone`                                | µg/m³                    |
-| `ph`                                   | None                     |
-| `pm1`                                  | µg/m³                    |
-| `pm10`                                 | µg/m³                    |
-| `pm25`                                 | µg/m³                    |
-| `power`                                | W, kW                    |
-| `power_factor`                         | %, None                  |
-| `precipitation`                        | cm, in, mm               |
-| `precipitation_intensity`              | in/d, in/h, mm/d, mm/h   |
-| `pressure`                             | cbar, bar, hPa, mmHg, inHg, kPa, mbar, Pa, psi |
-| `reactive_power`                       | var                      |
-| `signal_strength`                      | dB, dBm                  |
-| `sound_pressure`                       | dB, dBA                  |
-| `speed`                                | ft/s, in/d, in/h, km/h, kn, m/s, mph, mm/d |
-| `sulphur_dioxide`                      | µg/m³                    |
-| `temperature`                          | °C, °F, K                |
-| `timestamp`                            | None                     |
-| `volatile_organic_compounds`           | µg/m³                    |
-| `volatile_organic_compounds_parts`     | ppm, ppb                 |
-| `voltage`                              | V, mV                    |
-| `volume`                               | L, mL, gal, fl. oz., m³, ft³, CCF |
-| `volume_flow_rate`                     | m³/h, ft³/min, L/min, gal/min |
-| `volume_storage`                       | L, mL, gal, fl. oz., m³, ft³, CCF |
-| `water`                                | L, gal, m³, ft³, CCF     |
-| `weight`                               | kg, g, mg, µg, oz, lb, st |
-| `wind_speed`                           | ft/s, km/h, kn, m/s, mph |
-
-# Forced faster state update
-
-By default, Home Assistant automatically refreshes entities every 30 seconds. If you want to accelerate the object update, go to the `Settings->Automations & Scenes` and set up the automation:
-
-1. `Trigger` -> `Time and location` -> `Time pattern` -> e.g. `/10` (every 10 seconds)
-
-![Przechwytywanie1](https://github.com/jnalepka/GrentonObjects_HomeAssistant/assets/70645322/305b7f35-63a8-4341-83e6-ac3a85006dfd)
-
-2. `Action` -> `Other action` -> `Call service` -> `Home Assistant Core Integration: Update entity`
-3. Select objects (`+Choose entity`) to be updated at specified intervals.
-
-![Przechwytywanie2](https://github.com/jnalepka/GrentonObjects_HomeAssistant/assets/70645322/47d19f37-decb-4c7d-a5ed-c06bc66058a6)
-
-4. Save and restart Home Assistant.
-
-
+| HA device_type                     |  service               | parameters                                        |
+|------------------------------------|------------------------|---------------------------------------------------|
+| Binary Sensor 0/1                  |  set_state             | state [0 (off), 1 (on)]                           |
+| Switch                             |  set_state             | state [0 (off), 1 (on)]                           |
+| Light                              |  set_state             | state [0 (off), 1 (on)]                           |
+| Light                              |  set_brightness        | brightness [0.00 (0%, off), 1.00 or 255 (100%)]   |
+| Light                              |  set_rgb               | hex [#RRGGBB]                                     |
+| Sensor                             |  set_value             | value [-999999999.99 to 999999999.99]             |
+| Cover                              |  set_cover             | state [0-4], position [0-100%], lamel (optional) [0-90°] |
+| Climate                            |  set_therm_state       | state [0 (off), 1 (on)], direction (optional) [0 (normal/heat), 1 (reverse/cool)] |
+| Climate                            |  set_therm_target_temp | temp (target temp)                                |
+| Climate                            |  set_therm_current_temp | temp (current temp)                              |

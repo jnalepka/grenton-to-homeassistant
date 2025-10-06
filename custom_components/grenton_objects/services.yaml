@@ -1,0 +1,212 @@
+set_state:
+  name: Ustaw stan encji Grenton
+  description: Ręcznie ustawia stan encji Grenton jako 1 (ON) lub 0 (OFF).
+  fields:
+    entity_id:
+      name: Encja
+      description: Encja, której stan ma zostać zmieniony.
+      required: true
+      selector:
+        entity:
+          domain:
+            - binary_sensor
+            - switch
+            - light
+    state:
+      name: Stan docelowy
+      description: Wartość stanu (1 = ON, 0 = OFF).
+      required: true
+      selector:
+        number:
+          min: 0
+          max: 1
+          step: 1
+          mode: box
+
+set_brightness:
+  name: Ustaw stan/jasność encji Grenton
+  description: Ręcznie ustawia stan/jasność encji Grenton w zakresie 0.00 (0%, OFF) do 1.00 lub 255 (100%).
+  fields:
+    entity_id:
+      name: Encja
+      description: Encja, której stan ma zostać zmieniony.
+      required: true
+      selector:
+        entity:
+          domain:
+            - light
+    brightness:
+      name: Jasność
+      description: Wartość jasności od 0.00 do 1.00 lub 255.
+      required: true
+      selector:
+        number:
+          min: 0
+          max: 255
+          step: 0.01
+          mode: box
+
+set_rgb:
+  name: Ustaw kolor encji Grenton
+  description: Ręcznie ustawia kolor encji Grenton wg modelu RGB #RRGGBB (podawana w HEX).
+  fields:
+    entity_id:
+      name: Encja
+      description: Encja, której stan ma zostać zmieniony.
+      required: true
+      selector:
+        entity:
+          domain:
+            - light
+    hex:
+      name: Kolor (hex)
+      description: Wartość koloru wg modelu RGB #RRGGBB (podawana w HEX).
+      required: true
+      selector:
+        text:
+          multiline: false
+
+set_value:
+  name: Ustaw wartość sensora encji Grenton
+  description: Ręcznie ustawia wartość encji sensora Grenton.
+  fields:
+    entity_id:
+      name: Encja
+      description: Encja, której stan ma zostać zmieniony.
+      required: true
+      selector:
+        entity:
+          domain:
+            - sensor
+    value:
+      name: Wartość
+      description: Wartość sensora.
+      required: true
+      selector:
+        number:
+          min: -999999999
+          max: 999999999
+          step: 0.01
+          mode: box
+
+set_cover:
+  name: Ustaw roletę (stan, pozycję i lamele) encji Grenton
+  description: Ręcznie ustawia wartość encji rolet Grenton dla stanu, pozycji i lameli (opcjonalnie), zgodnie z cechami użytkownika Grenton.
+  fields:
+    entity_id:
+      name: Encja
+      description: Encja, której stan ma zostać zmieniony.
+      required: true
+      selector:
+        entity:
+          domain:
+            - cover
+    state:
+      name: Stan ruchu rolety
+      description: Wartość stanu ruchu rolety.
+      required: true
+      selector:
+        number:
+          min: 0
+          max: 4
+          step: 1
+          mode: box
+    position:
+      name: Pozycja rolety
+      description: Wartość pozycji rolety od 0 do 100%.
+      required: true
+      selector:
+        number:
+          min: 0
+          max: 100
+          step: 1
+          mode: box
+    lamel:
+      name: Pozycja lameli
+      description: Wartość lameli rolety od 0 do 90°.
+      required: false
+      selector:
+        number:
+          min: 0
+          max: 90
+          step: 1
+          mode: box
+
+set_therm_state:
+  name: Ustaw stan termostatu encji Grenton
+  description: Ręcznie ustawia wartość encji termostatu Grenton dla stanu i trybu pracy grzania/chłodzenia (opcjonalnie, domyślnie grzania).
+  fields:
+    entity_id:
+      name: Encja
+      description: Encja, której stan ma zostać zmieniony.
+      required: true
+      selector:
+        entity:
+          domain:
+            - climate
+    state:
+      name: Stan włączenia termostatu
+      description: Wartość włączenia termostatu.
+      required: true
+      selector:
+        number:
+          min: 0
+          max: 1
+          step: 1
+          mode: box
+    direction:
+      name: Tryb pracy termostatu
+      description: Tryb pracy termostatu (ControlDirection) (0 = normalny/grzanie, 1 = odwrócony/chłodzenie). Domyślny tryb pracy to grzanie.
+      required: false
+      selector:
+        number:
+          min: 0
+          max: 1
+          step: 1
+          mode: box
+
+set_therm_target_temp:
+  name: Ustaw docelową temperaturę termostatu encji Grenton
+  description: Ręcznie ustawia wartość encji termostatu Grenton dla temperatury docelowej (TargetTemp).
+  fields:
+    entity_id:
+      name: Encja
+      description: Encja, której stan ma zostać zmieniony.
+      required: true
+      selector:
+        entity:
+          domain:
+            - climate
+    temp:
+      name: Wartość docelowej temperatury
+      description: Wartość docelowej temperatury (TargetTemp).
+      required: true
+      selector:
+        number:
+          min: -999999999
+          max: 999999999
+          step: 0.01
+          mode: box
+
+set_therm_current_temp:
+  name: Ustaw aktualną temperaturę termostatu encji Grenton
+  description: Ręcznie ustawia wartość encji termostatu Grenton dla temperatury aktualnej (CurrentTemp).
+  fields:
+    entity_id:
+      name: Encja
+      description: Encja, której stan ma zostać zmieniony.
+      required: true
+      selector:
+        entity:
+          domain:
+            - climate
+    temp:
+      name: Wartość aktualnej temperatury
+      description: Wartość aktualnej temperatury (CurrentTemp).
+      required: true
+      selector:
+        number:
+          min: -999999999
+          max: 999999999
+          step: 0.01
+          mode: box

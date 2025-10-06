@@ -1,8 +1,8 @@
 """
 ==================================================
 Author: Jan Nalepka
-Script version: 3.0
-Date: 15.09.2025
+Script version: 3.1
+Date: 01.10.2025
 Repository: https://github.com/jnalepka/grenton-to-homeassistant
 ==================================================
 """
@@ -14,7 +14,8 @@ from .const import (
     CONF_OBJECT_NAME,
     CONF_AUTO_UPDATE,
     CONF_UPDATE_INTERVAL, 
-    DEFAULT_UPDATE_INTERVAL
+    DEFAULT_UPDATE_INTERVAL,
+    DOMAIN
 )
 import logging
 import voluptuous as vol
@@ -43,7 +44,13 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
     auto_update = config_entry.options.get(CONF_AUTO_UPDATE, True)
     update_interval = config_entry.options.get(CONF_UPDATE_INTERVAL, DEFAULT_UPDATE_INTERVAL)
 
-    async_add_entities([GrentonClimate(api_endpoint, grenton_id, object_name, auto_update, update_interval)], True)
+    entity = GrentonClimate(api_endpoint, grenton_id, object_name, auto_update, update_interval)
+    async_add_entities([entity], True)
+
+    if DOMAIN not in hass.data:
+        hass.data[DOMAIN] = {"entities": {}}
+
+    hass.data[DOMAIN]["entities"][entity.entity_id] = entity
 
 class GrentonClimate(ClimateEntity):
     _enable_turn_on_off_backwards_compatibility = False
@@ -79,6 +86,18 @@ class GrentonClimate(ClimateEntity):
 
     async def _update_callback(self, now):
         await self.async_update()
+
+    async def async_force_therm_state(self, state: int, direction: int):
+        self._hvac_mode = HVACMode.OFF if state == 0 else (HVACMode.COOL if direction == 1 else HVACMode.HEAT)
+        self.async_write_ha_state()
+
+    async def async_force_therm_target_temp(self, temp: float):
+        self._target_temperature = temp
+        self.async_write_ha_state()
+
+    async def async_force_therm_current_temp(self, temp: float):
+        self._current_temperature = temp
+        self.async_write_ha_state()
 
     @property
     def name(self):

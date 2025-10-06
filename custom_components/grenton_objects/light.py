@@ -1,8 +1,8 @@
 """
 ==================================================
 Author: Jan Nalepka
-Script version: 3.0
-Date: 15.09.2025
+Script version: 3.1
+Date: 01.10.2025
 Repository: https://github.com/jnalepka/grenton-to-homeassistant
 ==================================================
 """
@@ -23,7 +23,8 @@ from .const import (
     CONF_GRENTON_TYPE_LED_W,
     CONF_AUTO_UPDATE,
     CONF_UPDATE_INTERVAL, 
-    DEFAULT_UPDATE_INTERVAL
+    DEFAULT_UPDATE_INTERVAL,
+    DOMAIN
 )
 import logging
 import voluptuous as vol
@@ -54,7 +55,13 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
     auto_update = config_entry.options.get(CONF_AUTO_UPDATE, True)
     update_interval = config_entry.options.get(CONF_UPDATE_INTERVAL, DEFAULT_UPDATE_INTERVAL)
     
-    async_add_entities([GrentonLight(api_endpoint, grenton_id, grenton_type, object_name, auto_update, update_interval)], True)
+    entity = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name, auto_update, update_interval)
+    async_add_entities([entity], True)
+
+    if DOMAIN not in hass.data:
+        hass.data[DOMAIN] = {"entities": {}}
+
+    hass.data[DOMAIN]["entities"][entity.entity_id] = entity
 
 class GrentonLight(LightEntity):
     def __init__(self, api_endpoint, grenton_id, grenton_type, object_name, auto_update, update_interval):
@@ -124,6 +131,26 @@ class GrentonLight(LightEntity):
 
     async def _update_callback(self, now):
         await self.async_update()
+
+    async def async_force_state(self, state: int):
+        self._state = STATE_ON if state == 1 else STATE_OFF
+        self.async_write_ha_state()
+
+    async def async_force_brightness(self, brightness: float):
+        self._state = STATE_OFF if brightness == 0 else STATE_ON
+        grenton_id_part_0, grenton_id_part_1 = self._grenton_id.split('->')
+        if self._grenton_type == CONF_GRENTON_TYPE_RGB or self._grenton_type == CONF_GRENTON_TYPE_DIMMER:
+            if self._grenton_type == CONF_GRENTON_TYPE_DIMMER and grenton_id_part_1.startswith("ZWA"):
+                self._brightness = brightness
+            else:
+                self._brightness = brightness * 255
+        elif self._grenton_type == CONF_GRENTON_TYPE_LED_R or self._grenton_type == CONF_GRENTON_TYPE_LED_G or self._grenton_type == CONF_GRENTON_TYPE_LED_B or self._grenton_type == CONF_GRENTON_TYPE_LED_W:
+            self._brightness = brightness
+        self.async_write_ha_state()
+
+    async def async_force_rgb(self, hex: str):
+        self._rgb_color = color_util.rgb_hex_to_rgb_list(hex.strip("#"))
+        self.async_write_ha_state()
 
     @property
     def name(self):
