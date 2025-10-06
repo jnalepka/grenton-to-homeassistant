@@ -52,8 +52,12 @@ To install manually, copy the grenton_objects folder along with all its contents
 - Binary Sensor 0/1 – DIN / BINARY_SENSOR / ZWAVE
 - User Scripts
 
+# Simple updates
 
-# Requirement on the Grenton side
+If you only add a small number of objects (up to about 20), the basic method of updating states from Grenton is enough.
+You just need a little configuration on the Grenton side, shown below.
+
+## Requirement on the Grenton side
 
 1. Create a `HTTPListener` virtual object on GateHTTP named `HA_Listener_Integration` and configure it as follows:
    * Path - `/HAlistener` (You can edit it if you want)
@@ -116,9 +120,16 @@ GATE_HTTP->HA_Listener_Integration->SendResponse()
 ![image](https://github.com/jnalepka/GrentonHomeAssistantIntegration/assets/70645322/25a94dee-a43a-4b32-a3f2-83c455652688)
 
 
+# Advanced updates
 
+If you add a larger number of Grenton objects (>20) and want the state updates to run in a more controlled way, you can go to the object settings in HA: Settings -> Devices & services -> Grenton Objects.
+For each object, click the settings icon to adjust the `Refresh interval` (how often HA asks for values), or disable the `Automatic Object Updates` and set it up manually using services.
 
-# Grenton object services
+## Calling services in Grenton
+
+todo
+
+## Grenton object services
 
 | HA device_type                     |  service               | parameters                                        |
 |------------------------------------|------------------------|---------------------------------------------------|
