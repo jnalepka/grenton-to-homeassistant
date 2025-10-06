@@ -177,7 +177,7 @@ set_therm_target_temp:
         entity:
           domain:
             - climate
-    value:
+    temp:
       name: Wartość docelowej temperatury
       description: Wartość docelowej temperatury (TargetTemp).
       required: true
@@ -200,7 +200,7 @@ set_therm_current_temp:
         entity:
           domain:
             - climate
-    value:
+    temp:
       name: Wartość aktualnej temperatury
       description: Wartość aktualnej temperatury (CurrentTemp).
       required: true

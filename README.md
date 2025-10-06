@@ -1,15 +1,14 @@
 
 <img src="https://github.com/user-attachments/assets/08571ca3-a9b2-404b-820f-dccc688f62e8" width="600"/>
 
-# Grenton to Home Assistant
-
-
-![image](https://github.com/user-attachments/assets/4cab82f8-548c-4b96-ae29-daaea8c5c11e)
-
+# Grenton to Home Assistant (custom integration)
 
 A Home Assistant custom integration for presenting and controlling Grenton objects.
 
 This integration creates objects in Home Assistant based on selected objects from Grenton. The HTTP Gate module is required, as well as the creation of a virtual HttpListener object and a script, according to the instructions. After providing the identifiers of Grenton objects, they will appear in Home Assistant. It is possible to display statuses and control Grenton devices.
+
+![image](https://github.com/user-attachments/assets/4cab82f8-548c-4b96-ae29-daaea8c5c11e)
+
 
 If you like what I do, buy me a `coffee`!
 
@@ -17,14 +16,41 @@ If you like what I do, buy me a `coffee`!
     <img src="https://img.shields.io/static/v1?label=Donate&message=%E2%9D%A4&logo=GitHub&color=%23fe8e86" alt="Donate" width="130" height="30">
 </a>
 
+## License
 
-<br>Watch the video how to use this integration: https://www.youtube.com/watch?v=uhjFG1vz1Ro
+This project is free for personal and non-commercial use.  
+Commercial use requires the author's prior written permission.  
+The full license text can be found in the [LICENSE](LICENSE) file.
+
+**Note:** Starting from version 3.0.0, this license applies.  
 
 # Installation
 
-If you're using [HACS](https://hacs.xyz/), is to the easiest way is to install Grenton Objects through it.
+## Option 1 – Using HASC (recommended)
+
+The best way to install is by using the Home Assistant Community Store (HACS). [Downloading HACS](https://www.hacs.xyz/docs/use/download/download/).
+After installing HACS, search for and install Grenton Objects.
+
+## Option 2 – Manual install (not recommended)
 
 To install manually, copy the grenton_objects folder along with all its contents into the custom_components folder of your Home Assistant setup. This folder is typically found within the /config directory.
+
+
+# How to use
+
+1. Open `Settings` -> `Devices & services` -> `+Add integration`.
+2. Type and select "Grenton Objects".
+3. Add your Grenton object.
+
+# Supported Grenton objects
+
+- Light – DOUT / DIMMER / LED / ZWAVE
+- Switch – DOUT / ZWAVE
+- Cover – ROLLER_SHUTTER / ZWAVE
+- Climate – THERMOSTAT
+- Sensor – ONE_WIRE / TEMPERATURE / ANALOG IN / MODBUS / ZWAVE / User Feature
+- Binary Sensor 0/1 – DIN / BINARY_SENSOR / ZWAVE
+- User Scripts
 
 
 # Requirement on the Grenton side
@@ -90,21 +116,7 @@ GATE_HTTP->HA_Listener_Integration->SendResponse()
 ![image](https://github.com/jnalepka/GrentonHomeAssistantIntegration/assets/70645322/25a94dee-a43a-4b32-a3f2-83c455652688)
 
 
-# Adding Grenton objects to Home Assistant
 
-1. Open `Settings` -> `Devices & services` -> `+Add integration`.
-2. Type and select "Grenton Objects".
-3. Add your Grenton object.
-
-# Supported Grenton objects
-
-- Light – DOUT / DIMMER / LED / ZWAVE
-- Switch – DOUT / ZWAVE
-- Cover – ROLLER_SHUTTER / ZWAVE
-- Climate – THERMOSTAT
-- Sensor – ONE_WIRE / TEMPERATURE / ANALOG IN / MODBUS / ZWAVE / User Feature
-- Binary Sensor 0/1 – DIN / BINARY_SENSOR / ZWAVE
-- User Scripts
 
 # Grenton object services
 
