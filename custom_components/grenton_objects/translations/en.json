@@ -102,7 +102,7 @@
         "switch": "Switch – DOUT / ZWAVE",
         "cover": "Cover – ROLLER_SHUTTER / ZWAVE",
         "climate": "Climate – THERMOSTAT",
-        "sensor": "Sensor – ONE_WIRE / TEMPERATURE / ANALOG IN / MODBUS / ZWAVE / User Feature",
+        "sensor": "Sensor – ONE_WIRE / TEMPERATURE / ANALOG IN / MODBUS / ZWAVE / User Feature / Inne",
         "binary_sensor": "Binary Sensor 0/1 – DIN / BINARY_SENSOR / ZWAVE",
         "button": "User Script"
       }

@@ -102,7 +102,7 @@
         "switch": "Przełącznik – DOUT / ZWAVE",
         "cover": "Rolety – ROLLER_SHUTTER / ZWAVE",
         "climate": "Klimat – THERMOSTAT",
-        "sensor": "Czujnik – ONE_WIRE / TEMPERATURE / ANALOG IN / MODBUS / ZWAVE / Cecha użytkownika",
+        "sensor": "Czujnik – ONE_WIRE / TEMPERATURE / ANALOG IN / MODBUS / ZWAVE / Cecha użytkownika / Inne",
         "binary_sensor": "Czujnik binarny 0/1 – DIN / BINARY_SENSOR / ZWAVE",
         "button": "Skrypt użytkownika"
       }
