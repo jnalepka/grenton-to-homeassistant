@@ -24,6 +24,7 @@ from .const import (
     CONF_GRENTON_TYPE_MODBUS_SERVER,
     CONF_GRENTON_TYPE_MODBUS_SLAVE_RTU,
     CONF_GRENTON_TYPE_POWER,
+    CONF_GRENTON_TYPE_ANALOG_SCALED_VALUE,
     CONF_AUTO_UPDATE,
     CONF_UPDATE_INTERVAL, 
     DEFAULT_UPDATE_INTERVAL,
@@ -197,7 +198,8 @@ class GrentonSensor(SensorEntity):
                     CONF_GRENTON_TYPE_MODBUS_CLIENT: 19,
                     CONF_GRENTON_TYPE_MODBUS_SERVER: 10,
                     CONF_GRENTON_TYPE_MODBUS_SLAVE_RTU: 10,
-                    CONF_GRENTON_TYPE_POWER: 5
+                    CONF_GRENTON_TYPE_POWER: 5,
+                    CONF_GRENTON_TYPE_ANALOG_SCALED_VALUE: 1
                 }
                 index = grenton_type_mapping.get(self._grenton_type, 0)
                 command = {"status": f"return {self._grenton_id.split('->')[0]}:execute(0, '{self._grenton_id.split('->')[1]}:get({index})')"}
