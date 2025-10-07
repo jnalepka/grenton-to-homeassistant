@@ -48,7 +48,7 @@ To install manually, copy the grenton_objects folder along with all its contents
 - Switch – DOUT / ZWAVE
 - Cover – ROLLER_SHUTTER / ZWAVE
 - Climate – THERMOSTAT
-- Sensor – ONE_WIRE / TEMPERATURE / ANALOG IN / MODBUS / ZWAVE / User Feature
+- Sensor – ONE_WIRE / TEMPERATURE / ANALOG IN / MODBUS / ZWAVE / User Feature / Other
 - Binary Sensor 0/1 – DIN / BINARY_SENSOR / ZWAVE
 - User Scripts
 
