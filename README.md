@@ -10,11 +10,11 @@ This integration creates objects in Home Assistant based on selected objects fro
 ![image](https://github.com/user-attachments/assets/4cab82f8-548c-4b96-ae29-daaea8c5c11e)
 
 
-If you like what I do, buy me a `coffee`!
-
 <a href="https://tipply.pl/@jnalepka">
     <img src="https://img.shields.io/static/v1?label=Donate&message=%E2%9D%A4&logo=GitHub&color=%23fe8e86" alt="Donate" width="130" height="30">
 </a>
+
+If you like what I do, buy me a `coffee`!
 
 # License
 
@@ -31,9 +31,12 @@ The full license text can be found in the [LICENSE](LICENSE) file.
 The best way to install is by using the Home Assistant Community Store (HACS). [Downloading HACS](https://www.hacs.xyz/docs/use/download/download/).
 After installing HACS, search for and install Grenton Objects.
 
+Youtube tutorial: [HACS and Grenton Objects Installation](https://www.youtube.com/watch?v=LEcBMFAkLcY&t=2s)
+
 ### Option 2 – Manual install (not recommended)
 
 To install manually, copy the grenton_objects folder along with all its contents into the custom_components folder of your Home Assistant setup. This folder is typically found within the /config directory.
+
 
 
 # How to use
@@ -41,6 +44,7 @@ To install manually, copy the grenton_objects folder along with all its contents
 1. Open `Settings` -> `Devices & services` -> `+Add integration`.
 2. Type and select "Grenton Objects".
 3. Add your Grenton object.
+
 
 ### Supported Grenton objects
 
