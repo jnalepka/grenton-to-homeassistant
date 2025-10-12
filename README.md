@@ -26,14 +26,14 @@ The full license text can be found in the [LICENSE](LICENSE) file.
 
 # Installation
 
-### Option 1 – Using HASC (recommended)
+## Using HASC (recommended)
 
 The best way to install is by using the Home Assistant Community Store (HACS). [Downloading HACS](https://www.hacs.xyz/docs/use/download/download/).
 After installing HACS, search for and install Grenton Objects.
 
 Youtube tutorial: [HACS and Grenton Objects Installation](https://www.youtube.com/watch?v=LEcBMFAkLcY&t=2s)
 
-### Option 2 – Manual install (not recommended)
+## Manual installation (not recommended)
 
 To install manually, copy the grenton_objects folder along with all its contents into the custom_components folder of your Home Assistant setup. This folder is typically found within the /config directory.
 
@@ -141,7 +141,6 @@ To use the Home Assistant REST API, you need to create an access token. To do th
 <img width="603" height="295" alt="image" src="https://github.com/user-attachments/assets/36c3a1c8-783d-4bc6-b8cb-6ffcf7e15014" />
 
 
-
 ## Grenton-side requirement for calling Grenton services
 
 1. Create a `HTTPRequest` virtual object on GateHTTP named `HA_Request_Grenton_Set` and configure it as follows:
@@ -221,6 +220,17 @@ GATE_HTTP->HA_Request_Grenton_Set->SendRequest()
 ```
 
 > NOTE! Pay attention to the name of the GATE and the virtual object.
+
+3. Create parameters for the script HA_Integration_Grenton_Set:
+   * ha_entity, default: "-", string
+   * grenton_service, default: "-", string
+   * value_1, default: "-1", number
+   * value_2, default: "-1", number
+   * value_3, default: "-1", number
+   * string_value, default: "-", string
+  
+<img width="602" height="508" alt="image" src="https://github.com/user-attachments/assets/edea5dd3-ff18-459c-be0e-74143d0b4d51" />
+
 
 ## All Grenton services
 
