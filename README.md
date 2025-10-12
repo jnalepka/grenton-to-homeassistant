@@ -249,10 +249,18 @@ GATE_HTTP->HA_Request_Grenton_Set->SendRequest()
 
 ## Example of a dynamic update
 
-### Light - DOUT
+### DOUT - Light / Switch / Binary Sensor
 
 <img width="836" height="643" alt="image" src="https://github.com/user-attachments/assets/fe39f7eb-879f-4b25-a8a2-3b27c3ac64a7" />
 
-<img width="1099" height="550" alt="image" src="https://github.com/user-attachments/assets/9d998362-d38e-435f-8da8-b760e3148940" />
+<img width="1099" height="557" alt="image" src="https://github.com/user-attachments/assets/fa76d811-c09a-4adc-9144-f29944605235" />
+
+### DIMMER - Light
+
+<img width="836" height="643" alt="image" src="https://github.com/user-attachments/assets/9bf141b2-36f1-48b2-ab67-077526f4a2ef" />
+
+<img width="1099" height="557" alt="image" src="https://github.com/user-attachments/assets/ae260a69-7708-433d-bd3b-e028da617c40" />
+
+### LED - Light
 
 
