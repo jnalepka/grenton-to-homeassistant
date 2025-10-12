@@ -45,7 +45,7 @@ To install manually, copy the grenton_objects folder along with all its contents
 
   ![image](https://github.com/jnalepka/GrentonHomeAssistantIntegration/assets/70645322/1d69d9fc-95f3-4f89-90e3-588b8637ffad)
 
-2. Create a script named `HA_Integration_Script` and attach it to the OnRequest event of the virtual object.
+2. Create a script named `HA_Integration_Script`.
 
 ```lua
 -- ╔═══════════════════════════════════════════════════════════════════════╗
@@ -95,7 +95,9 @@ GATE_HTTP->HA_Listener_Integration->SetResponseBody(resp)
 GATE_HTTP->HA_Listener_Integration->SendResponse()
 ```
 
-> NOTE! Pay attention to the name of the GATE and the Object.
+> NOTE! Pay attention to the name of the GATE and the virtual object.
+
+3. Attach `HA_Integration_Script` script to the `OnRequest` event of the `HA_Listener_Integration` virtual object.
 
 ![image](https://github.com/jnalepka/GrentonHomeAssistantIntegration/assets/70645322/25a94dee-a43a-4b32-a3f2-83c455652688)
 
@@ -135,6 +137,10 @@ To configure dynamic updates, go to `Settings -> Devices & Services -> Grenton O
 ## Create long-lived access tokens
 
 To use the Home Assistant REST API, you need to create an access token. To do this, go to `Profile → Security → Long-Lived Access Tokens`, create a token, and then copy it.
+
+<img width="603" height="295" alt="image" src="https://github.com/user-attachments/assets/36c3a1c8-783d-4bc6-b8cb-6ffcf7e15014" />
+
+
 
 ## Grenton-side requirement for calling Grenton services
 
@@ -214,10 +220,7 @@ GATE_HTTP->HA_Request_Grenton_Set->SetRequestBody(reqJson)
 GATE_HTTP->HA_Request_Grenton_Set->SendRequest()
 ```
 
-> NOTE! Pay attention to the name of the GATE and the Object.
-
-
-
+> NOTE! Pay attention to the name of the GATE and the virtual object.
 
 ## All Grenton services
 
@@ -233,3 +236,13 @@ GATE_HTTP->HA_Request_Grenton_Set->SendRequest()
 | Climate                            |  set_therm_state       | state [0 (off), 1 (on)], direction (optional) [0 (normal/heat), 1 (reverse/cool)] |
 | Climate                            |  set_therm_target_temp | temp (target temp)                                |
 | Climate                            |  set_therm_current_temp | temp (current temp)                              |
+
+## Example of a dynamic update
+
+### Light - DOUT
+
+<img width="836" height="643" alt="image" src="https://github.com/user-attachments/assets/fe39f7eb-879f-4b25-a8a2-3b27c3ac64a7" />
+
+<img width="1099" height="550" alt="image" src="https://github.com/user-attachments/assets/9d998362-d38e-435f-8da8-b760e3148940" />
+
+
