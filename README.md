@@ -37,31 +37,7 @@ Youtube tutorial: [HACS and Grenton Objects Installation](https://www.youtube.co
 
 To install manually, copy the grenton_objects folder along with all its contents into the custom_components folder of your Home Assistant setup. This folder is typically found within the /config directory.
 
-
-
-# How to use
-
-1. Open `Settings` -> `Devices & services` -> `+Add integration`.
-2. Type and select "Grenton Objects".
-3. Add your Grenton object.
-
-
-### Supported Grenton objects
-
-- Light – DOUT / DIMMER / LED / ZWAVE
-- Switch – DOUT / ZWAVE
-- Cover – ROLLER_SHUTTER / ZWAVE
-- Climate – THERMOSTAT
-- Sensor – ONE_WIRE / TEMPERATURE / ANALOG IN / MODBUS / ZWAVE / User Feature / Other
-- Binary Sensor 0/1 – DIN / BINARY_SENSOR / ZWAVE
-- User Scripts
-
-# Simple updates
-
-If you only add a small number of objects (up to about 20), the basic method of updating states from Grenton is enough.
-You just need a little configuration on the Grenton side, shown below.
-
-## Requirement on the Grenton side
+# Requirements on the Grenton side
 
 1. Create a `HTTPListener` virtual object on GateHTTP named `HA_Listener_Integration` and configure it as follows:
    * Path - `/HAlistener` (You can edit it if you want)
@@ -78,7 +54,7 @@ You just need a little configuration on the Grenton side, shown below.
 -- ║ Script: HA_Integration_Script                                         ║
 -- ║ Description: Display and control Grenton objects in Home Assistant.   ║
 -- ║                                                                       ║
--- ║ License: MIT License                                                  ║
+-- ║ License: Free for non-commercial use                                  ║
 -- ║ Github: https://github.com/jnalepka/grenton-to-homeassistant          ║
 -- ║                                                                       ║
 -- ║ Script version: 1.0.0                                                 ║
@@ -123,19 +99,129 @@ GATE_HTTP->HA_Listener_Integration->SendResponse()
 
 ![image](https://github.com/jnalepka/GrentonHomeAssistantIntegration/assets/70645322/25a94dee-a43a-4b32-a3f2-83c455652688)
 
+# How to add an object
 
-# Advanced updates
+1. Open `Settings` -> `Devices & services` -> `+Add integration`.
+2. Type and select "Grenton Objects".
+3. Add your Grenton object.
 
-If you add a larger number of Grenton objects (>20) and want the state updates to run in a more controlled way, you can go to the object settings in HA: Settings -> Devices & services -> Grenton Objects.
-For each object, click the settings icon to adjust the `Refresh interval` (how often HA asks for values), or disable the `Automatic Object Updates` and set it up manually using services.
+> NOTE! After adding the object, a Home Assistant restart is required.
 
-## Calling services in Grenton
+### Supported Grenton objects
 
-todo
+- Light – DOUT / DIMMER / LED / ZWAVE
+- Switch – DOUT / ZWAVE
+- Cover – ROLLER_SHUTTER / ZWAVE
+- Climate – THERMOSTAT
+- Sensor – ONE_WIRE / TEMPERATURE / ANALOG IN / MODBUS / ZWAVE / User Feature / Other
+- Binary Sensor 0/1 – DIN / BINARY_SENSOR / ZWAVE
+- User Scripts
 
-## Grenton object services
+# Auto updates
 
-| HA device_type                     |  service               | parameters                                        |
+The add-on automatically retrieves the status of objects from Grenton. This works well for a small number of objects (around 15) and when immediate state updates are not required.
+You can also go to `Settings -> Devices & Services -> Grenton Objects` and, by clicking the settings icon for a specific object, configure its data refresh interval.
+
+> NOTE! After adding the object, a Home Assistant restart is required.
+
+For a larger number of objects or when dynamic state updates are needed, dynamic updates should be configured.
+
+# Dynamic updates
+
+To configure dynamic updates, go to `Settings -> Devices & Services -> Grenton Objects`, and for each object you want to enable dynamic updates for, disable automatic updates.
+
+> NOTE! After changing an object's settings, a Home Assistant restart is required.
+
+## Create long-lived access tokens
+
+To use the Home Assistant REST API, you need to create an access token. To do this, go to `Profile → Security → Long-Lived Access Tokens`, create a token, and then copy it.
+
+## Grenton-side requirement for calling Grenton services
+
+1. Create a `HTTPRequest` virtual object on GateHTTP named `HA_Request_Grenton_Set` and configure it as follows:
+   * Host - `http://192.168.0.95:8123` (Enter the IP address of your Home Assistant.)
+   * Path - `\z`
+   * Method = `POST`
+   * RequestType = `JSON`
+   * ResponseType = `JSON`
+   * RequestHeaders = `Authorization: Bearer <your token>` (paste your long-lived access token)
+
+2. Create a script named `HA_Integration_Grenton_Set` and attach it to the OnRequest event of the virtual object.
+
+```lua
+-- ╔═══════════════════════════════════════════════════════════════════════╗
+-- ║                        Author: Jan Nalepka                            ║
+-- ║                                                                       ║
+-- ║ Script: HA_Integration_Grenton_Set                                    ║
+-- ║ Description: Send a service command for an entity in Home Assistant.  ║
+-- ║                                                                       ║
+-- ║ License: Free for non-commercial use                                  ║
+-- ║ Github: https://github.com/jnalepka/grenton-to-homeassistant          ║
+-- ║                                                                       ║
+-- ║ Version: 1.0.0                                                        ║
+-- ║                                                                       ║
+-- ║ Requirements:                                                         ║
+-- ║    Gate Http:                                                         ║
+-- ║          1.  Gate Http NAME: "GATE_HTTP" <or change it in this script>║
+-- ║                                                                       ║
+-- ║    Script parameters:                                                 ║
+-- ║          1.  ha_entity, default: "-", string                          ║
+-- ║          2.  grenton_service, default: "-", string                    ║
+-- ║          3.  value_1, default: "-1", number                           ║
+-- ║          4.  value_2, default: "-1", number                           ║
+-- ║          5.  value_3, default: "-1", number                           ║
+-- ║          6.  string_value, default: "-", string                       ║
+-- ║                                                                       ║
+-- ║    Http_Request virtual object:                                       ║
+-- ║          Name: HA_Integration_Grenton_Set                             ║
+-- ║          Host: http://192.168.0.114:8123  (example)                   ║
+-- ║          Path: \z                                                     ║
+-- ║          Method: "POST"                                               ║
+-- ║          RequestType: JSON                                            ║
+-- ║          ResponseType: JSON                                           ║
+-- ║          RequestHeaders: Authorization: Bearer <your HA token>        ║
+-- ║                                                                       ║
+-- ╚═══════════════════════════════════════════════════════════════════════╝
+
+local path = "/api/services/grenton_objects/"..grenton_service
+local reqJson = { entity_id = ha_entity }
+  
+if grenton_service == "set_state" then
+    reqJson.state = value_1
+elseif grenton_service == "set_brightness" then
+    reqJson.brightness = value_1
+elseif grenton_service == "set_rgb" then
+    reqJson.hex = string_value
+elseif grenton_service == "set_value" then
+    reqJson.value = value_1
+elseif grenton_service == "set_cover" then
+    reqJson.state = value_1
+    reqJson.position = value_2
+    if value_3 ~= "-1" then
+        reqJson.lamel = value_3
+    end
+elseif grenton_service == "set_therm_state" then
+    reqJson.state = value_1
+    if value_2 ~= "-1" then
+        reqJson.direction = value_2
+    end
+elseif grenton_service == "set_therm_target_temp" or grenton_service == "set_therm_current_temp" then
+    reqJson.temp = value_1
+end
+
+GATE_HTTP->HA_Request_Grenton_Set->SetPath(path)
+GATE_HTTP->HA_Request_Grenton_Set->SetRequestBody(reqJson)
+GATE_HTTP->HA_Request_Grenton_Set->SendRequest()
+```
+
+> NOTE! Pay attention to the name of the GATE and the Object.
+
+
+
+
+## All Grenton services
+
+| HA device_type                     |  grenton service       | parameters                                        |
 |------------------------------------|------------------------|---------------------------------------------------|
 | Binary Sensor 0/1                  |  set_state             | state [0 (off), 1 (on)]                           |
 | Switch                             |  set_state             | state [0 (off), 1 (on)]                           |
