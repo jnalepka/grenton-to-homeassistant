@@ -265,7 +265,22 @@ GATE_HTTP->HA_Request_Grenton_Set->SendRequest()
 
 <img width="836" height="643" alt="image" src="https://github.com/user-attachments/assets/e7813732-cf0d-49ad-9f3b-6c3c5b2a230d" />
 
-<img width="1099" height="557" alt="image" src="https://github.com/user-attachments/assets/e23f28ee-518a-48fd-9703-598a57acabdd" />
+<img width="1099" height="559" alt="image" src="https://github.com/user-attachments/assets/b459e424-0a77-477f-bad1-05c6556fdef4" />
 
-<img width="1099" height="911" alt="image" src="https://github.com/user-attachments/assets/f6168989-1e58-4de4-bc2e-4c2b1f8a3977" />
+### ONE_WIRE / TEMPERATURE / ANALOG IN / Other - Sensor
+
+<img width="836" height="643" alt="image" src="https://github.com/user-attachments/assets/1e7ea14f-7d9b-481f-b1e1-ede387fde552" />
+
+<img width="1099" height="559" alt="image" src="https://github.com/user-attachments/assets/446f88af-9e21-4961-afb3-4122cd3597cd" />
+
+
+<img width="1099" height="899" alt="image" src="https://github.com/user-attachments/assets/ba213fe7-ee07-4ee8-bf46-2de10025ffeb" />
+
+### ROLLER_SHUTTER (without lamel) - Cover
+
+<img width="836" height="697" alt="image" src="https://github.com/user-attachments/assets/53d11780-b770-461e-8e42-03ee41e8bcba" />
+
+<img width="1099" height="557" alt="image" src="https://github.com/user-attachments/assets/8124101c-54b9-4728-8d63-349842134f89" />
+
+
 
