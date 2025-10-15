@@ -105,6 +105,8 @@ GATE_HTTP->HA_Listener_Integration->SendResponse()
 
 # How to add an object
 
+<img src="https://user-images.githubusercontent.com/47686437/168548113-b3cd4206-3281-445b-b7c6-bc0a3251293d.png" height="20"> Youtube tutorial: [Configure Grenton side and add first object](https://youtu.be/LEcBMFAkLcY)
+
 1. Open `Settings` -> `Devices & services` -> `+Add integration`.
 2. Type and select "Grenton Objects".
 3. Add your Grenton object.
