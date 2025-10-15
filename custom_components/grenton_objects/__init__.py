@@ -1,8 +1,8 @@
 """
 ==================================================
 Author: Jan Nalepka
-Script version: 3.1
-Date: 01.10.2025
+Script version: 3.2
+Date: 16.10.2025
 Repository: https://github.com/jnalepka/grenton-to-homeassistant
 ==================================================
 """
@@ -195,7 +195,13 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
         
     return True
 
+async def async_update_options(hass: HomeAssistant, entry: ConfigEntry):
+    await hass.config_entries.async_reload(entry.entry_id)
+
 async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> bool:
+    config_entry.async_on_unload(
+        config_entry.add_update_listener(async_update_options)
+    )
     device = config_entry.data
     platform = device["device_type"]
     if platform:
