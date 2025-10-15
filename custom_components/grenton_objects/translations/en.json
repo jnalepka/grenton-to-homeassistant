@@ -90,7 +90,8 @@
         "data": {
           "api_endpoint": "URL to Grenton HTTP Listener",
           "auto_update": "Automatic Object Updates",
-          "update_interval": "Refresh interval (in seconds)"
+          "update_interval": "Refresh interval (in seconds)",
+          "reversed": "Reversed Direction"
         }
       }
     }
