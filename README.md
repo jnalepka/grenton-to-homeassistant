@@ -31,13 +31,15 @@ The full license text can be found in the [LICENSE](LICENSE) file.
 The best way to install is by using the Home Assistant Community Store (HACS). [Downloading HACS](https://www.hacs.xyz/docs/use/download/download/).
 After installing HACS, search for and install Grenton Objects.
 
-Youtube tutorial: [HACS and Grenton Objects Installation](https://www.youtube.com/watch?v=LEcBMFAkLcY&t=2s)
+Youtube tutorial: [HACS and Grenton Objects Installation](https://youtu.be/LEcBMFAkLcY)
 
 ## Manual installation (not recommended)
 
 To install manually, copy the grenton_objects folder along with all its contents into the custom_components folder of your Home Assistant setup. This folder is typically found within the /config directory.
 
 # Requirements on the Grenton side
+
+Youtube tutorial: [Configure Grenton side and add first object](https://youtu.be/LEcBMFAkLcY)
 
 1. Create a `HTTPListener` virtual object on GateHTTP named `HA_Listener_Integration` and configure it as follows:
    * Path - `/HAlistener` (You can edit it if you want)
