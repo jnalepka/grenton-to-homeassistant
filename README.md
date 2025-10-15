@@ -107,8 +107,6 @@ GATE_HTTP->HA_Listener_Integration->SendResponse()
 2. Type and select "Grenton Objects".
 3. Add your Grenton object.
 
-> NOTE! After adding the object, a Home Assistant restart is required.
-
 ### Supported Grenton objects
 
 - Light – DOUT / DIMMER / LED / ZWAVE
@@ -124,7 +122,7 @@ GATE_HTTP->HA_Listener_Integration->SendResponse()
 The add-on automatically retrieves the status of objects from Grenton. This works well for a small number of objects (around 15) and when immediate state updates are not required.
 You can also go to `Settings -> Devices & Services -> Grenton Objects` and, by clicking the settings icon for a specific object, configure its data refresh interval.
 
-> NOTE! After adding the object, a Home Assistant restart is required.
+> NOTE! After changing the object settings, a Home Assistant restart is required.
 
 For a larger number of objects or when dynamic state updates are needed, dynamic updates should be configured.
 
@@ -283,4 +281,17 @@ GATE_HTTP->HA_Request_Grenton_Set->SendRequest()
 <img width="1099" height="557" alt="image" src="https://github.com/user-attachments/assets/8124101c-54b9-4728-8d63-349842134f89" />
 
 
+### THERMOSTAT - Climate
+
+<img width="836" height="643" alt="image" src="https://github.com/user-attachments/assets/87c94098-7eed-4ecc-879b-7c4d991f4bc8" />
+
+<img width="836" height="664" alt="image" src="https://github.com/user-attachments/assets/489b1814-4d31-484e-92ea-71f944289fa9" />
+
+<img width="836" height="643" alt="image" src="https://github.com/user-attachments/assets/dd1293f6-0405-4d31-986a-f1da153ffc3d" />
+
+<img width="1059" height="563" alt="image" src="https://github.com/user-attachments/assets/e11022ea-9e23-4e40-899e-0fab24ed40b6" />
+
+<img width="836" height="643" alt="image" src="https://github.com/user-attachments/assets/d9792c72-9bfe-427f-8ca2-92f45365a8af" />
+
+<img width="1059" height="563" alt="image" src="https://github.com/user-attachments/assets/23ee434c-d681-405f-82b8-df73fd008368" />
 
