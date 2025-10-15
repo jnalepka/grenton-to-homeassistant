@@ -233,6 +233,33 @@ GATE_HTTP->HA_Request_Grenton_Set->SendRequest()
   
 <img width="602" height="508" alt="image" src="https://github.com/user-attachments/assets/edea5dd3-ff18-459c-be0e-74143d0b4d51" />
 
+## How to perform a dynamic update
+
+| Grenton object type               |   object event  | ha_entity example   |  grenton service    | value_1             | value_2  | value_3  | string_value |
+|-----------------------------------|-----------------|---------------------|---------------------|---------------------|----------|----------|--------------|
+| DOUT - Light / Switch / Binary Sensor  | OnValueChange   | light.lamp1         |   set_state         | CLU->dout->Value  |    (default)     |      (default)    |       (default)     |
+| DIMMER - Light                    | OnValueChange   | light.lamp2         |   set_brightness         | CLU->dimmer->Value  |    (default)     |     (default)    |       (default)    |
+| LED - Light                      | OnValueChange   | light.lamp3         |   set_brightness         | CLU->led->Value  |    (default)    |     (default)    |       (default)     |
+| -                             | OnValueChange   | light.lamp3         |   set_rgb         | (default)  |    (default)     |      (default)    |       CLU->led->RGB     |
+| ONE_WIRE / TEMPERATURE / ANALOG IN / Other - Sensor  | OnValueChange   | sensor.tempsens1         |   set_value         | CLU->sensor->Value  |    (default)    |     (default)    |       (default)     |
+| ROLLER_SHUTTER (with lamel) - Cover  | OnStateChange   | cover.blinds1         |   set_cover         | CLU->roller->State  |    CLU->roller->Position   |     CLU->roller->LamelPosition    |       (default)     |
+| -                      | OnPositionChange   | cover.blinds1         |   set_cover         | CLU->roller->State  |    CLU->roller->Position   |     CLU->roller->LamelPosition    |       (default)     |
+| -                      | OnLamelPositionChange   | cover.blinds1         |   set_cover         | CLU->roller->State  |    CLU->roller->Position   |     CLU->roller->LamelPosition    |       (default)     |
+| ROLLER_SHUTTER (without lamel) - Cover  | OnStateChange   | cover.blinds1         |   set_cover         | CLU->roller->State  |    CLU->roller->Position   |     (default)    |       (default)     |
+| -                      | OnPositionChange   | cover.blinds1         |   set_cover         | CLU->roller->State  |    CLU->roller->Position   |     (default)     |       (default)     |
+| THERMOSTAT - Climate  | OnStart   | climate.therm1         |   set_therm_state         | CLU->thermostat->State  |    (default)     |      (default)    |       (default)     |
+| -                     | OnStop   | climate.therm1         |   set_therm_state         | CLU->thermostat->State  |    (default)     |      (default)    |       (default)     |
+| -                     | OnChange   | climate.therm1         |   set_therm_target_temp         | CLU->thermostat->PointValue  |    (default)     |      (default)    |       (default)     |
+| *THERMOSTAT temp sensor  | OnValueChange   | climate.therm1         |   set_therm_current_temp         | CLU->sensor->Value  |    (default)     |      (default)    |       (default)     |
+
+## Usage example
+
+### DOUT - Light / Switch / Binary Sensor
+
+<img width="836" height="643" alt="image" src="https://github.com/user-attachments/assets/fe39f7eb-879f-4b25-a8a2-3b27c3ac64a7" />
+
+<img width="1099" height="557" alt="image" src="https://github.com/user-attachments/assets/fa76d811-c09a-4adc-9144-f29944605235" />
+
 
 ## All Grenton services
 
@@ -248,54 +275,3 @@ GATE_HTTP->HA_Request_Grenton_Set->SendRequest()
 | Climate                            |  set_therm_state       | state [0 (off), 1 (on)], direction (optional) [0 (normal/heat), 1 (reverse/cool)] |
 | Climate                            |  set_therm_target_temp | temp (target temp)                                |
 | Climate                            |  set_therm_current_temp | temp (current temp)                              |
-
-## Example of a dynamic update
-
-### DOUT - Light / Switch / Binary Sensor
-
-<img width="836" height="643" alt="image" src="https://github.com/user-attachments/assets/fe39f7eb-879f-4b25-a8a2-3b27c3ac64a7" />
-
-<img width="1099" height="557" alt="image" src="https://github.com/user-attachments/assets/fa76d811-c09a-4adc-9144-f29944605235" />
-
-### DIMMER - Light
-
-<img width="836" height="643" alt="image" src="https://github.com/user-attachments/assets/9bf141b2-36f1-48b2-ab67-077526f4a2ef" />
-
-<img width="1099" height="557" alt="image" src="https://github.com/user-attachments/assets/ae260a69-7708-433d-bd3b-e028da617c40" />
-
-### LED - Light
-
-<img width="836" height="643" alt="image" src="https://github.com/user-attachments/assets/e7813732-cf0d-49ad-9f3b-6c3c5b2a230d" />
-
-<img width="1099" height="559" alt="image" src="https://github.com/user-attachments/assets/b459e424-0a77-477f-bad1-05c6556fdef4" />
-
-### ONE_WIRE / TEMPERATURE / ANALOG IN / Other - Sensor
-
-<img width="836" height="643" alt="image" src="https://github.com/user-attachments/assets/1e7ea14f-7d9b-481f-b1e1-ede387fde552" />
-
-<img width="1099" height="559" alt="image" src="https://github.com/user-attachments/assets/446f88af-9e21-4961-afb3-4122cd3597cd" />
-
-
-<img width="1099" height="899" alt="image" src="https://github.com/user-attachments/assets/ba213fe7-ee07-4ee8-bf46-2de10025ffeb" />
-
-### ROLLER_SHUTTER (without lamel) - Cover
-
-<img width="836" height="697" alt="image" src="https://github.com/user-attachments/assets/53d11780-b770-461e-8e42-03ee41e8bcba" />
-
-<img width="1099" height="557" alt="image" src="https://github.com/user-attachments/assets/8124101c-54b9-4728-8d63-349842134f89" />
-
-
-### THERMOSTAT - Climate
-
-<img width="836" height="643" alt="image" src="https://github.com/user-attachments/assets/87c94098-7eed-4ecc-879b-7c4d991f4bc8" />
-
-<img width="836" height="664" alt="image" src="https://github.com/user-attachments/assets/489b1814-4d31-484e-92ea-71f944289fa9" />
-
-<img width="836" height="643" alt="image" src="https://github.com/user-attachments/assets/dd1293f6-0405-4d31-986a-f1da153ffc3d" />
-
-<img width="1059" height="563" alt="image" src="https://github.com/user-attachments/assets/e11022ea-9e23-4e40-899e-0fab24ed40b6" />
-
-<img width="836" height="643" alt="image" src="https://github.com/user-attachments/assets/d9792c72-9bfe-427f-8ca2-92f45365a8af" />
-
-<img width="1059" height="563" alt="image" src="https://github.com/user-attachments/assets/23ee434c-d681-405f-82b8-df73fd008368" />
-
