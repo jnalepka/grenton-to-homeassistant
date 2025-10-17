@@ -134,8 +134,6 @@ For a larger number of objects or when dynamic state updates are needed, dynamic
 
 To configure dynamic updates, go to `Settings -> Devices & Services -> Grenton Objects`, and for each object you want to enable dynamic updates for, disable automatic updates.
 
-> NOTE! After changing an object's settings, a Home Assistant restart is required.
-
 ## Create long-lived access tokens
 
 To use the Home Assistant REST API, you need to create an access token. To do this, go to `Profile → Security → Long-Lived Access Tokens`, create a token, and then copy it.
