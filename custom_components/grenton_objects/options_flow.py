@@ -42,9 +42,7 @@ class GrentonOptionsFlowHandler(config_entries.OptionsFlow):
         )
 
         data_schema = vol.Schema({
-            vol.Required(CONF_API_ENDPOINT, default=default_endpoint): str,
-            vol.Required(CONF_AUTO_UPDATE, default=default_auto_update): bool,
-            vol.Required(CONF_UPDATE_INTERVAL, default=default_update_interval): vol.All(vol.Coerce(int), vol.Range(min=5, max=3600))
+            vol.Required(CONF_API_ENDPOINT, default=default_endpoint): str
         })
 
         if self.device_type == "cover":
@@ -62,6 +60,11 @@ class GrentonOptionsFlowHandler(config_entries.OptionsFlow):
             data_schema = data_schema.extend({
                 vol.Required(CONF_GRENTON_TYPE, default=default_type): vol.In(SENSOR_GRENTON_TYPE_OPTIONS)
             })
+
+        data_schema = data_schema.extend({
+            vol.Required(CONF_AUTO_UPDATE, default=default_auto_update): bool,
+            vol.Required(CONF_UPDATE_INTERVAL, default=default_update_interval): vol.All(vol.Coerce(int), vol.Range(min=5, max=3600))
+        })
 
         return self.async_show_form(
             step_id="init", 
