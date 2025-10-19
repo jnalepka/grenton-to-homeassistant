@@ -1,8 +1,8 @@
 """
 ==================================================
 Author: Jan Nalepka
-Script version: 3.1
-Date: 16.10.2025
+Script version: 3.2
+Date: 19.10.2025
 Repository: https://github.com/jnalepka/grenton-to-homeassistant
 ==================================================
 """
@@ -14,7 +14,10 @@ from .const import (
     CONF_AUTO_UPDATE,
     CONF_UPDATE_INTERVAL, 
     DEFAULT_UPDATE_INTERVAL,
-    CONF_REVERSED
+    CONF_REVERSED,
+    CONF_GRENTON_TYPE,
+    LIGHT_GRENTON_TYPE_OPTIONS,
+    SENSOR_GRENTON_TYPE_OPTIONS
 )
 
 class GrentonOptionsFlowHandler(config_entries.OptionsFlow):
@@ -39,15 +42,34 @@ class GrentonOptionsFlowHandler(config_entries.OptionsFlow):
         )
 
         data_schema = vol.Schema({
-            vol.Required(CONF_API_ENDPOINT, default=default_endpoint): str,
+            vol.Required(CONF_API_ENDPOINT, default=default_endpoint): str
+        })
+
+        if self.device_type == "cover":
+            default_reversed = self.config_entry.options.get(CONF_REVERSED, self.config_entry.data.get(CONF_REVERSED))
+            data_schema = data_schema.extend({
+                vol.Required(CONF_REVERSED, default=default_reversed): bool
+            })
+        elif self.device_type == "light":
+            default_type = self.config_entry.options.get(CONF_GRENTON_TYPE, self.config_entry.data.get(CONF_GRENTON_TYPE))
+            data_schema = data_schema.extend({
+                vol.Required(CONF_GRENTON_TYPE, default=default_type): vol.In(LIGHT_GRENTON_TYPE_OPTIONS)
+            })
+        elif self.device_type == "sensor":
+            default_type = self.config_entry.options.get(CONF_GRENTON_TYPE, self.config_entry.data.get(CONF_GRENTON_TYPE))
+            data_schema = data_schema.extend({
+                vol.Required(CONF_GRENTON_TYPE, default=default_type): vol.In(SENSOR_GRENTON_TYPE_OPTIONS)
+            })
+
+        data_schema = data_schema.extend({
             vol.Required(CONF_AUTO_UPDATE, default=default_auto_update): bool,
             vol.Required(CONF_UPDATE_INTERVAL, default=default_update_interval): vol.All(vol.Coerce(int), vol.Range(min=5, max=3600))
         })
 
-        if self.device_type == "cover":
-            default_reversed = self.config_entry.options.get(CONF_REVERSED, False)
-            data_schema = data_schema.extend({
-                vol.Required(CONF_REVERSED, default=default_reversed): bool
-            })
-
-        return self.async_show_form(step_id="init", data_schema=data_schema)
+        return self.async_show_form(
+            step_id="init", 
+            data_schema=data_schema, 
+            description_placeholders={
+                "grenton_id": self.config_entry.data.get("grenton_id")
+            }
+        )
