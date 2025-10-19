@@ -14,7 +14,10 @@ from .const import (
     CONF_AUTO_UPDATE,
     CONF_UPDATE_INTERVAL, 
     DEFAULT_UPDATE_INTERVAL,
-    CONF_REVERSED
+    CONF_REVERSED,
+    CONF_GRENTON_TYPE,
+    LIGHT_GRENTON_TYPE_OPTIONS,
+    SENSOR_GRENTON_TYPE_OPTIONS
 )
 
 class GrentonOptionsFlowHandler(config_entries.OptionsFlow):
@@ -48,6 +51,16 @@ class GrentonOptionsFlowHandler(config_entries.OptionsFlow):
             default_reversed = self.config_entry.options.get(CONF_REVERSED, False)
             data_schema = data_schema.extend({
                 vol.Required(CONF_REVERSED, default=default_reversed): bool
+            })
+        elif self.device_type == "light":
+            default_type = self.config_entry.options.get(CONF_GRENTON_TYPE)
+            data_schema = data_schema.extend({
+                vol.Required(CONF_GRENTON_TYPE, default=default_type): vol.In(LIGHT_GRENTON_TYPE_OPTIONS)
+            })
+        elif self.device_type == "sensor":
+            default_type = self.config_entry.options.get(CONF_GRENTON_TYPE)
+            data_schema = data_schema.extend({
+                vol.Required(CONF_GRENTON_TYPE, default=default_type): vol.In(SENSOR_GRENTON_TYPE_OPTIONS)
             })
 
         return self.async_show_form(
