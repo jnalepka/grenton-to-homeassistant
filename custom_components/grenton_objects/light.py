@@ -24,7 +24,8 @@ from .const import (
     CONF_AUTO_UPDATE,
     CONF_UPDATE_INTERVAL, 
     DEFAULT_UPDATE_INTERVAL,
-    DOMAIN
+    DOMAIN,
+    LIGHT_GRENTON_TYPE_LED
 )
 import logging
 import voluptuous as vol
@@ -81,14 +82,7 @@ class GrentonLight(LightEntity):
         
         grenton_id_part_0, grenton_id_part_1 = self._grenton_id.split('->')
         
-        led_types = {
-            CONF_GRENTON_TYPE_LED_R,
-            CONF_GRENTON_TYPE_LED_G,
-            CONF_GRENTON_TYPE_LED_B,
-            CONF_GRENTON_TYPE_LED_W
-        }
-        
-        if self._grenton_type in led_types:
+        if self._grenton_type in LIGHT_GRENTON_TYPE_LED:
             self._unique_id = f"grenton_{grenton_id_part_1}_{grenton_type}"
         else:
             self._unique_id = f"grenton_{grenton_id_part_1}"
