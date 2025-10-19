@@ -1,8 +1,8 @@
 """
 ==================================================
 Author: Jan Nalepka
-Script version: 3.1
-Date: 16.10.2025
+Script version: 3.2
+Date: 19.10.2025
 Repository: https://github.com/jnalepka/grenton-to-homeassistant
 ==================================================
 """
@@ -50,4 +50,10 @@ class GrentonOptionsFlowHandler(config_entries.OptionsFlow):
                 vol.Required(CONF_REVERSED, default=default_reversed): bool
             })
 
-        return self.async_show_form(step_id="init", data_schema=data_schema)
+        return self.async_show_form(
+            step_id="init", 
+            data_schema=data_schema, 
+            description_placeholders={
+                "grenton_id": self.config_entry.data.get("grenton_id")
+            }
+        )

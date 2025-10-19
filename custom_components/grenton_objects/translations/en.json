@@ -86,7 +86,7 @@
   "options": {
     "step": {
       "init": {
-        "title": "Grenton Object Options",
+        "title": "{grenton_id}",
         "description": "Note! If automatic updates are disabled, Home Assistant will not automatically retrieve the state from Grenton; manual updates will be required (see manual).",
         "data": {
           "api_endpoint": "URL to Grenton HTTP Listener",
