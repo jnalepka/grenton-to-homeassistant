@@ -25,7 +25,8 @@ from .const import (
     DEVICE_CLASS_OPTIONS,
     STATE_CLASS_OPTIONS,
     LIGHT_GRENTON_TYPE_OPTIONS,
-    SENSOR_GRENTON_TYPE_OPTIONS
+    SENSOR_GRENTON_TYPE_OPTIONS,
+    LIGHT_GRENTON_TYPE_LED
 )
 from .options_flow import GrentonOptionsFlowHandler
 from homeassistant.helpers.selector import SelectSelector, SelectSelectorConfig
@@ -74,11 +75,18 @@ class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         if grenton_id and "->" in grenton_id:
             self.hass.data[f"{DOMAIN}_last_grenton_clu_id"] = grenton_id.split("->")[0]
 
-    def _is_duplicate_grenton_id(self, grenton_id: str) -> bool:
-        return any(
-            entry.data.get(CONF_GRENTON_ID) == grenton_id
-            for entry in self._async_current_entries()
-        )
+    def _is_duplicate_grenton_id(self, grenton_id: str, grenton_type: str | None = None) -> bool:
+        for entry in self._async_current_entries():
+            existing_id = entry.data.get(CONF_GRENTON_ID)
+            existing_type = entry.data.get(CONF_GRENTON_TYPE)
+
+            if existing_id == grenton_id and existing_type == grenton_type:
+                return True
+
+            if grenton_type not in LIGHT_GRENTON_TYPE_LED and existing_id == grenton_id:
+                return True
+
+        return False
 
     async def async_step_light_config(self, user_input=None):
         if user_input is None:
@@ -87,7 +95,7 @@ class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 data_schema=self._get_device_schema()
             )
         
-        if self._is_duplicate_grenton_id(user_input[CONF_GRENTON_ID]):
+        if self._is_duplicate_grenton_id(user_input[CONF_GRENTON_ID], user_input[CONF_GRENTON_TYPE]):
             return self.async_show_form(
                 step_id="light_config",
                 data_schema=self._get_device_schema(),
