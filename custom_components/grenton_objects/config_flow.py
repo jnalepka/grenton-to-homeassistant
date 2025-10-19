@@ -1,8 +1,8 @@
 """
 ==================================================
 Author: Jan Nalepka
-Script version: 3.2
-Date: 18.10.2025
+Script version: 3.3
+Date: 20.10.2025
 Repository: https://github.com/jnalepka/grenton-to-homeassistant
 ==================================================
 """
@@ -89,7 +89,7 @@ class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         
         if self._is_duplicate_grenton_id(user_input[CONF_GRENTON_ID]):
             return self.async_show_form(
-                step_id="sensor_config",
+                step_id="light_config",
                 data_schema=self._get_device_schema(),
                 errors={"base": "duplicate_grenton_id"}
             )
@@ -113,7 +113,7 @@ class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         
         if self._is_duplicate_grenton_id(user_input[CONF_GRENTON_ID]):
             return self.async_show_form(
-                step_id="sensor_config",
+                step_id="switch_config",
                 data_schema=self._get_device_schema(),
                 errors={"base": "duplicate_grenton_id"}
             )
@@ -136,7 +136,7 @@ class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         
         if self._is_duplicate_grenton_id(user_input[CONF_GRENTON_ID]):
             return self.async_show_form(
-                step_id="sensor_config",
+                step_id="cover_config",
                 data_schema=self._get_device_schema(),
                 errors={"base": "duplicate_grenton_id"}
             )
@@ -160,7 +160,7 @@ class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         
         if self._is_duplicate_grenton_id(user_input[CONF_GRENTON_ID]):
             return self.async_show_form(
-                step_id="sensor_config",
+                step_id="climate_config",
                 data_schema=self._get_device_schema(),
                 errors={"base": "duplicate_grenton_id"}
             )
@@ -209,7 +209,7 @@ class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         
         if self._is_duplicate_grenton_id(user_input[CONF_GRENTON_ID]):
             return self.async_show_form(
-                step_id="sensor_config",
+                step_id="binary_sensor_config",
                 data_schema=self._get_device_schema(),
                 errors={"base": "duplicate_grenton_id"}
             )
@@ -232,7 +232,7 @@ class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         
         if self._is_duplicate_grenton_id(user_input[CONF_GRENTON_ID]):
             return self.async_show_form(
-                step_id="sensor_config",
+                step_id="button_config",
                 data_schema=self._get_device_schema(),
                 errors={"base": "duplicate_grenton_id"}
             )
