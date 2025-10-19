@@ -46,17 +46,17 @@ class GrentonOptionsFlowHandler(config_entries.OptionsFlow):
         })
 
         if self.device_type == "cover":
-            default_reversed = self.config_entry.options.get(CONF_REVERSED, False)
+            default_reversed = self.config_entry.options.get(CONF_REVERSED, self.config_entry.data.get(CONF_REVERSED))
             data_schema = data_schema.extend({
                 vol.Required(CONF_REVERSED, default=default_reversed): bool
             })
         elif self.device_type == "light":
-            default_type = self.config_entry.options.get(CONF_GRENTON_TYPE)
+            default_type = self.config_entry.options.get(CONF_GRENTON_TYPE, self.config_entry.data.get(CONF_GRENTON_TYPE))
             data_schema = data_schema.extend({
                 vol.Required(CONF_GRENTON_TYPE, default=default_type): vol.In(LIGHT_GRENTON_TYPE_OPTIONS)
             })
         elif self.device_type == "sensor":
-            default_type = self.config_entry.options.get(CONF_GRENTON_TYPE)
+            default_type = self.config_entry.options.get(CONF_GRENTON_TYPE, self.config_entry.data.get(CONF_GRENTON_TYPE))
             data_schema = data_schema.extend({
                 vol.Required(CONF_GRENTON_TYPE, default=default_type): vol.In(SENSOR_GRENTON_TYPE_OPTIONS)
             })
