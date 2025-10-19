@@ -79,7 +79,8 @@
     },
     "error": {
       "min_value": "The value must be at least {min}.",
-      "max_value": "The value can be at most {max}."
+      "max_value": "The value can be at most {max}.",
+      "duplicate_grenton_id": "This Grenton Object ID is already used."
     }
   },
   "options": {
