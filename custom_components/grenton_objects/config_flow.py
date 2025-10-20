@@ -1,7 +1,7 @@
 """
 ==================================================
 Author: Jan Nalepka
-Script version: 3.3
+Script version: 3.4
 Date: 20.10.2025
 Repository: https://github.com/jnalepka/grenton-to-homeassistant
 ==================================================
@@ -26,7 +26,10 @@ from .const import (
     STATE_CLASS_OPTIONS,
     LIGHT_GRENTON_TYPE_OPTIONS,
     SENSOR_GRENTON_TYPE_OPTIONS,
-    LIGHT_GRENTON_TYPE_LED
+    LIGHT_GRENTON_TYPE_LED,
+    CONF_AUTO_UPDATE,
+    CONF_UPDATE_INTERVAL,
+    DEFAULT_UPDATE_INTERVAL
 )
 from .options_flow import GrentonOptionsFlowHandler
 from homeassistant.helpers.selector import SelectSelector, SelectSelectorConfig
@@ -109,7 +112,9 @@ class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             CONF_API_ENDPOINT: user_input[CONF_API_ENDPOINT],
             CONF_GRENTON_ID: user_input[CONF_GRENTON_ID],
             CONF_OBJECT_NAME: user_input[CONF_OBJECT_NAME],
-            CONF_GRENTON_TYPE: user_input[CONF_GRENTON_TYPE]
+            CONF_GRENTON_TYPE: user_input[CONF_GRENTON_TYPE],
+            CONF_AUTO_UPDATE: user_input[CONF_AUTO_UPDATE],
+            CONF_UPDATE_INTERVAL: user_input[CONF_UPDATE_INTERVAL]
         })
     
     async def async_step_switch_config(self, user_input=None):
@@ -132,7 +137,9 @@ class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             "device_type": self.device_type,
             CONF_API_ENDPOINT: user_input[CONF_API_ENDPOINT],
             CONF_GRENTON_ID: user_input[CONF_GRENTON_ID],
-            CONF_OBJECT_NAME: user_input[CONF_OBJECT_NAME]
+            CONF_OBJECT_NAME: user_input[CONF_OBJECT_NAME],
+            CONF_AUTO_UPDATE: user_input[CONF_AUTO_UPDATE],
+            CONF_UPDATE_INTERVAL: user_input[CONF_UPDATE_INTERVAL]
         })
     
     async def async_step_cover_config(self, user_input=None):
@@ -156,7 +163,9 @@ class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             CONF_API_ENDPOINT: user_input[CONF_API_ENDPOINT],
             CONF_GRENTON_ID: user_input[CONF_GRENTON_ID],
             CONF_OBJECT_NAME: user_input[CONF_OBJECT_NAME],
-            CONF_REVERSED: user_input[CONF_REVERSED]
+            CONF_REVERSED: user_input[CONF_REVERSED],
+            CONF_AUTO_UPDATE: user_input[CONF_AUTO_UPDATE],
+            CONF_UPDATE_INTERVAL: user_input[CONF_UPDATE_INTERVAL]
         })
     
     async def async_step_climate_config(self, user_input=None):
@@ -179,7 +188,9 @@ class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             "device_type": self.device_type,
             CONF_API_ENDPOINT: user_input[CONF_API_ENDPOINT],
             CONF_GRENTON_ID: user_input[CONF_GRENTON_ID],
-            CONF_OBJECT_NAME: user_input[CONF_OBJECT_NAME]
+            CONF_OBJECT_NAME: user_input[CONF_OBJECT_NAME],
+            CONF_AUTO_UPDATE: user_input[CONF_AUTO_UPDATE],
+            CONF_UPDATE_INTERVAL: user_input[CONF_UPDATE_INTERVAL]
         })
     
     async def async_step_sensor_config(self, user_input=None):
@@ -205,7 +216,9 @@ class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             CONF_OBJECT_NAME: user_input[CONF_OBJECT_NAME],
             CONF_GRENTON_TYPE: user_input[CONF_GRENTON_TYPE],
             CONF_DEVICE_CLASS: user_input[CONF_DEVICE_CLASS],
-            CONF_STATE_CLASS: user_input[CONF_STATE_CLASS]
+            CONF_STATE_CLASS: user_input[CONF_STATE_CLASS],
+            CONF_AUTO_UPDATE: user_input[CONF_AUTO_UPDATE],
+            CONF_UPDATE_INTERVAL: user_input[CONF_UPDATE_INTERVAL]
         })
     
     async def async_step_binary_sensor_config(self, user_input=None):
@@ -228,7 +241,9 @@ class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             "device_type": self.device_type,
             CONF_API_ENDPOINT: user_input[CONF_API_ENDPOINT],
             CONF_GRENTON_ID: user_input[CONF_GRENTON_ID],
-            CONF_OBJECT_NAME: user_input[CONF_OBJECT_NAME]
+            CONF_OBJECT_NAME: user_input[CONF_OBJECT_NAME],
+            CONF_AUTO_UPDATE: user_input[CONF_AUTO_UPDATE],
+            CONF_UPDATE_INTERVAL: user_input[CONF_UPDATE_INTERVAL]
         })
     
     async def async_step_button_config(self, user_input=None):
@@ -263,51 +278,63 @@ class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 vol.Required(CONF_API_ENDPOINT, default=last_api_endpoint): str,
                 vol.Required(CONF_GRENTON_ID, default=last_grenton_clu_id+"->DOU0000"): str,
                 vol.Required(CONF_GRENTON_TYPE, default=CONF_GRENTON_TYPE_DOUT): vol.In(LIGHT_GRENTON_TYPE_OPTIONS),
+                vol.Required(CONF_AUTO_UPDATE, default=True): bool,
+                vol.Required(CONF_UPDATE_INTERVAL, default=DEFAULT_UPDATE_INTERVAL): vol.All(vol.Coerce(int), vol.Range(min=5, max=3600))
             })
         elif self.device_type == "switch":
             return vol.Schema({
                 vol.Required(CONF_OBJECT_NAME): str,
                 vol.Required(CONF_API_ENDPOINT, default=last_api_endpoint): str,
                 vol.Required(CONF_GRENTON_ID, default=last_grenton_clu_id+"->DOU0000"): str,
+                vol.Required(CONF_AUTO_UPDATE, default=True): bool,
+                vol.Required(CONF_UPDATE_INTERVAL, default=DEFAULT_UPDATE_INTERVAL): vol.All(vol.Coerce(int), vol.Range(min=5, max=3600))
             })
         elif self.device_type == "cover":
             return vol.Schema({
                 vol.Required(CONF_OBJECT_NAME): str,
                 vol.Required(CONF_API_ENDPOINT, default=last_api_endpoint): str,
                 vol.Required(CONF_GRENTON_ID, default=last_grenton_clu_id+"->ROL0000"): str,
-                vol.Optional(CONF_REVERSED, default=False): bool,
+                vol.Required(CONF_REVERSED, default=False): bool,
+                vol.Required(CONF_AUTO_UPDATE, default=True): bool,
+                vol.Required(CONF_UPDATE_INTERVAL, default=DEFAULT_UPDATE_INTERVAL): vol.All(vol.Coerce(int), vol.Range(min=5, max=3600))
             })
         elif self.device_type == "climate":
             return vol.Schema({
                 vol.Required(CONF_OBJECT_NAME): str,
                 vol.Required(CONF_API_ENDPOINT, default=last_api_endpoint): str,
                 vol.Required(CONF_GRENTON_ID, default=last_grenton_clu_id+"->THE0000"): str,
+                vol.Required(CONF_AUTO_UPDATE, default=True): bool,
+                vol.Required(CONF_UPDATE_INTERVAL, default=DEFAULT_UPDATE_INTERVAL): vol.All(vol.Coerce(int), vol.Range(min=5, max=3600))
             })
         elif self.device_type == "sensor":
             return vol.Schema({
                 vol.Required(CONF_OBJECT_NAME): str,
                 vol.Required(CONF_API_ENDPOINT, default=last_api_endpoint): str,
                 vol.Required(CONF_GRENTON_ID, default=last_grenton_clu_id+"->PAN0000"): str,
-                vol.Optional(CONF_GRENTON_TYPE, default=CONF_GRENTON_TYPE_DEFAULT_SENSOR): vol.In(SENSOR_GRENTON_TYPE_OPTIONS),
-                vol.Optional(CONF_DEVICE_CLASS, default="temperature"): vol.In(DEVICE_CLASS_OPTIONS),
-                vol.Optional(CONF_DEVICE_CLASS, default="temperature"): SelectSelector(
+                vol.Required(CONF_GRENTON_TYPE, default=CONF_GRENTON_TYPE_DEFAULT_SENSOR): vol.In(SENSOR_GRENTON_TYPE_OPTIONS),
+                vol.Required(CONF_DEVICE_CLASS, default="temperature"): vol.In(DEVICE_CLASS_OPTIONS),
+                vol.Required(CONF_DEVICE_CLASS, default="temperature"): SelectSelector(
                     SelectSelectorConfig(
                         options=DEVICE_CLASS_OPTIONS,
                         translation_key="device_class"
                     )
                 ),
-                vol.Optional(CONF_STATE_CLASS, default="measurement"): SelectSelector(
+                vol.Required(CONF_STATE_CLASS, default="measurement"): SelectSelector(
                     SelectSelectorConfig(
                         options=STATE_CLASS_OPTIONS,
                         translation_key="state_class"
                     )
                 ),
+                vol.Required(CONF_AUTO_UPDATE, default=True): bool,
+                vol.Required(CONF_UPDATE_INTERVAL, default=DEFAULT_UPDATE_INTERVAL): vol.All(vol.Coerce(int), vol.Range(min=5, max=3600))
             })
         elif self.device_type == "binary_sensor":
             return vol.Schema({
                 vol.Required(CONF_OBJECT_NAME): str,
                 vol.Required(CONF_API_ENDPOINT, default=last_api_endpoint): str,
-                vol.Required(CONF_GRENTON_ID, default=last_grenton_clu_id+"->DIN0000"): str
+                vol.Required(CONF_GRENTON_ID, default=last_grenton_clu_id+"->DIN0000"): str,
+                vol.Required(CONF_AUTO_UPDATE, default=True): bool,
+                vol.Required(CONF_UPDATE_INTERVAL, default=DEFAULT_UPDATE_INTERVAL): vol.All(vol.Coerce(int), vol.Range(min=5, max=3600))
             })
         elif self.device_type == "button":
             return vol.Schema({

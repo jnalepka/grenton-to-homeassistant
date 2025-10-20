@@ -1,8 +1,8 @@
 """
 ==================================================
 Author: Jan Nalepka
-Script version: 3.2
-Date: 19.10.2025
+Script version: 3.3
+Date: 20.10.2025
 Repository: https://github.com/jnalepka/grenton-to-homeassistant
 ==================================================
 """
@@ -34,11 +34,14 @@ class GrentonOptionsFlowHandler(config_entries.OptionsFlow):
             self.config_entry.data.get(CONF_API_ENDPOINT)
         )
 
-        default_auto_update = self.config_entry.options.get(CONF_AUTO_UPDATE, True)
+        default_auto_update = self.config_entry.options.get(
+            CONF_AUTO_UPDATE, 
+            self.config_entry.data.get(CONF_AUTO_UPDATE, True)
+        )
 
         default_update_interval = self.config_entry.options.get(
             CONF_UPDATE_INTERVAL,
-            DEFAULT_UPDATE_INTERVAL
+            self.config_entry.data.get(CONF_UPDATE_INTERVAL, DEFAULT_UPDATE_INTERVAL)
         )
 
         data_schema = vol.Schema({

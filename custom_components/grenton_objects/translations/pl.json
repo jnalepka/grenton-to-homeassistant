@@ -15,7 +15,9 @@
           "name": "Nazwa obiektu",
           "api_endpoint": "Adres URL do Grenton HTTP Listener",
           "grenton_id": "ID obiektu Grenton",
-          "grenton_type": "Typ obiektu Grenton"
+          "grenton_type": "Typ obiektu Grenton",
+          "auto_update": "Automatyczna aktualizacja obiektu",
+          "update_interval": "Okres odświeżania (w sekundach)"
         }
       },
       "switch_config": {
@@ -24,7 +26,9 @@
         "data": {
           "name": "Nazwa obiektu",
           "api_endpoint": "Adres URL do Grenton HTTP Listener",
-          "grenton_id": "ID obiektu Grenton"
+          "grenton_id": "ID obiektu Grenton",
+          "auto_update": "Automatyczna aktualizacja obiektu",
+          "update_interval": "Okres odświeżania (w sekundach)"
         }
       },
       "cover_config": {
@@ -34,7 +38,9 @@
           "name": "Nazwa obiektu",
           "api_endpoint": "Adres URL do Grenton HTTP Listener",
           "grenton_id": "ID obiektu Grenton",
-          "reversed": "Odwrócony kierunek"
+          "reversed": "Odwrócony kierunek",
+          "auto_update": "Automatyczna aktualizacja obiektu",
+          "update_interval": "Okres odświeżania (w sekundach)"
         }
       },
       "climate_config": {
@@ -43,7 +49,9 @@
         "data": {
           "name": "Nazwa obiektu",
           "api_endpoint": "Adres URL do Grenton HTTP Listener",
-          "grenton_id": "ID obiektu Grenton"
+          "grenton_id": "ID obiektu Grenton",
+          "auto_update": "Automatyczna aktualizacja obiektu",
+          "update_interval": "Okres odświeżania (w sekundach)"
         }
       },
       "sensor_config": {
@@ -55,7 +63,9 @@
           "grenton_id": "ID obiektu Grenton",
           "grenton_type": "Typ obiektu Grenton",
           "device_class": "Typ danych",
-          "state_class": "Interpretacja danych w statystykach"
+          "state_class": "Interpretacja danych w statystykach",
+          "auto_update": "Automatyczna aktualizacja obiektu",
+          "update_interval": "Okres odświeżania (w sekundach)"
         }
       },
       "binary_sensor_config": {
@@ -64,7 +74,9 @@
         "data": {
           "name": "Nazwa obiektu",
           "api_endpoint": "Adres URL do Grenton HTTP Listener",
-          "grenton_id": "ID obiektu Grenton"
+          "grenton_id": "ID obiektu Grenton",
+          "auto_update": "Automatyczna aktualizacja obiektu",
+          "update_interval": "Okres odświeżania (w sekundach)"
         }
       },
       "button_config": {
