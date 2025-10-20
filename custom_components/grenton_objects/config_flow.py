@@ -1,7 +1,7 @@
 """
 ==================================================
 Author: Jan Nalepka
-Script version: 3.4
+Script version: 3.5
 Date: 20.10.2025
 Repository: https://github.com/jnalepka/grenton-to-homeassistant
 ==================================================
@@ -95,13 +95,13 @@ class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         if user_input is None:
             return self.async_show_form(
                 step_id="light_config",
-                data_schema=self._get_device_schema()
+                data_schema=self._get_device_schema(user_input)
             )
         
         if self._is_duplicate_grenton_id(user_input[CONF_GRENTON_ID], user_input[CONF_GRENTON_TYPE]):
             return self.async_show_form(
                 step_id="light_config",
-                data_schema=self._get_device_schema(),
+                data_schema=self._get_device_schema(user_input),
                 errors={"base": "duplicate_grenton_id"}
             )
 
@@ -121,13 +121,13 @@ class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         if user_input is None:
             return self.async_show_form(
                 step_id="switch_config",
-                data_schema=self._get_device_schema()
+                data_schema=self._get_device_schema(user_input)
             )
         
         if self._is_duplicate_grenton_id(user_input[CONF_GRENTON_ID]):
             return self.async_show_form(
                 step_id="switch_config",
-                data_schema=self._get_device_schema(),
+                data_schema=self._get_device_schema(user_input),
                 errors={"base": "duplicate_grenton_id"}
             )
 
@@ -146,13 +146,13 @@ class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         if user_input is None:
             return self.async_show_form(
                 step_id="cover_config",
-                data_schema=self._get_device_schema()
+                data_schema=self._get_device_schema(user_input)
             )
         
         if self._is_duplicate_grenton_id(user_input[CONF_GRENTON_ID]):
             return self.async_show_form(
                 step_id="cover_config",
-                data_schema=self._get_device_schema(),
+                data_schema=self._get_device_schema(user_input),
                 errors={"base": "duplicate_grenton_id"}
             )
 
@@ -172,13 +172,13 @@ class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         if user_input is None:
             return self.async_show_form(
                 step_id="climate_config",
-                data_schema=self._get_device_schema()
+                data_schema=self._get_device_schema(user_input)
             )
         
         if self._is_duplicate_grenton_id(user_input[CONF_GRENTON_ID]):
             return self.async_show_form(
                 step_id="climate_config",
-                data_schema=self._get_device_schema(),
+                data_schema=self._get_device_schema(user_input),
                 errors={"base": "duplicate_grenton_id"}
             )
 
@@ -197,13 +197,13 @@ class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         if user_input is None:
             return self.async_show_form(
                 step_id="sensor_config",
-                data_schema=self._get_device_schema()
+                data_schema=self._get_device_schema(user_input)
             )
         
         if self._is_duplicate_grenton_id(user_input[CONF_GRENTON_ID]):
             return self.async_show_form(
                 step_id="sensor_config",
-                data_schema=self._get_device_schema(),
+                data_schema=self._get_device_schema(user_input),
                 errors={"base": "duplicate_grenton_id"}
             )
 
@@ -225,13 +225,13 @@ class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         if user_input is None:
             return self.async_show_form(
                 step_id="binary_sensor_config",
-                data_schema=self._get_device_schema()
+                data_schema=self._get_device_schema(user_input)
             )
         
         if self._is_duplicate_grenton_id(user_input[CONF_GRENTON_ID]):
             return self.async_show_form(
                 step_id="binary_sensor_config",
-                data_schema=self._get_device_schema(),
+                data_schema=self._get_device_schema(user_input),
                 errors={"base": "duplicate_grenton_id"}
             )
 
@@ -250,13 +250,13 @@ class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         if user_input is None:
             return self.async_show_form(
                 step_id="button_config",
-                data_schema=self._get_device_schema()
+                data_schema=self._get_device_schema(user_input)
             )
         
         if self._is_duplicate_grenton_id(user_input[CONF_GRENTON_ID]):
             return self.async_show_form(
                 step_id="button_config",
-                data_schema=self._get_device_schema(),
+                data_schema=self._get_device_schema(user_input),
                 errors={"base": "duplicate_grenton_id"}
             )
 
@@ -269,78 +269,80 @@ class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             CONF_OBJECT_NAME: user_input[CONF_OBJECT_NAME]
         })
         
-    def _get_device_schema(self):
+    def _get_device_schema(self, user_input=None):
         last_api_endpoint = self.hass.data.get(f"{DOMAIN}_last_api_endpoint", "http://192.168.0.4/HAlistener")
         last_grenton_clu_id = self.hass.data.get(f"{DOMAIN}_last_grenton_clu_id", "CLU220000000")
+
+        defaults = user_input or {}
+
         if self.device_type == "light":
             return vol.Schema({
-                vol.Required(CONF_OBJECT_NAME): str,
-                vol.Required(CONF_API_ENDPOINT, default=last_api_endpoint): str,
-                vol.Required(CONF_GRENTON_ID, default=last_grenton_clu_id+"->DOU0000"): str,
-                vol.Required(CONF_GRENTON_TYPE, default=CONF_GRENTON_TYPE_DOUT): vol.In(LIGHT_GRENTON_TYPE_OPTIONS),
-                vol.Required(CONF_AUTO_UPDATE, default=True): bool,
-                vol.Required(CONF_UPDATE_INTERVAL, default=DEFAULT_UPDATE_INTERVAL): vol.All(vol.Coerce(int), vol.Range(min=5, max=3600))
+                vol.Required(CONF_OBJECT_NAME, default=defaults.get(CONF_OBJECT_NAME, "")): str,
+                vol.Required(CONF_API_ENDPOINT, default=defaults.get(CONF_API_ENDPOINT, last_api_endpoint)): str,
+                vol.Required(CONF_GRENTON_ID, default=defaults.get(CONF_GRENTON_ID, last_grenton_clu_id + "->DOU0000")): str,
+                vol.Required(CONF_GRENTON_TYPE, default=defaults.get(CONF_GRENTON_TYPE, CONF_GRENTON_TYPE_DOUT)): vol.In(LIGHT_GRENTON_TYPE_OPTIONS),
+                vol.Required(CONF_AUTO_UPDATE, default=defaults.get(CONF_AUTO_UPDATE, True)): bool,
+                vol.Required(CONF_UPDATE_INTERVAL, default=defaults.get(CONF_UPDATE_INTERVAL, DEFAULT_UPDATE_INTERVAL)): vol.All(vol.Coerce(int), vol.Range(min=5, max=3600))
             })
         elif self.device_type == "switch":
             return vol.Schema({
-                vol.Required(CONF_OBJECT_NAME): str,
-                vol.Required(CONF_API_ENDPOINT, default=last_api_endpoint): str,
-                vol.Required(CONF_GRENTON_ID, default=last_grenton_clu_id+"->DOU0000"): str,
-                vol.Required(CONF_AUTO_UPDATE, default=True): bool,
-                vol.Required(CONF_UPDATE_INTERVAL, default=DEFAULT_UPDATE_INTERVAL): vol.All(vol.Coerce(int), vol.Range(min=5, max=3600))
+                vol.Required(CONF_OBJECT_NAME, default=defaults.get(CONF_OBJECT_NAME, "")): str,
+                vol.Required(CONF_API_ENDPOINT, default=defaults.get(CONF_API_ENDPOINT, last_api_endpoint)): str,
+                vol.Required(CONF_GRENTON_ID, default=defaults.get(CONF_GRENTON_ID, last_grenton_clu_id + "->DOU0000")): str,
+                vol.Required(CONF_AUTO_UPDATE, default=defaults.get(CONF_AUTO_UPDATE, True)): bool,
+                vol.Required(CONF_UPDATE_INTERVAL, default=defaults.get(CONF_UPDATE_INTERVAL, DEFAULT_UPDATE_INTERVAL)): vol.All(vol.Coerce(int), vol.Range(min=5, max=3600))
             })
         elif self.device_type == "cover":
             return vol.Schema({
-                vol.Required(CONF_OBJECT_NAME): str,
-                vol.Required(CONF_API_ENDPOINT, default=last_api_endpoint): str,
-                vol.Required(CONF_GRENTON_ID, default=last_grenton_clu_id+"->ROL0000"): str,
-                vol.Required(CONF_REVERSED, default=False): bool,
-                vol.Required(CONF_AUTO_UPDATE, default=True): bool,
-                vol.Required(CONF_UPDATE_INTERVAL, default=DEFAULT_UPDATE_INTERVAL): vol.All(vol.Coerce(int), vol.Range(min=5, max=3600))
+                vol.Required(CONF_OBJECT_NAME, default=defaults.get(CONF_OBJECT_NAME, "")): str,
+                vol.Required(CONF_API_ENDPOINT, default=defaults.get(CONF_API_ENDPOINT, last_api_endpoint)): str,
+                vol.Required(CONF_GRENTON_ID, default=defaults.get(CONF_GRENTON_ID, last_grenton_clu_id + "->ROL0000")): str,
+                vol.Required(CONF_REVERSED, default=defaults.get(CONF_REVERSED, False)): bool,
+                vol.Required(CONF_AUTO_UPDATE, default=defaults.get(CONF_AUTO_UPDATE, True)): bool,
+                vol.Required(CONF_UPDATE_INTERVAL, default=defaults.get(CONF_UPDATE_INTERVAL, DEFAULT_UPDATE_INTERVAL)): vol.All(vol.Coerce(int), vol.Range(min=5, max=3600))
             })
         elif self.device_type == "climate":
             return vol.Schema({
-                vol.Required(CONF_OBJECT_NAME): str,
-                vol.Required(CONF_API_ENDPOINT, default=last_api_endpoint): str,
-                vol.Required(CONF_GRENTON_ID, default=last_grenton_clu_id+"->THE0000"): str,
-                vol.Required(CONF_AUTO_UPDATE, default=True): bool,
-                vol.Required(CONF_UPDATE_INTERVAL, default=DEFAULT_UPDATE_INTERVAL): vol.All(vol.Coerce(int), vol.Range(min=5, max=3600))
+                vol.Required(CONF_OBJECT_NAME, default=defaults.get(CONF_OBJECT_NAME, "")): str,
+                vol.Required(CONF_API_ENDPOINT, default=defaults.get(CONF_API_ENDPOINT, last_api_endpoint)): str,
+                vol.Required(CONF_GRENTON_ID, default=defaults.get(CONF_GRENTON_ID, last_grenton_clu_id + "->THE0000")): str,
+                vol.Required(CONF_AUTO_UPDATE, default=defaults.get(CONF_AUTO_UPDATE, True)): bool,
+                vol.Required(CONF_UPDATE_INTERVAL, default=defaults.get(CONF_UPDATE_INTERVAL, DEFAULT_UPDATE_INTERVAL)): vol.All(vol.Coerce(int), vol.Range(min=5, max=3600))
             })
         elif self.device_type == "sensor":
             return vol.Schema({
-                vol.Required(CONF_OBJECT_NAME): str,
-                vol.Required(CONF_API_ENDPOINT, default=last_api_endpoint): str,
-                vol.Required(CONF_GRENTON_ID, default=last_grenton_clu_id+"->PAN0000"): str,
-                vol.Required(CONF_GRENTON_TYPE, default=CONF_GRENTON_TYPE_DEFAULT_SENSOR): vol.In(SENSOR_GRENTON_TYPE_OPTIONS),
-                vol.Required(CONF_DEVICE_CLASS, default="temperature"): vol.In(DEVICE_CLASS_OPTIONS),
-                vol.Required(CONF_DEVICE_CLASS, default="temperature"): SelectSelector(
+                vol.Required(CONF_OBJECT_NAME, default=defaults.get(CONF_OBJECT_NAME, "")): str,
+                vol.Required(CONF_API_ENDPOINT, default=defaults.get(CONF_API_ENDPOINT, last_api_endpoint)): str,
+                vol.Required(CONF_GRENTON_ID, default=defaults.get(CONF_GRENTON_ID, last_grenton_clu_id + "->PAN0000")): str,
+                vol.Required(CONF_GRENTON_TYPE, default=defaults.get(CONF_GRENTON_TYPE, CONF_GRENTON_TYPE_DEFAULT_SENSOR)): vol.In(SENSOR_GRENTON_TYPE_OPTIONS),
+                vol.Required(CONF_DEVICE_CLASS, default=defaults.get(CONF_DEVICE_CLASS, "temperature")): SelectSelector(
                     SelectSelectorConfig(
                         options=DEVICE_CLASS_OPTIONS,
                         translation_key="device_class"
                     )
                 ),
-                vol.Required(CONF_STATE_CLASS, default="measurement"): SelectSelector(
+                vol.Required(CONF_STATE_CLASS, default=defaults.get(CONF_STATE_CLASS, "measurement")): SelectSelector(
                     SelectSelectorConfig(
                         options=STATE_CLASS_OPTIONS,
                         translation_key="state_class"
                     )
                 ),
-                vol.Required(CONF_AUTO_UPDATE, default=True): bool,
-                vol.Required(CONF_UPDATE_INTERVAL, default=DEFAULT_UPDATE_INTERVAL): vol.All(vol.Coerce(int), vol.Range(min=5, max=3600))
+                vol.Required(CONF_AUTO_UPDATE, default=defaults.get(CONF_AUTO_UPDATE, True)): bool,
+                vol.Required(CONF_UPDATE_INTERVAL, default=defaults.get(CONF_UPDATE_INTERVAL, DEFAULT_UPDATE_INTERVAL)): vol.All(vol.Coerce(int), vol.Range(min=5, max=3600))
             })
         elif self.device_type == "binary_sensor":
             return vol.Schema({
-                vol.Required(CONF_OBJECT_NAME): str,
-                vol.Required(CONF_API_ENDPOINT, default=last_api_endpoint): str,
-                vol.Required(CONF_GRENTON_ID, default=last_grenton_clu_id+"->DIN0000"): str,
-                vol.Required(CONF_AUTO_UPDATE, default=True): bool,
-                vol.Required(CONF_UPDATE_INTERVAL, default=DEFAULT_UPDATE_INTERVAL): vol.All(vol.Coerce(int), vol.Range(min=5, max=3600))
+                vol.Required(CONF_OBJECT_NAME, default=defaults.get(CONF_OBJECT_NAME, "")): str,
+                vol.Required(CONF_API_ENDPOINT, default=defaults.get(CONF_API_ENDPOINT, last_api_endpoint)): str,
+                vol.Required(CONF_GRENTON_ID, default=defaults.get(CONF_GRENTON_ID, last_grenton_clu_id + "->DIN0000")): str,
+                vol.Required(CONF_AUTO_UPDATE, default=defaults.get(CONF_AUTO_UPDATE, True)): bool,
+                vol.Required(CONF_UPDATE_INTERVAL, default=defaults.get(CONF_UPDATE_INTERVAL, DEFAULT_UPDATE_INTERVAL)): vol.All(vol.Coerce(int), vol.Range(min=5, max=3600))
             })
         elif self.device_type == "button":
             return vol.Schema({
-                vol.Required(CONF_OBJECT_NAME): str,
-                vol.Required(CONF_API_ENDPOINT, default=last_api_endpoint): str,
-                vol.Required(CONF_GRENTON_ID, default=last_grenton_clu_id+"->script_name"): str
+                vol.Required(CONF_OBJECT_NAME, default=defaults.get(CONF_OBJECT_NAME, "")): str,
+                vol.Required(CONF_API_ENDPOINT, default=defaults.get(CONF_API_ENDPOINT, last_api_endpoint)): str,
+                vol.Required(CONF_GRENTON_ID, default=defaults.get(CONF_GRENTON_ID, last_grenton_clu_id + "->script_name")): str
             })
     
     @staticmethod
