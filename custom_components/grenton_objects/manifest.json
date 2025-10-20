@@ -10,5 +10,5 @@
     "issue_tracker": "https://github.com/jnalepka/grenton-to-homeassistant/issues",
     "requirements": [],
     "single_config_entry": false,
-    "version": "v3.0.3"
+    "version": "v3.0.4"
 }
