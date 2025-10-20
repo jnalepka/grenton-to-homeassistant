@@ -15,7 +15,9 @@
           "name": "Object Name",
           "api_endpoint": "URL to Grenton HTTP Listener",
           "grenton_id": "Grenton Object ID",
-          "grenton_type": "Grenton Object Type"
+          "grenton_type": "Grenton Object Type",
+          "auto_update": "Automatic Object Updates",
+          "update_interval": "Refresh interval (in seconds)"
         }
       },
       "switch_config": {
@@ -24,7 +26,9 @@
         "data": {
           "name": "Object Name",
           "api_endpoint": "URL to Grenton HTTP Listener",
-          "grenton_id": "Grenton Object ID"
+          "grenton_id": "Grenton Object ID",
+          "auto_update": "Automatic Object Updates",
+          "update_interval": "Refresh interval (in seconds)"
         }
       },
       "cover_config": {
@@ -34,7 +38,9 @@
           "name": "Object Name",
           "api_endpoint": "URL to Grenton HTTP Listener",
           "grenton_id": "Grenton Object ID",
-          "reversed": "Reversed Direction"
+          "reversed": "Reversed Direction",
+          "auto_update": "Automatic Object Updates",
+          "update_interval": "Refresh interval (in seconds)"
         }
       },
       "climate_config": {
@@ -43,7 +49,9 @@
         "data": {
           "name": "Object Name",
           "api_endpoint": "URL to Grenton HTTP Listener",
-          "grenton_id": "Grenton Object ID"
+          "grenton_id": "Grenton Object ID",
+          "auto_update": "Automatic Object Updates",
+          "update_interval": "Refresh interval (in seconds)"
         }
       },
       "sensor_config": {
@@ -55,7 +63,9 @@
           "grenton_id": "Grenton Object ID",
           "grenton_type": "Grenton Object Type",
           "device_class": "Data Type",
-          "state_class": "Data Interpretation in Statistics"
+          "state_class": "Data Interpretation in Statistics",
+          "auto_update": "Automatic Object Updates",
+          "update_interval": "Refresh interval (in seconds)"
         }
       },
       "binary_sensor_config": {
@@ -64,7 +74,9 @@
         "data": {
           "name": "Object Name",
           "api_endpoint": "URL to Grenton HTTP Listener",
-          "grenton_id": "Grenton Object ID"
+          "grenton_id": "Grenton Object ID",
+          "auto_update": "Automatic Object Updates",
+          "update_interval": "Refresh interval (in seconds)"
         }
       },
       "button_config": {

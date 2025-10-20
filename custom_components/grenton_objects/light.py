@@ -1,8 +1,8 @@
 """
 ==================================================
 Author: Jan Nalepka
-Script version: 3.2
-Date: 19.10.2025
+Script version: 3.3
+Date: 20.10.2025
 Repository: https://github.com/jnalepka/grenton-to-homeassistant
 ==================================================
 """
@@ -13,7 +13,6 @@ from .const import (
     CONF_GRENTON_ID,
     CONF_OBJECT_NAME,
     CONF_GRENTON_TYPE,
-    CONF_GRENTON_TYPE_UNKNOWN,
     CONF_GRENTON_TYPE_DIMMER,
     CONF_GRENTON_TYPE_RGB,
     CONF_GRENTON_TYPE_DOUT,
@@ -24,7 +23,9 @@ from .const import (
     CONF_AUTO_UPDATE,
     CONF_UPDATE_INTERVAL, 
     DEFAULT_UPDATE_INTERVAL,
-    DOMAIN
+    DOMAIN,
+    LIGHT_GRENTON_TYPE_LED,
+    LIGHT_GRENTON_TYPE_BRIGHTNESS
 )
 import logging
 import voluptuous as vol
@@ -43,17 +44,17 @@ _LOGGER = logging.getLogger(__name__)
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Required(CONF_API_ENDPOINT): str,
     vol.Required(CONF_GRENTON_ID): str,
-    vol.Required(CONF_GRENTON_TYPE, default=CONF_GRENTON_TYPE_UNKNOWN): str, #DOUT, DIMMER, RGB, LED_R, LED_G, LED_B, LED_W
+    vol.Required(CONF_GRENTON_TYPE, default=CONF_GRENTON_TYPE_DOUT): str, #DOUT, DIMMER, RGB, LED_R, LED_G, LED_B, LED_W
     vol.Optional(CONF_OBJECT_NAME, default='Grenton Light'): str
 })
 
 async def async_setup_entry(hass, config_entry, async_add_entities):
     api_endpoint = config_entry.options.get(CONF_API_ENDPOINT, config_entry.data.get(CONF_API_ENDPOINT))
     grenton_id = config_entry.data.get(CONF_GRENTON_ID)
-    grenton_type = config_entry.options.get(CONF_GRENTON_TYPE, config_entry.data.get(CONF_GRENTON_TYPE, CONF_GRENTON_TYPE_UNKNOWN))
+    grenton_type = config_entry.options.get(CONF_GRENTON_TYPE, config_entry.data.get(CONF_GRENTON_TYPE, CONF_GRENTON_TYPE_DOUT))
     object_name = config_entry.data.get(CONF_OBJECT_NAME, "Grenton Light")
-    auto_update = config_entry.options.get(CONF_AUTO_UPDATE, True)
-    update_interval = config_entry.options.get(CONF_UPDATE_INTERVAL, DEFAULT_UPDATE_INTERVAL)
+    auto_update = config_entry.options.get(CONF_AUTO_UPDATE, config_entry.data.get(CONF_AUTO_UPDATE, True))
+    update_interval = config_entry.options.get(CONF_UPDATE_INTERVAL, config_entry.data.get(CONF_UPDATE_INTERVAL, DEFAULT_UPDATE_INTERVAL))
     
     entity = GrentonLight(api_endpoint, grenton_id, grenton_type, object_name, auto_update, update_interval)
     async_add_entities([entity], True)
@@ -81,36 +82,12 @@ class GrentonLight(LightEntity):
         
         grenton_id_part_0, grenton_id_part_1 = self._grenton_id.split('->')
         
-        led_types = {
-            CONF_GRENTON_TYPE_LED_R,
-            CONF_GRENTON_TYPE_LED_G,
-            CONF_GRENTON_TYPE_LED_B,
-            CONF_GRENTON_TYPE_LED_W
-        }
-        
-        if self._grenton_type in led_types:
+        if self._grenton_type in LIGHT_GRENTON_TYPE_LED:
             self._unique_id = f"grenton_{grenton_id_part_1}_{grenton_type}"
         else:
             self._unique_id = f"grenton_{grenton_id_part_1}"
-    
         
-        if grenton_type == CONF_GRENTON_TYPE_UNKNOWN:
-            if grenton_id_part_1.startswith("DIM"):
-                self._grenton_type = CONF_GRENTON_TYPE_DIMMER
-            elif grenton_id_part_1.startswith("LED"):
-                self._grenton_type = CONF_GRENTON_TYPE_RGB
-            else:
-                self._grenton_type = CONF_GRENTON_TYPE_DOUT
-
-        brightness_types = {
-            CONF_GRENTON_TYPE_DIMMER,
-            CONF_GRENTON_TYPE_LED_R,
-            CONF_GRENTON_TYPE_LED_G,
-            CONF_GRENTON_TYPE_LED_B,
-            CONF_GRENTON_TYPE_LED_W
-        }
-        
-        if self._grenton_type in brightness_types:
+        if self._grenton_type in LIGHT_GRENTON_TYPE_BRIGHTNESS:
             self._supported_color_modes.add(ColorMode.BRIGHTNESS)
         elif self._grenton_type == CONF_GRENTON_TYPE_RGB:
             self._supported_color_modes.add(ColorMode.RGB)
@@ -166,15 +143,7 @@ class GrentonLight(LightEntity):
     
     @property
     def color_mode(self) -> ColorMode:
-        brightness_types = {
-            CONF_GRENTON_TYPE_DIMMER,
-            CONF_GRENTON_TYPE_LED_R,
-            CONF_GRENTON_TYPE_LED_G,
-            CONF_GRENTON_TYPE_LED_B,
-            CONF_GRENTON_TYPE_LED_W
-        }
-        
-        if self._grenton_type in brightness_types:
+        if self._grenton_type in LIGHT_GRENTON_TYPE_BRIGHTNESS:
             return ColorMode.BRIGHTNESS
         elif self._grenton_type == CONF_GRENTON_TYPE_RGB:
             return ColorMode.RGB

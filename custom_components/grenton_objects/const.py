@@ -1,8 +1,8 @@
 """
 ==================================================
 Author: Jan Nalepka
-Script version: 3.0
-Date: 15.09.2025
+Script version: 3.1
+Date: 20.10.2025
 Repository: https://github.com/jnalepka/grenton-to-homeassistant
 ==================================================
 """
@@ -11,7 +11,6 @@ DOMAIN = 'grenton_objects'
 CONF_API_ENDPOINT = 'api_endpoint'
 CONF_GRENTON_ID = 'grenton_id'
 CONF_GRENTON_TYPE = 'grenton_type'
-CONF_GRENTON_TYPE_UNKNOWN = 'UNKNOWN'
 CONF_GRENTON_TYPE_DOUT = 'DOUT'
 CONF_GRENTON_TYPE_DIMMER = 'DIMMER'
 CONF_GRENTON_TYPE_RGB = 'RGB'
@@ -120,4 +119,19 @@ SENSOR_GRENTON_TYPE_OPTIONS = [
     CONF_GRENTON_TYPE_MODBUS_SLAVE_RTU,
     CONF_GRENTON_TYPE_RELAY_POWER,
     CONF_GRENTON_TYPE_ANALOG_SCALED_VALUE
+]
+
+LIGHT_GRENTON_TYPE_LED = [
+    CONF_GRENTON_TYPE_LED_R, 
+    CONF_GRENTON_TYPE_LED_G, 
+    CONF_GRENTON_TYPE_LED_B, 
+    CONF_GRENTON_TYPE_LED_W
+]
+
+LIGHT_GRENTON_TYPE_BRIGHTNESS = [
+    CONF_GRENTON_TYPE_DIMMER,
+    CONF_GRENTON_TYPE_LED_R,
+    CONF_GRENTON_TYPE_LED_G,
+    CONF_GRENTON_TYPE_LED_B,
+    CONF_GRENTON_TYPE_LED_W
 ]

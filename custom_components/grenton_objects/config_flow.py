@@ -1,8 +1,8 @@
 """
 ==================================================
 Author: Jan Nalepka
-Script version: 3.2
-Date: 18.10.2025
+Script version: 3.4
+Date: 20.10.2025
 Repository: https://github.com/jnalepka/grenton-to-homeassistant
 ==================================================
 """
@@ -25,7 +25,11 @@ from .const import (
     DEVICE_CLASS_OPTIONS,
     STATE_CLASS_OPTIONS,
     LIGHT_GRENTON_TYPE_OPTIONS,
-    SENSOR_GRENTON_TYPE_OPTIONS
+    SENSOR_GRENTON_TYPE_OPTIONS,
+    LIGHT_GRENTON_TYPE_LED,
+    CONF_AUTO_UPDATE,
+    CONF_UPDATE_INTERVAL,
+    DEFAULT_UPDATE_INTERVAL
 )
 from .options_flow import GrentonOptionsFlowHandler
 from homeassistant.helpers.selector import SelectSelector, SelectSelectorConfig
@@ -74,11 +78,18 @@ class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         if grenton_id and "->" in grenton_id:
             self.hass.data[f"{DOMAIN}_last_grenton_clu_id"] = grenton_id.split("->")[0]
 
-    def _is_duplicate_grenton_id(self, grenton_id: str) -> bool:
-        return any(
-            entry.data.get(CONF_GRENTON_ID) == grenton_id
-            for entry in self._async_current_entries()
-        )
+    def _is_duplicate_grenton_id(self, grenton_id: str, grenton_type: str | None = None) -> bool:
+        for entry in self._async_current_entries():
+            existing_id = entry.data.get(CONF_GRENTON_ID)
+            existing_type = entry.data.get(CONF_GRENTON_TYPE)
+
+            if existing_id == grenton_id and existing_type == grenton_type:
+                return True
+
+            if grenton_type not in LIGHT_GRENTON_TYPE_LED and existing_id == grenton_id:
+                return True
+
+        return False
 
     async def async_step_light_config(self, user_input=None):
         if user_input is None:
@@ -87,9 +98,9 @@ class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 data_schema=self._get_device_schema()
             )
         
-        if self._is_duplicate_grenton_id(user_input[CONF_GRENTON_ID]):
+        if self._is_duplicate_grenton_id(user_input[CONF_GRENTON_ID], user_input[CONF_GRENTON_TYPE]):
             return self.async_show_form(
-                step_id="sensor_config",
+                step_id="light_config",
                 data_schema=self._get_device_schema(),
                 errors={"base": "duplicate_grenton_id"}
             )
@@ -101,7 +112,9 @@ class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             CONF_API_ENDPOINT: user_input[CONF_API_ENDPOINT],
             CONF_GRENTON_ID: user_input[CONF_GRENTON_ID],
             CONF_OBJECT_NAME: user_input[CONF_OBJECT_NAME],
-            CONF_GRENTON_TYPE: user_input.get(CONF_GRENTON_TYPE, None)
+            CONF_GRENTON_TYPE: user_input[CONF_GRENTON_TYPE],
+            CONF_AUTO_UPDATE: user_input[CONF_AUTO_UPDATE],
+            CONF_UPDATE_INTERVAL: user_input[CONF_UPDATE_INTERVAL]
         })
     
     async def async_step_switch_config(self, user_input=None):
@@ -113,30 +126,7 @@ class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         
         if self._is_duplicate_grenton_id(user_input[CONF_GRENTON_ID]):
             return self.async_show_form(
-                step_id="sensor_config",
-                data_schema=self._get_device_schema(),
-                errors={"base": "duplicate_grenton_id"}
-            )
-
-        self._persist_last_inputs(user_input)
-
-        return self.async_create_entry(title=user_input[CONF_OBJECT_NAME], data={
-            "device_type": self.device_type,
-            CONF_API_ENDPOINT: user_input[CONF_API_ENDPOINT],
-            CONF_GRENTON_ID: user_input[CONF_GRENTON_ID],
-            CONF_OBJECT_NAME: user_input[CONF_OBJECT_NAME]
-        })
-    
-    async def async_step_cover_config(self, user_input=None):
-        if user_input is None:
-            return self.async_show_form(
-                step_id="cover_config",
-                data_schema=self._get_device_schema()
-            )
-        
-        if self._is_duplicate_grenton_id(user_input[CONF_GRENTON_ID]):
-            return self.async_show_form(
-                step_id="sensor_config",
+                step_id="switch_config",
                 data_schema=self._get_device_schema(),
                 errors={"base": "duplicate_grenton_id"}
             )
@@ -148,7 +138,34 @@ class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             CONF_API_ENDPOINT: user_input[CONF_API_ENDPOINT],
             CONF_GRENTON_ID: user_input[CONF_GRENTON_ID],
             CONF_OBJECT_NAME: user_input[CONF_OBJECT_NAME],
-            CONF_REVERSED: user_input.get(CONF_REVERSED, None)
+            CONF_AUTO_UPDATE: user_input[CONF_AUTO_UPDATE],
+            CONF_UPDATE_INTERVAL: user_input[CONF_UPDATE_INTERVAL]
+        })
+    
+    async def async_step_cover_config(self, user_input=None):
+        if user_input is None:
+            return self.async_show_form(
+                step_id="cover_config",
+                data_schema=self._get_device_schema()
+            )
+        
+        if self._is_duplicate_grenton_id(user_input[CONF_GRENTON_ID]):
+            return self.async_show_form(
+                step_id="cover_config",
+                data_schema=self._get_device_schema(),
+                errors={"base": "duplicate_grenton_id"}
+            )
+
+        self._persist_last_inputs(user_input)
+
+        return self.async_create_entry(title=user_input[CONF_OBJECT_NAME], data={
+            "device_type": self.device_type,
+            CONF_API_ENDPOINT: user_input[CONF_API_ENDPOINT],
+            CONF_GRENTON_ID: user_input[CONF_GRENTON_ID],
+            CONF_OBJECT_NAME: user_input[CONF_OBJECT_NAME],
+            CONF_REVERSED: user_input[CONF_REVERSED],
+            CONF_AUTO_UPDATE: user_input[CONF_AUTO_UPDATE],
+            CONF_UPDATE_INTERVAL: user_input[CONF_UPDATE_INTERVAL]
         })
     
     async def async_step_climate_config(self, user_input=None):
@@ -160,7 +177,7 @@ class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         
         if self._is_duplicate_grenton_id(user_input[CONF_GRENTON_ID]):
             return self.async_show_form(
-                step_id="sensor_config",
+                step_id="climate_config",
                 data_schema=self._get_device_schema(),
                 errors={"base": "duplicate_grenton_id"}
             )
@@ -171,7 +188,9 @@ class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             "device_type": self.device_type,
             CONF_API_ENDPOINT: user_input[CONF_API_ENDPOINT],
             CONF_GRENTON_ID: user_input[CONF_GRENTON_ID],
-            CONF_OBJECT_NAME: user_input[CONF_OBJECT_NAME]
+            CONF_OBJECT_NAME: user_input[CONF_OBJECT_NAME],
+            CONF_AUTO_UPDATE: user_input[CONF_AUTO_UPDATE],
+            CONF_UPDATE_INTERVAL: user_input[CONF_UPDATE_INTERVAL]
         })
     
     async def async_step_sensor_config(self, user_input=None):
@@ -195,9 +214,11 @@ class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             CONF_API_ENDPOINT: user_input[CONF_API_ENDPOINT],
             CONF_GRENTON_ID: user_input[CONF_GRENTON_ID],
             CONF_OBJECT_NAME: user_input[CONF_OBJECT_NAME],
-            CONF_GRENTON_TYPE: user_input.get(CONF_GRENTON_TYPE, None),
-            CONF_DEVICE_CLASS: user_input.get(CONF_DEVICE_CLASS, None),
-            CONF_STATE_CLASS: user_input.get(CONF_STATE_CLASS, None)
+            CONF_GRENTON_TYPE: user_input[CONF_GRENTON_TYPE],
+            CONF_DEVICE_CLASS: user_input[CONF_DEVICE_CLASS],
+            CONF_STATE_CLASS: user_input[CONF_STATE_CLASS],
+            CONF_AUTO_UPDATE: user_input[CONF_AUTO_UPDATE],
+            CONF_UPDATE_INTERVAL: user_input[CONF_UPDATE_INTERVAL]
         })
     
     async def async_step_binary_sensor_config(self, user_input=None):
@@ -209,7 +230,7 @@ class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         
         if self._is_duplicate_grenton_id(user_input[CONF_GRENTON_ID]):
             return self.async_show_form(
-                step_id="sensor_config",
+                step_id="binary_sensor_config",
                 data_schema=self._get_device_schema(),
                 errors={"base": "duplicate_grenton_id"}
             )
@@ -220,7 +241,9 @@ class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             "device_type": self.device_type,
             CONF_API_ENDPOINT: user_input[CONF_API_ENDPOINT],
             CONF_GRENTON_ID: user_input[CONF_GRENTON_ID],
-            CONF_OBJECT_NAME: user_input[CONF_OBJECT_NAME]
+            CONF_OBJECT_NAME: user_input[CONF_OBJECT_NAME],
+            CONF_AUTO_UPDATE: user_input[CONF_AUTO_UPDATE],
+            CONF_UPDATE_INTERVAL: user_input[CONF_UPDATE_INTERVAL]
         })
     
     async def async_step_button_config(self, user_input=None):
@@ -232,7 +255,7 @@ class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         
         if self._is_duplicate_grenton_id(user_input[CONF_GRENTON_ID]):
             return self.async_show_form(
-                step_id="sensor_config",
+                step_id="button_config",
                 data_schema=self._get_device_schema(),
                 errors={"base": "duplicate_grenton_id"}
             )
@@ -255,51 +278,63 @@ class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 vol.Required(CONF_API_ENDPOINT, default=last_api_endpoint): str,
                 vol.Required(CONF_GRENTON_ID, default=last_grenton_clu_id+"->DOU0000"): str,
                 vol.Required(CONF_GRENTON_TYPE, default=CONF_GRENTON_TYPE_DOUT): vol.In(LIGHT_GRENTON_TYPE_OPTIONS),
+                vol.Required(CONF_AUTO_UPDATE, default=True): bool,
+                vol.Required(CONF_UPDATE_INTERVAL, default=DEFAULT_UPDATE_INTERVAL): vol.All(vol.Coerce(int), vol.Range(min=5, max=3600))
             })
         elif self.device_type == "switch":
             return vol.Schema({
                 vol.Required(CONF_OBJECT_NAME): str,
                 vol.Required(CONF_API_ENDPOINT, default=last_api_endpoint): str,
                 vol.Required(CONF_GRENTON_ID, default=last_grenton_clu_id+"->DOU0000"): str,
+                vol.Required(CONF_AUTO_UPDATE, default=True): bool,
+                vol.Required(CONF_UPDATE_INTERVAL, default=DEFAULT_UPDATE_INTERVAL): vol.All(vol.Coerce(int), vol.Range(min=5, max=3600))
             })
         elif self.device_type == "cover":
             return vol.Schema({
                 vol.Required(CONF_OBJECT_NAME): str,
                 vol.Required(CONF_API_ENDPOINT, default=last_api_endpoint): str,
                 vol.Required(CONF_GRENTON_ID, default=last_grenton_clu_id+"->ROL0000"): str,
-                vol.Optional(CONF_REVERSED, default=False): bool,
+                vol.Required(CONF_REVERSED, default=False): bool,
+                vol.Required(CONF_AUTO_UPDATE, default=True): bool,
+                vol.Required(CONF_UPDATE_INTERVAL, default=DEFAULT_UPDATE_INTERVAL): vol.All(vol.Coerce(int), vol.Range(min=5, max=3600))
             })
         elif self.device_type == "climate":
             return vol.Schema({
                 vol.Required(CONF_OBJECT_NAME): str,
                 vol.Required(CONF_API_ENDPOINT, default=last_api_endpoint): str,
                 vol.Required(CONF_GRENTON_ID, default=last_grenton_clu_id+"->THE0000"): str,
+                vol.Required(CONF_AUTO_UPDATE, default=True): bool,
+                vol.Required(CONF_UPDATE_INTERVAL, default=DEFAULT_UPDATE_INTERVAL): vol.All(vol.Coerce(int), vol.Range(min=5, max=3600))
             })
         elif self.device_type == "sensor":
             return vol.Schema({
                 vol.Required(CONF_OBJECT_NAME): str,
                 vol.Required(CONF_API_ENDPOINT, default=last_api_endpoint): str,
                 vol.Required(CONF_GRENTON_ID, default=last_grenton_clu_id+"->PAN0000"): str,
-                vol.Optional(CONF_GRENTON_TYPE, default=CONF_GRENTON_TYPE_DEFAULT_SENSOR): vol.In(SENSOR_GRENTON_TYPE_OPTIONS),
-                vol.Optional(CONF_DEVICE_CLASS, default="temperature"): vol.In(DEVICE_CLASS_OPTIONS),
-                vol.Optional(CONF_DEVICE_CLASS, default="temperature"): SelectSelector(
+                vol.Required(CONF_GRENTON_TYPE, default=CONF_GRENTON_TYPE_DEFAULT_SENSOR): vol.In(SENSOR_GRENTON_TYPE_OPTIONS),
+                vol.Required(CONF_DEVICE_CLASS, default="temperature"): vol.In(DEVICE_CLASS_OPTIONS),
+                vol.Required(CONF_DEVICE_CLASS, default="temperature"): SelectSelector(
                     SelectSelectorConfig(
                         options=DEVICE_CLASS_OPTIONS,
                         translation_key="device_class"
                     )
                 ),
-                vol.Optional(CONF_STATE_CLASS, default="measurement"): SelectSelector(
+                vol.Required(CONF_STATE_CLASS, default="measurement"): SelectSelector(
                     SelectSelectorConfig(
                         options=STATE_CLASS_OPTIONS,
                         translation_key="state_class"
                     )
                 ),
+                vol.Required(CONF_AUTO_UPDATE, default=True): bool,
+                vol.Required(CONF_UPDATE_INTERVAL, default=DEFAULT_UPDATE_INTERVAL): vol.All(vol.Coerce(int), vol.Range(min=5, max=3600))
             })
         elif self.device_type == "binary_sensor":
             return vol.Schema({
                 vol.Required(CONF_OBJECT_NAME): str,
                 vol.Required(CONF_API_ENDPOINT, default=last_api_endpoint): str,
-                vol.Required(CONF_GRENTON_ID, default=last_grenton_clu_id+"->DIN0000"): str
+                vol.Required(CONF_GRENTON_ID, default=last_grenton_clu_id+"->DIN0000"): str,
+                vol.Required(CONF_AUTO_UPDATE, default=True): bool,
+                vol.Required(CONF_UPDATE_INTERVAL, default=DEFAULT_UPDATE_INTERVAL): vol.All(vol.Coerce(int), vol.Range(min=5, max=3600))
             })
         elif self.device_type == "button":
             return vol.Schema({
