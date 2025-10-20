@@ -109,7 +109,7 @@ class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             CONF_API_ENDPOINT: user_input[CONF_API_ENDPOINT],
             CONF_GRENTON_ID: user_input[CONF_GRENTON_ID],
             CONF_OBJECT_NAME: user_input[CONF_OBJECT_NAME],
-            CONF_GRENTON_TYPE: user_input.get(CONF_GRENTON_TYPE, None)
+            CONF_GRENTON_TYPE: user_input[CONF_GRENTON_TYPE]
         })
     
     async def async_step_switch_config(self, user_input=None):
@@ -156,7 +156,7 @@ class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             CONF_API_ENDPOINT: user_input[CONF_API_ENDPOINT],
             CONF_GRENTON_ID: user_input[CONF_GRENTON_ID],
             CONF_OBJECT_NAME: user_input[CONF_OBJECT_NAME],
-            CONF_REVERSED: user_input.get(CONF_REVERSED, None)
+            CONF_REVERSED: user_input[CONF_REVERSED]
         })
     
     async def async_step_climate_config(self, user_input=None):
@@ -203,9 +203,9 @@ class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             CONF_API_ENDPOINT: user_input[CONF_API_ENDPOINT],
             CONF_GRENTON_ID: user_input[CONF_GRENTON_ID],
             CONF_OBJECT_NAME: user_input[CONF_OBJECT_NAME],
-            CONF_GRENTON_TYPE: user_input.get(CONF_GRENTON_TYPE, None),
-            CONF_DEVICE_CLASS: user_input.get(CONF_DEVICE_CLASS, None),
-            CONF_STATE_CLASS: user_input.get(CONF_STATE_CLASS, None)
+            CONF_GRENTON_TYPE: user_input[CONF_GRENTON_TYPE],
+            CONF_DEVICE_CLASS: user_input[CONF_DEVICE_CLASS],
+            CONF_STATE_CLASS: user_input[CONF_STATE_CLASS]
         })
     
     async def async_step_binary_sensor_config(self, user_input=None):
