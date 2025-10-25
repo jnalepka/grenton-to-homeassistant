@@ -39,7 +39,7 @@ To install manually, copy the grenton_objects folder along with all its contents
 
 # Requirements on the Grenton side
 
-<img src="https://user-images.githubusercontent.com/47686437/168548113-b3cd4206-3281-445b-b7c6-bc0a3251293d.png" height="20"> Youtube tutorial: [Configure Grenton side and add first object](https://youtu.be/LEcBMFAkLcY)
+<img src="https://user-images.githubusercontent.com/47686437/168548113-b3cd4206-3281-445b-b7c6-bc0a3251293d.png" height="20"> Youtube tutorial: [Configure Grenton side and add first object](https://youtu.be/QOVhQc0x1ro)
 
 1. Create a `HTTPListener` virtual object on GateHTTP named `HA_Listener_Integration` and configure it as follows:
    * Path - `/HAlistener` (You can edit it if you want)
@@ -105,7 +105,7 @@ GATE_HTTP->HA_Listener_Integration->SendResponse()
 
 # How to add an object
 
-<img src="https://user-images.githubusercontent.com/47686437/168548113-b3cd4206-3281-445b-b7c6-bc0a3251293d.png" height="20"> Youtube tutorial: [Configure Grenton side and add first object](https://youtu.be/LEcBMFAkLcY)
+<img src="https://user-images.githubusercontent.com/47686437/168548113-b3cd4206-3281-445b-b7c6-bc0a3251293d.png" height="20"> Youtube tutorial: [Configure Grenton side and add first object](https://youtu.be/QOVhQc0x1ro)
 
 1. Open `Settings` -> `Devices & services` -> `+Add integration`.
 2. Type and select "Grenton Objects".
@@ -131,6 +131,8 @@ You can also go to `Settings -> Devices & Services -> Grenton Objects` and, by c
 For a larger number of objects or when dynamic state updates are needed, dynamic updates should be configured.
 
 # Dynamic updates
+
+<img src="https://user-images.githubusercontent.com/47686437/168548113-b3cd4206-3281-445b-b7c6-bc0a3251293d.png" height="20"> Youtube tutorial: [Dynamic update - Lamp (DOUT)](https://youtu.be/3-AoxTPbSp0)
 
 To configure dynamic updates, go to `Settings -> Devices & Services -> Grenton Objects`, and for each object you want to enable dynamic updates for, disable automatic updates.
 
