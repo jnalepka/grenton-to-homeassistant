@@ -242,11 +242,7 @@ GATE_HTTP->HA_Request_Grenton_Set->SendRequest()
 | LED - Light                      | OnValueChange   | light.lamp3         |   set_brightness         | CLU->led->Value  |    (default)    |     (default)    |       (default)     |
 | -                             | OnValueChange   | light.lamp3         |   set_rgb         | (default)  |    (default)     |      (default)    |       CLU->led->RGB     |
 | ONE_WIRE / TEMPERATURE / ANALOG IN / Other - Sensor  | OnValueChange   | sensor.tempsens1         |   set_value         | CLU->sensor->Value  |    (default)    |     (default)    |       (default)     |
-| ROLLER_SHUTTER (with lamel) - Cover  | OnStateChange   | cover.blinds1         |   set_cover         | CLU->roller->State  |    CLU->roller->Position   |     CLU->roller->LamelPosition    |       (default)     |
-| -                      | OnPositionChange   | cover.blinds1         |   set_cover         | CLU->roller->State  |    CLU->roller->Position   |     CLU->roller->LamelPosition    |       (default)     |
-| -                      | OnLamelPositionChange   | cover.blinds1         |   set_cover         | CLU->roller->State  |    CLU->roller->Position   |     CLU->roller->LamelPosition    |       (default)     |
-| ROLLER_SHUTTER (without lamel) - Cover  | OnStateChange   | cover.blinds1         |   set_cover         | CLU->roller->State  |    CLU->roller->Position   |     (default)    |       (default)     |
-| -                      | OnPositionChange   | cover.blinds1         |   set_cover         | CLU->roller->State  |    CLU->roller->Position   |     (default)     |       (default)     |
+| ROLLER_SHUTTER - Cover  | OnStateChange   | cover.blinds1         |   set_cover         | CLU->roller->State  |    CLU->roller->Position   |     CLU->roller->LamelPosition    |       (default)     |
 | THERMOSTAT - Climate  | OnStart   | climate.therm1         |   set_therm_state         | CLU->thermostat->State  |    (default)     |      (default)    |       (default)     |
 | -                     | OnStop   | climate.therm1         |   set_therm_state         | CLU->thermostat->State  |    (default)     |      (default)    |       (default)     |
 | -                     | OnChange   | climate.therm1         |   set_therm_target_temp         | CLU->thermostat->PointValue  |    (default)     |      (default)    |       (default)     |
