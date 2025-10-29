@@ -1,8 +1,8 @@
 """
 ==================================================
 Author: Jan Nalepka
-Script version: 3.5
-Date: 20.10.2025
+Script version: 3.6
+Date: 29.10.2025
 Repository: https://github.com/jnalepka/grenton-to-homeassistant
 ==================================================
 """
@@ -33,6 +33,7 @@ from .const import (
 )
 from .options_flow import GrentonOptionsFlowHandler
 from homeassistant.helpers.selector import SelectSelector, SelectSelectorConfig
+from homeassistant.components.cover import CoverDeviceClass
 
 
 class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
@@ -163,6 +164,7 @@ class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             CONF_API_ENDPOINT: user_input[CONF_API_ENDPOINT],
             CONF_GRENTON_ID: user_input[CONF_GRENTON_ID],
             CONF_OBJECT_NAME: user_input[CONF_OBJECT_NAME],
+            CONF_DEVICE_CLASS: user_input[CONF_DEVICE_CLASS],
             CONF_REVERSED: user_input[CONF_REVERSED],
             CONF_AUTO_UPDATE: user_input[CONF_AUTO_UPDATE],
             CONF_UPDATE_INTERVAL: user_input[CONF_UPDATE_INTERVAL]
@@ -297,6 +299,12 @@ class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 vol.Required(CONF_OBJECT_NAME, default=defaults.get(CONF_OBJECT_NAME, "")): str,
                 vol.Required(CONF_API_ENDPOINT, default=defaults.get(CONF_API_ENDPOINT, last_api_endpoint)): str,
                 vol.Required(CONF_GRENTON_ID, default=defaults.get(CONF_GRENTON_ID, last_grenton_clu_id + "->ROL0000")): str,
+                vol.Required(CONF_DEVICE_CLASS, default=defaults.get(CONF_DEVICE_CLASS, CoverDeviceClass.BLIND.value)): SelectSelector(
+                    SelectSelectorConfig(
+                        options=[dc.value for dc in CoverDeviceClass],
+                        translation_key="device_class"
+                    )
+                ),
                 vol.Required(CONF_REVERSED, default=defaults.get(CONF_REVERSED, False)): bool,
                 vol.Required(CONF_AUTO_UPDATE, default=defaults.get(CONF_AUTO_UPDATE, True)): bool,
                 vol.Required(CONF_UPDATE_INTERVAL, default=defaults.get(CONF_UPDATE_INTERVAL, DEFAULT_UPDATE_INTERVAL)): vol.All(vol.Coerce(int), vol.Range(min=5, max=3600))

@@ -17,7 +17,7 @@
           "grenton_id": "Grenton Object ID",
           "grenton_type": "Grenton Object Type",
           "auto_update": "Automatic Object Updates",
-          "update_interval": "Refresh interval (in seconds)"
+          "update_interval": "Refresh Interval (in seconds)"
         }
       },
       "switch_config": {
@@ -28,7 +28,7 @@
           "api_endpoint": "URL to Grenton HTTP Listener",
           "grenton_id": "Grenton Object ID",
           "auto_update": "Automatic Object Updates",
-          "update_interval": "Refresh interval (in seconds)"
+          "update_interval": "Refresh Interval (in seconds)"
         }
       },
       "cover_config": {
@@ -38,9 +38,10 @@
           "name": "Object Name",
           "api_endpoint": "URL to Grenton HTTP Listener",
           "grenton_id": "Grenton Object ID",
+          "device_class": "Device Class",
           "reversed": "Reversed Direction",
           "auto_update": "Automatic Object Updates",
-          "update_interval": "Refresh interval (in seconds)"
+          "update_interval": "Refresh Interval (in seconds)"
         }
       },
       "climate_config": {
@@ -51,7 +52,7 @@
           "api_endpoint": "URL to Grenton HTTP Listener",
           "grenton_id": "Grenton Object ID",
           "auto_update": "Automatic Object Updates",
-          "update_interval": "Refresh interval (in seconds)"
+          "update_interval": "Refresh Interval (in seconds)"
         }
       },
       "sensor_config": {
@@ -65,7 +66,7 @@
           "device_class": "Data Type",
           "state_class": "Data Interpretation in Statistics",
           "auto_update": "Automatic Object Updates",
-          "update_interval": "Refresh interval (in seconds)"
+          "update_interval": "Refresh Interval (in seconds)"
         }
       },
       "binary_sensor_config": {
@@ -76,7 +77,7 @@
           "api_endpoint": "URL to Grenton HTTP Listener",
           "grenton_id": "Grenton Object ID",
           "auto_update": "Automatic Object Updates",
-          "update_interval": "Refresh interval (in seconds)"
+          "update_interval": "Refresh Interval (in seconds)"
         }
       },
       "button_config": {
@@ -103,9 +104,10 @@
         "data": {
           "api_endpoint": "URL to Grenton HTTP Listener",
           "auto_update": "Automatic Object Updates",
-          "update_interval": "Refresh interval (in seconds)",
+          "update_interval": "Refresh Interval (in seconds)",
           "reversed": "Reversed Direction",
-          "grenton_type": "Grenton Object Type"
+          "grenton_type": "Grenton Object Type",
+          "device_class": "Device Class"
         }
       }
     }
@@ -168,7 +170,17 @@
         "volume_storage": "Volume Storage (L, mL, gal, fl. oz., m³, ft³, CCF)",
         "water": "Water (L, gal, m³, ft³, CCF)",
         "weight": "Weight (kg, g, mg, µg, oz, lb, st)",
-        "wind_speed": "Wind Speed (ft/s, km/h, kn, m/s, mph)"
+        "wind_speed": "Wind Speed (ft/s, km/h, kn, m/s, mph)",
+        "awning": "Awning",
+        "blind": "Blind",
+        "curtain": "Curtain",
+        "damper": "Damper",
+        "door": "Door",
+        "garage": "Garage door",
+        "gate": "Gate",
+        "shade": "Shade",
+        "shutter": "Shutter",
+        "window": "Window"
       }
     },
     "state_class": {

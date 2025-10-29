@@ -1,8 +1,8 @@
 """
 ==================================================
 Author: Jan Nalepka
-Script version: 3.3
-Date: 20.10.2025
+Script version: 3.4
+Date: 29.10.2025
 Repository: https://github.com/jnalepka/grenton-to-homeassistant
 ==================================================
 """
@@ -16,14 +16,16 @@ from .const import (
     CONF_AUTO_UPDATE,
     CONF_UPDATE_INTERVAL, 
     DEFAULT_UPDATE_INTERVAL,
-    DOMAIN
+    DOMAIN,
+    CONF_DEVICE_CLASS
 )
 import logging
 import voluptuous as vol
 from homeassistant.components.cover import (
     CoverEntity,
     PLATFORM_SCHEMA,
-    CoverDeviceClass
+    CoverDeviceClass,
+    CoverEntityFeature
 )
 from homeassistant.const import (
     STATE_CLOSED,
@@ -40,7 +42,8 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Required(CONF_API_ENDPOINT): str,
     vol.Required(CONF_GRENTON_ID): str,
     vol.Required(CONF_REVERSED, default=False): bool,
-    vol.Optional(CONF_OBJECT_NAME, default='Grenton Cover'): str
+    vol.Optional(CONF_OBJECT_NAME, default='Grenton Cover'): str,
+    vol.Optional(CONF_DEVICE_CLASS, default=''): str,
 })
 
 async def async_setup_entry(hass, config_entry, async_add_entities):
@@ -50,8 +53,9 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
     object_name = config_entry.data.get(CONF_OBJECT_NAME)
     auto_update = config_entry.options.get(CONF_AUTO_UPDATE, config_entry.data.get(CONF_AUTO_UPDATE, True))
     update_interval = config_entry.options.get(CONF_UPDATE_INTERVAL, config_entry.data.get(CONF_UPDATE_INTERVAL, DEFAULT_UPDATE_INTERVAL))
+    device_class = config_entry.options.get(CONF_DEVICE_CLASS, config_entry.data.get(CONF_DEVICE_CLASS, CoverDeviceClass.BLIND.value))
 
-    entity = GrentonCover(api_endpoint, grenton_id, reversed, object_name, auto_update, update_interval)
+    entity = GrentonCover(api_endpoint, grenton_id, reversed, object_name, auto_update, update_interval, device_class)
     async_add_entities([entity], True)
 
     if DOMAIN not in hass.data:
@@ -60,8 +64,8 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
     hass.data[DOMAIN]["entities"][entity.entity_id] = entity
 
 class GrentonCover(CoverEntity):
-    def __init__(self, api_endpoint, grenton_id, reversed, object_name, auto_update, update_interval):
-        self._device_class = CoverDeviceClass.BLIND
+    def __init__(self, api_endpoint, grenton_id, reversed, object_name, auto_update, update_interval, device_class):
+        self._device_class = device_class
         self._api_endpoint = api_endpoint
         self._grenton_id = grenton_id
         self._reversed = reversed
@@ -135,6 +139,29 @@ class GrentonCover(CoverEntity):
     @property
     def should_poll(self):
         return False
+    
+    @property
+    def device_class(self):
+        return self._device_class
+    
+    @property
+    def supported_features(self):
+        base_features = (
+            CoverEntityFeature.OPEN
+            | CoverEntityFeature.CLOSE
+            | CoverEntityFeature.STOP
+            | CoverEntityFeature.SET_POSITION
+        )
+
+        if self._device_class == CoverDeviceClass.BLIND.value:
+            base_features |= (
+                CoverEntityFeature.OPEN_TILT
+                | CoverEntityFeature.CLOSE_TILT
+                | CoverEntityFeature.STOP_TILT
+                | CoverEntityFeature.SET_TILT_POSITION
+            )
+
+        return base_features
 
     async def async_open_cover(self, **kwargs):
         try:

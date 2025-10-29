@@ -6,15 +6,17 @@ from homeassistant.const import (
     STATE_OPEN,
     STATE_OPENING
 )
+from homeassistant.components.cover import CoverDeviceClass
 
-def create_obj(grenton_id="CLU220000000->ROL0000", response_data={"status": "ok"}, captured_command=None, reversed = False):
+def create_obj(grenton_id="CLU220000000->ROL0000", response_data={"status": "ok"}, captured_command=None, reversed=False):
     obj = GrentonCover(
         api_endpoint="http://fake-api",
         grenton_id=grenton_id,
         reversed = reversed,
         object_name="Test obj",
         auto_update=False,
-        update_interval=5
+        update_interval=5,
+        device_class = CoverDeviceClass.BLIND.value
     )
     obj._initialized = True
 

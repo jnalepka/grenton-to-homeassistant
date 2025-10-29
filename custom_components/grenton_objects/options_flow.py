@@ -2,7 +2,7 @@
 ==================================================
 Author: Jan Nalepka
 Script version: 3.3
-Date: 20.10.2025
+Date: 29.10.2025
 Repository: https://github.com/jnalepka/grenton-to-homeassistant
 ==================================================
 """
@@ -17,8 +17,12 @@ from .const import (
     CONF_REVERSED,
     CONF_GRENTON_TYPE,
     LIGHT_GRENTON_TYPE_OPTIONS,
-    SENSOR_GRENTON_TYPE_OPTIONS
+    SENSOR_GRENTON_TYPE_OPTIONS,
+    CONF_DEVICE_CLASS
 )
+from homeassistant.components.cover import CoverDeviceClass
+from homeassistant.helpers.selector import SelectSelector, SelectSelectorConfig
+
 
 class GrentonOptionsFlowHandler(config_entries.OptionsFlow):
     def __init__(self, config_entry: config_entries.ConfigEntry):
@@ -50,7 +54,14 @@ class GrentonOptionsFlowHandler(config_entries.OptionsFlow):
 
         if self.device_type == "cover":
             default_reversed = self.config_entry.options.get(CONF_REVERSED, self.config_entry.data.get(CONF_REVERSED))
+            default_device_type = self.config_entry.options.get(CONF_DEVICE_CLASS, self.config_entry.data.get(CONF_DEVICE_CLASS, CoverDeviceClass.BLIND.value))
             data_schema = data_schema.extend({
+                vol.Required(CONF_DEVICE_CLASS, default=default_device_type): SelectSelector(
+                    SelectSelectorConfig(
+                        options=[dc.value for dc in CoverDeviceClass],
+                        translation_key="device_class"
+                    )
+                ),
                 vol.Required(CONF_REVERSED, default=default_reversed): bool
             })
         elif self.device_type == "light":
