@@ -38,6 +38,7 @@
           "name": "Nazwa obiektu",
           "api_endpoint": "Adres URL do Grenton HTTP Listener",
           "grenton_id": "ID obiektu Grenton",
+          "device_class": "Klasa urządzenia",
           "reversed": "Odwrócony kierunek",
           "auto_update": "Automatyczna aktualizacja obiektu",
           "update_interval": "Okres odświeżania (w sekundach)"
@@ -105,7 +106,8 @@
           "auto_update": "Automatyczna aktualizacja obiektu",
           "update_interval": "Okres odświeżania (w sekundach)",
           "reversed": "Odwrócony kierunek",
-          "grenton_type": "Typ obiektu Grenton"
+          "grenton_type": "Typ obiektu Grenton",
+          "device_class": "Klasa urządzenia"
         }
       }
     }
@@ -168,7 +170,17 @@
         "volume_storage": "Magazyn objętości (L, mL, gal, fl. oz., m³, ft³, CCF)",
         "water": "Woda (L, gal, m³, ft³, CCF)",
         "weight": "Waga (kg, g, mg, µg, oz, lb, st)",
-        "wind_speed": "Prędkość wiatru (ft/s, km/h, kn, m/s, mph)"
+        "wind_speed": "Prędkość wiatru (ft/s, km/h, kn, m/s, mph)",
+        "awning": "Markiza",
+        "blind": "Żaluzja",
+        "curtain": "Zasłona",
+        "damper": "Klapa",
+        "door": "Drzwi",
+        "garage": "Brama garażowa",
+        "gate": "Brama",
+        "shade": "Osłona",
+        "shutter": "Roleta",
+        "window": "Okno"
       }
     },
     "state_class": {
