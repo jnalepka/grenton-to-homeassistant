@@ -243,10 +243,10 @@ GATE_HTTP->HA_Request_Grenton_Set->SendRequest()
 | -                             | OnValueChange   | light.lamp3         |   set_rgb         | (default)  |    (default)     |      (default)    |       CLU->led->RGB     |
 | ONE_WIRE / TEMPERATURE / ANALOG IN / Other - Sensor  | OnValueChange   | sensor.tempsens1         |   set_value         | CLU->sensor->Value  |    (default)    |     (default)    |       (default)     |
 | ROLLER_SHUTTER - Cover  | OnStateChange   | cover.blinds1         |   set_cover         | CLU->roller->State  |    CLU->roller->Position   |     CLU->roller->LamelPosition    |       (default)     |
-| THERMOSTAT - Climate  | OnStart   | climate.therm1         |   set_therm_state         | CLU->thermostat->State  |    (default)     |      (default)    |       (default)     |
+<!-- | THERMOSTAT - Climate  | OnStart   | climate.therm1         |   set_therm_state         | CLU->thermostat->State  |    (default)     |      (default)    |       (default)     |
 | -                     | OnStop   | climate.therm1         |   set_therm_state         | CLU->thermostat->State  |    (default)     |      (default)    |       (default)     |
 | -                     | OnChange   | climate.therm1         |   set_therm_target_temp         | CLU->thermostat->PointValue  |    (default)     |      (default)    |       (default)     |
-| *THERMOSTAT temp sensor  | OnValueChange   | climate.therm1         |   set_therm_current_temp         | CLU->sensor->Value  |    (default)     |      (default)    |       (default)     |
+| *THERMOSTAT temp sensor  | OnValueChange   | climate.therm1         |   set_therm_current_temp         | CLU->sensor->Value  |    (default)     |      (default)    |       (default)     | -->
 
 ## Usage example
 
@@ -268,6 +268,6 @@ GATE_HTTP->HA_Request_Grenton_Set->SendRequest()
 | Light                              |  set_rgb               | hex [#RRGGBB]                                     |
 | Sensor                             |  set_value             | value [-999999999.99 to 999999999.99]             |
 | Cover                              |  set_cover             | state [0-4], position [0-100%], lamel (optional) [0-90°] |
-| Climate                            |  set_therm_state       | state [0 (off), 1 (on)], direction (optional) [0 (normal/heat), 1 (reverse/cool)] |
+<!-- | Climate                            |  set_therm_state       | state [0 (off), 1 (on)], direction (optional) [0 (normal/heat), 1 (reverse/cool)] |
 | Climate                            |  set_therm_target_temp | temp (target temp)                                |
-| Climate                            |  set_therm_current_temp | temp (current temp)                              |
+| Climate                            |  set_therm_current_temp | temp (current temp)                              | -->
