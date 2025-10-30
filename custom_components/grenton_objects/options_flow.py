@@ -1,7 +1,7 @@
 """
 ==================================================
 Author: Jan Nalepka
-Script version: 3.3
+Script version: 3.4
 Date: 29.10.2025
 Repository: https://github.com/jnalepka/grenton-to-homeassistant
 ==================================================
@@ -52,7 +52,12 @@ class GrentonOptionsFlowHandler(config_entries.OptionsFlow):
             vol.Required(CONF_API_ENDPOINT, default=default_endpoint): str
         })
 
-        if self.device_type == "cover":
+        if self.device_type == "light":
+            default_type = self.config_entry.options.get(CONF_GRENTON_TYPE, self.config_entry.data.get(CONF_GRENTON_TYPE))
+            data_schema = data_schema.extend({
+                vol.Required(CONF_GRENTON_TYPE, default=default_type): vol.In(LIGHT_GRENTON_TYPE_OPTIONS)
+            })
+        elif self.device_type == "cover":
             default_reversed = self.config_entry.options.get(CONF_REVERSED, self.config_entry.data.get(CONF_REVERSED))
             default_device_type = self.config_entry.options.get(CONF_DEVICE_CLASS, self.config_entry.data.get(CONF_DEVICE_CLASS, CoverDeviceClass.BLIND.value))
             data_schema = data_schema.extend({
@@ -64,21 +69,21 @@ class GrentonOptionsFlowHandler(config_entries.OptionsFlow):
                 ),
                 vol.Required(CONF_REVERSED, default=default_reversed): bool
             })
-        elif self.device_type == "light":
-            default_type = self.config_entry.options.get(CONF_GRENTON_TYPE, self.config_entry.data.get(CONF_GRENTON_TYPE))
-            data_schema = data_schema.extend({
-                vol.Required(CONF_GRENTON_TYPE, default=default_type): vol.In(LIGHT_GRENTON_TYPE_OPTIONS)
-            })
         elif self.device_type == "sensor":
             default_type = self.config_entry.options.get(CONF_GRENTON_TYPE, self.config_entry.data.get(CONF_GRENTON_TYPE))
             data_schema = data_schema.extend({
                 vol.Required(CONF_GRENTON_TYPE, default=default_type): vol.In(SENSOR_GRENTON_TYPE_OPTIONS)
             })
 
-        data_schema = data_schema.extend({
-            vol.Required(CONF_AUTO_UPDATE, default=default_auto_update): bool,
-            vol.Required(CONF_UPDATE_INTERVAL, default=default_update_interval): vol.All(vol.Coerce(int), vol.Range(min=5, max=3600))
-        })
+        if self.device_type == "climate":
+            data_schema = data_schema.extend({
+                vol.Required(CONF_UPDATE_INTERVAL, default=default_update_interval): vol.All(vol.Coerce(int), vol.Range(min=5, max=3600))
+            })
+        elif self.device_type != "button":
+            data_schema = data_schema.extend({
+                vol.Required(CONF_AUTO_UPDATE, default=default_auto_update): bool,
+                vol.Required(CONF_UPDATE_INTERVAL, default=default_update_interval): vol.All(vol.Coerce(int), vol.Range(min=5, max=3600))
+            })
 
         return self.async_show_form(
             step_id="init", 

@@ -41,7 +41,7 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
     api_endpoint = config_entry.options.get(CONF_API_ENDPOINT, config_entry.data.get(CONF_API_ENDPOINT))
     grenton_id = config_entry.data.get(CONF_GRENTON_ID)
     object_name = config_entry.data.get(CONF_OBJECT_NAME)
-    auto_update = config_entry.options.get(CONF_AUTO_UPDATE, config_entry.data.get(CONF_AUTO_UPDATE, True))
+    auto_update = True
     update_interval = config_entry.options.get(CONF_UPDATE_INTERVAL, config_entry.data.get(CONF_UPDATE_INTERVAL, DEFAULT_UPDATE_INTERVAL))
 
     entity = GrentonClimate(api_endpoint, grenton_id, object_name, auto_update, update_interval)
