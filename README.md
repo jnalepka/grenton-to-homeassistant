@@ -41,13 +41,13 @@ To install manually, copy the grenton_objects folder along with all its contents
 
 <img src="https://user-images.githubusercontent.com/47686437/168548113-b3cd4206-3281-445b-b7c6-bc0a3251293d.png" height="20"> Youtube tutorial: [Configure Grenton side and add first object](https://youtu.be/QOVhQc0x1ro)
 
-1. Create a `HTTPListener` virtual object on GateHTTP named `HA_Listener_Integration` and configure it as follows:
+1. Create a `HTTPListener` virtual object on the `GATE_HTTP` named `HA_Listener_Integration` and configure it as follows:
    * Path - `/HAlistener` (You can edit it if you want)
    * ResponseType - `JSON`
 
   ![image](https://github.com/jnalepka/GrentonHomeAssistantIntegration/assets/70645322/1d69d9fc-95f3-4f89-90e3-588b8637ffad)
 
-2. Create a script named `HA_Integration_Script`.
+2. Create a script on the `GATE_HTTP` named `HA_Integration_Script`.
 
 ```lua
 -- ╔═══════════════════════════════════════════════════════════════════════╗
@@ -80,7 +80,6 @@ if reqJson.command or reqJson.status then
     local results = {}
 
     for key, value in pairs(reqJson) do
-        -- print("HA integration command >> " .. value)
         results[key] = load(value)()
     end
 
@@ -145,7 +144,13 @@ To use the Home Assistant REST API, you need to create an access token. To do th
 
 ## Grenton-side requirement for calling Grenton services
 
-1. Create a `HTTPRequest` virtual object on GateHTTP named `HA_Request_Grenton_Set` and configure it as follows:
+1. Create a two `user features` on the `GATE_HTTP`:
+   * `queueHA`, type `OTHER`, init value `0`
+   * `queueHArunning`, type `BOOLEAN`, init value `false`
+  
+<img width="864" height="643" alt="image" src="https://github.com/user-attachments/assets/ce621b2d-55ec-46b7-9fee-b05939b2bd30" />
+  
+2. Create a `HTTPRequest` virtual object on the `GATE_HTTP` named `HA_Request_Grenton_Set` and configure it as follows:
    * Host - `http://192.168.0.95:8123` (Enter the IP address of your Home Assistant.)
    * Path - `\z`
    * Method = `POST`
@@ -153,14 +158,14 @@ To use the Home Assistant REST API, you need to create an access token. To do th
    * ResponseType = `JSON`
    * RequestHeaders = `Authorization: Bearer <your token>` (paste your long-lived access token)
 
-2. Create a script named `HA_Integration_Grenton_Set` and attach it to the OnRequest event of the virtual object.
+2. Create a script on the `GATE_HTTP` named `HA_Integration_Queue_Prepare`.
 
 ```lua
 -- ╔═══════════════════════════════════════════════════════════════════════╗
 -- ║                        Author: Jan Nalepka                            ║
 -- ║                                                                       ║
--- ║ Script: HA_Integration_Grenton_Set                                    ║
--- ║ Description: Send a service command for an entity in Home Assistant.  ║
+-- ║ Script: HA_Integration_Queue_Prepare                                  ║
+-- ║ Description: Prepare queue for the grenton service request to the HA. ║
 -- ║                                                                       ║
 -- ║ License: Free for non-commercial use                                  ║
 -- ║ Github: https://github.com/jnalepka/grenton-to-homeassistant          ║
@@ -170,6 +175,7 @@ To use the Home Assistant REST API, you need to create an access token. To do th
 -- ║ Requirements:                                                         ║
 -- ║    Gate Http:                                                         ║
 -- ║          1.  Gate Http NAME: "GATE_HTTP" <or change it in this script>║
+-- ║          2.  HA_Integration_Queue_Prepare     script added            ║
 -- ║                                                                       ║
 -- ║    Script parameters:                                                 ║
 -- ║          1.  ha_entity, default: "-", string                          ║
@@ -178,6 +184,61 @@ To use the Home Assistant REST API, you need to create an access token. To do th
 -- ║          4.  value_2, default: "-1", number                           ║
 -- ║          5.  value_3, default: "-1", number                           ║
 -- ║          6.  string_value, default: "-", string                       ║
+-- ║                                                                       ║
+-- ╚═══════════════════════════════════════════════════════════════════════╝
+
+if type(queueHA) ~= "table" then queueHA = {} end
+local req = { e = ha_entity, s = grenton_service }
+local builders = {
+    set_state = function(r) r.v1 = value_1 end,
+    set_brightness = function(r) r.v1 = value_1 end,
+    set_rgb = function(r) r.v4 = string_value end,
+    set_value = function(r) r.v1 = value_1 end,
+    set_cover = function(r)
+        r.v1 = value_1
+        r.v2 = value_2
+        if value_3 ~= "-1" then r.v3 = value_3 end
+    end
+}
+local builder = builders[grenton_service]
+if builder then builder(req) end
+table.insert(queueHA, req)
+if not GATE_HTTP->queueHArunning then
+    GATE_HTTP->HA_Integration_Process_Queue()
+end
+```
+
+> NOTE! Pay attention to the name of the `GATE_HTTP` and the virtual object.
+
+3. Create a `parameters` for the script `HA_Integration_Queue_Prepare`:
+   * ha_entity, default: "-", string
+   * grenton_service, default: "-", string
+   * value_1, default: "-1", number
+   * value_2, default: "-1", number
+   * value_3, default: "-1", number
+   * string_value, default: "-", string
+  
+<img width="556" height="485" alt="image" src="https://github.com/user-attachments/assets/2861dd8a-c1d1-4048-8d9d-ac645b19cd66" />
+
+4. Create a script on the `GATE_HTTP` named `HA_Integration_Process_Queue`.
+
+```lua
+-- ╔═══════════════════════════════════════════════════════════════════════╗
+-- ║                        Author: Jan Nalepka                            ║
+-- ║                                                                       ║
+-- ║ Script: HA_Integration_Process_Queue                                  ║
+-- ║ Description: Send grenton service request to the HA.                  ║
+-- ║                                                                       ║
+-- ║ License: Free for non-commercial use                                  ║
+-- ║ Github: https://github.com/jnalepka/grenton-to-homeassistant          ║
+-- ║                                                                       ║
+-- ║ Version: 1.0.0                                                        ║
+-- ║                                                                       ║
+-- ║ Requirements:                                                         ║
+-- ║    Gate Http:                                                         ║
+-- ║          1.  Gate Http NAME: "GATE_HTTP" <or change it in this script>║
+-- ║          2.  HA_Integration_Process_Queue_Timer: CountDown, 50ms      ║
+-- ║                 |- OnTimer: this script                               ║
 -- ║                                                                       ║
 -- ║    Http_Request virtual object:                                       ║
 -- ║          Name: HA_Integration_Grenton_Set                             ║
@@ -190,48 +251,44 @@ To use the Home Assistant REST API, you need to create an access token. To do th
 -- ║                                                                       ║
 -- ╚═══════════════════════════════════════════════════════════════════════╝
 
-local path = "/api/services/grenton_objects/"..grenton_service
-local reqJson = { entity_id = ha_entity }
-  
-if grenton_service == "set_state" then
-    reqJson.state = value_1
-elseif grenton_service == "set_brightness" then
-    reqJson.brightness = value_1
-elseif grenton_service == "set_rgb" then
-    reqJson.hex = string_value
-elseif grenton_service == "set_value" then
-    reqJson.value = value_1
-elseif grenton_service == "set_cover" then
-    reqJson.state = value_1
-    reqJson.position = value_2
-    if value_3 ~= "-1" then
-        reqJson.lamel = value_3
-    end
-elseif grenton_service == "set_therm_state" then
-    reqJson.state = value_1
-    if value_2 ~= "-1" then
-        reqJson.direction = value_2
-    end
-elseif grenton_service == "set_therm_target_temp" or grenton_service == "set_therm_current_temp" then
-    reqJson.temp = value_1
+GATE_HTTP->queueHArunning = true
+if GATE_HTTP->HA_Request_Grenton_Set->IsActive == 1 then
+	GATE_HTTP->HA_Integration_Process_Queue_Timer->Start()
+    return
 end
-
+local nextReq = table.remove(queueHA, 1)
+if not nextReq then
+	GATE_HTTP->queueHArunning = false
+    return
+end
+local path = "/api/services/grenton_objects/"..nextReq.s
+local reqJson = { entity_id = nextReq.e }
+local handlers = {
+    set_state = function(r, n) r.state = n.v1 end,
+    set_brightness = function(r, n) r.brightness = n.v1 end,
+    set_rgb = function(r, n) r.hex = n.v4 end,
+    set_value = function(r, n) r.value = n.v1 end,
+    set_cover = function(r, n)
+        r.state = n.v1
+        r.position = n.v2
+        if n.v3 ~= "-1" then r.lamel = n.v3 end
+    end
+}
+local handler = handlers[nextReq.s]
+if handler then handler(reqJson, nextReq) end
 GATE_HTTP->HA_Request_Grenton_Set->SetPath(path)
 GATE_HTTP->HA_Request_Grenton_Set->SetRequestBody(reqJson)
 GATE_HTTP->HA_Request_Grenton_Set->SendRequest()
+GATE_HTTP->HA_Integration_Process_Queue_Timer->Start()
 ```
 
-> NOTE! Pay attention to the name of the GATE and the virtual object.
+> NOTE! Pay attention to the name of the `GATE_HTTP` and the virtual object.
 
-3. Create parameters for the script HA_Integration_Grenton_Set:
-   * ha_entity, default: "-", string
-   * grenton_service, default: "-", string
-   * value_1, default: "-1", number
-   * value_2, default: "-1", number
-   * value_3, default: "-1", number
-   * string_value, default: "-", string
-  
-<img width="602" height="508" alt="image" src="https://github.com/user-attachments/assets/edea5dd3-ff18-459c-be0e-74143d0b4d51" />
+5. Create a `Timer` virtual object on the `GATE_HTTP` named `HA_Integration_Process_Queue_Timer` and configure it as follows:
+   * Time - `50`
+   * Mode - `CountDown`
+   * OnTImer - `GATE_HTTP->HA_Integration_Process_Queue()`
+
 
 ## How to perform a dynamic update
 
@@ -252,9 +309,11 @@ GATE_HTTP->HA_Request_Grenton_Set->SendRequest()
 
 ### DOUT - Light / Switch / Binary Sensor
 
-<img width="836" height="643" alt="image" src="https://github.com/user-attachments/assets/fe39f7eb-879f-4b25-a8a2-3b27c3ac64a7" />
+<img width="864" height="643" alt="image" src="https://github.com/user-attachments/assets/bd2fdec5-912d-432f-8859-488c2ed02dba" />
 
-<img width="1099" height="557" alt="image" src="https://github.com/user-attachments/assets/fa76d811-c09a-4adc-9144-f29944605235" />
+
+<img width="836" height="543" alt="image" src="https://github.com/user-attachments/assets/b5789a7d-3116-41ab-828b-335cc11b54a6" />
+
 
 
 ## All Grenton services
