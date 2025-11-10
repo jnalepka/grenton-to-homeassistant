@@ -41,11 +41,12 @@ To install manually, copy the grenton_objects folder along with all its contents
 
 <img src="https://user-images.githubusercontent.com/47686437/168548113-b3cd4206-3281-445b-b7c6-bc0a3251293d.png" height="20"> Youtube tutorial: [Configure Grenton side and add first object](https://youtu.be/QOVhQc0x1ro)
 
-1. Create a `HTTPListener` virtual object on the `GATE_HTTP` named `HA_Listener_Integration` and configure it as follows:
+1. Create a `HTTPListener` virtual object on the `GATE_HTTP` named `HA_Integration_Listener` and configure it as follows:
    * Path - `/HAlistener` (You can edit it if you want)
    * ResponseType - `JSON`
 
-  ![image](https://github.com/jnalepka/GrentonHomeAssistantIntegration/assets/70645322/1d69d9fc-95f3-4f89-90e3-588b8637ffad)
+  <img width="836" height="643" alt="image" src="https://github.com/user-attachments/assets/32aef72d-bd06-4ec9-8861-20c48c50b06f" />
+
 
 2. Create a script on the `GATE_HTTP` named `HA_Integration_Script`.
 
@@ -66,13 +67,13 @@ To install manually, copy the grenton_objects folder along with all its contents
 -- ║          1.  Gate Http NAME: "GATE_HTTP" <or change it in this script>║
 -- ║                                                                       ║
 -- ║    HttpListener virtual object:                                       ║
--- ║          Name: HA_Listener_Integration                                ║
+-- ║          Name: HA_Integration_Listener                                ║
 -- ║          Path: /HAlistener                                            ║
 -- ║          ResponseType: JSON                                           ║
 -- ║                                                                       ║
 -- ╚═══════════════════════════════════════════════════════════════════════╝
 
-local reqJson = GATE_HTTP->HA_Listener_Integration->RequestBody
+local reqJson = GATE_HTTP->HA_Integration_Listener->RequestBody
 local code = 400
 local resp = { g_status = "Grenton script ERROR" }
 
@@ -91,14 +92,14 @@ if reqJson.command or reqJson.status then
     code = 200
 end
 
-GATE_HTTP->HA_Listener_Integration->SetStatusCode(code)
-GATE_HTTP->HA_Listener_Integration->SetResponseBody(resp)
-GATE_HTTP->HA_Listener_Integration->SendResponse()
+GATE_HTTP->HA_Integration_Listener->SetStatusCode(code)
+GATE_HTTP->HA_Integration_Listener->SetResponseBody(resp)
+GATE_HTTP->HA_Integration_Listener->SendResponse()
 ```
 
 > NOTE! Pay attention to the name of the GATE and the virtual object.
 
-3. Attach `HA_Integration_Script` script to the `OnRequest` event of the `HA_Listener_Integration` virtual object.
+3. Attach `HA_Integration_Script` script to the `OnRequest` event of the `HA_Integration_Listener` virtual object.
 
 ![image](https://github.com/jnalepka/GrentonHomeAssistantIntegration/assets/70645322/25a94dee-a43a-4b32-a3f2-83c455652688)
 
