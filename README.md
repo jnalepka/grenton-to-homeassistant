@@ -296,9 +296,9 @@ GATE_HTTP->HA_Integration_Process_Queue_Timer->Start()
 
 | Grenton object type               |   object event  | ha_entity example   |  grenton service    | value_1             | value_2  | value_3  | string_value |
 |-----------------------------------|-----------------|---------------------|---------------------|---------------------|----------|----------|--------------|
-| DOUT - Light / Switch / Binary Sensor  | OnValueChange   | light.lamp1         |   set_state         | CLU->dout->Value  |    (default)     |      (default)    |       (default)     |
+| DOUT - Light / Switch / Binary Sensor <br><img src="https://user-images.githubusercontent.com/47686437/168548113-b3cd4206-3281-445b-b7c6-bc0a3251293d.png" height="20"> [Tutorial](https://youtu.be/Au0BVK2WPuM) | OnValueChange   | light.lamp1         |   set_state         | CLU->dout->Value  |    (default)     |      (default)    |       (default)     |
 | DIMMER - Light                    | OnValueChange   | light.lamp2         |   set_brightness         | CLU->dimmer->Value  |    (default)     |     (default)    |       (default)    |
-| LED - Light                      | OnValueChange   | light.lamp3         |   set_brightness         | CLU->led->Value  |    (default)    |     (default)    |       (default)     |
+| LED - Light <br><img src="https://user-images.githubusercontent.com/47686437/168548113-b3cd4206-3281-445b-b7c6-bc0a3251293d.png" height="20"> [Tutorial](https://youtu.be/V0ZJ0n-DFUM)                     | OnValueChange   | light.lamp3         |   set_brightness         | CLU->led->Value  |    (default)    |     (default)    |       (default)     |
 | -                             | OnValueChange   | light.lamp3         |   set_rgb         | (default)  |    (default)     |      (default)    |       CLU->led->RGB     |
 | ONE_WIRE / TEMPERATURE / ANALOG IN / Other - Sensor  | OnValueChange   | sensor.tempsens1         |   set_value         | CLU->sensor->Value  |    (default)    |     (default)    |       (default)     |
 | ROLLER_SHUTTER - Cover  | OnStateChange   | cover.blinds1         |   set_cover         | CLU->roller->State  |    CLU->roller->Position   |     CLU->roller->LamelPosition    |       (default)     |
