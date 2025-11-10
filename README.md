@@ -101,7 +101,8 @@ GATE_HTTP->HA_Integration_Listener->SendResponse()
 
 3. Attach `HA_Integration_Script` script to the `OnRequest` event of the `HA_Integration_Listener` virtual object.
 
-![image](https://github.com/jnalepka/GrentonHomeAssistantIntegration/assets/70645322/25a94dee-a43a-4b32-a3f2-83c455652688)
+<img width="836" height="643" alt="image" src="https://github.com/user-attachments/assets/d5fcac49-6656-4b1b-9964-fb2b280c7792" />
+
 
 # How to add an object
 
@@ -132,7 +133,7 @@ For a larger number of objects or when dynamic state updates are needed, dynamic
 
 # Dynamic updates
 
-<img src="https://user-images.githubusercontent.com/47686437/168548113-b3cd4206-3281-445b-b7c6-bc0a3251293d.png" height="20"> Youtube tutorial: [Dynamic update - Lamp (DOUT)](https://youtu.be/3-AoxTPbSp0)
+<img src="https://user-images.githubusercontent.com/47686437/168548113-b3cd4206-3281-445b-b7c6-bc0a3251293d.png" height="20"> Youtube tutorial: [Dynamic update - Lamp (DOUT)](https://youtu.be/Au0BVK2WPuM)
 
 To configure dynamic updates, go to `Settings -> Devices & Services -> Grenton Objects`, and for each object you want to enable dynamic updates for, disable automatic updates.
 
