@@ -58,7 +58,7 @@ To install manually, copy the grenton_objects folder along with all its contents
 -- ║ Description: Display and control Grenton objects in Home Assistant.   ║
 -- ║                                                                       ║
 -- ║ License: Free for non-commercial use                                  ║
--- ║ Github: https://github.com/jnalepka/grenton-to-homeassistant          ║
+-- ║ Github: https://github.com/jnalepka/grenton-objects-home-assistant          ║
 -- ║                                                                       ║
 -- ║ Script version: 1.0.0                                                 ║
 -- ║                                                                       ║
@@ -170,7 +170,7 @@ To use the Home Assistant REST API, you need to create an access token. To do th
 -- ║ Description: Prepare queue for the grenton service request to the HA. ║
 -- ║                                                                       ║
 -- ║ License: Free for non-commercial use                                  ║
--- ║ Github: https://github.com/jnalepka/grenton-to-homeassistant          ║
+-- ║ Github: https://github.com/jnalepka/grenton-objects-home-assistant          ║
 -- ║                                                                       ║
 -- ║ Version: 1.0.0                                                        ║
 -- ║                                                                       ║
@@ -232,7 +232,7 @@ end
 -- ║ Description: Send grenton service request to the HA.                  ║
 -- ║                                                                       ║
 -- ║ License: Free for non-commercial use                                  ║
--- ║ Github: https://github.com/jnalepka/grenton-to-homeassistant          ║
+-- ║ Github: https://github.com/jnalepka/grenton-objects-home-assistant          ║
 -- ║                                                                       ║
 -- ║ Version: 1.0.0                                                        ║
 -- ║                                                                       ║

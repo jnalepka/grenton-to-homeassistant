@@ -3,7 +3,7 @@
 Author: Jan Nalepka
 Script version: 3.5
 Date: 15.11.2025
-Repository: https://github.com/jnalepka/grenton-to-homeassistant
+Repository: https://github.com/jnalepka/grenton-objects-home-assistant
 ==================================================
 """
 

@@ -3,7 +3,7 @@
     "step": {
       "user": {
         "title": "Dodaj obiekt Grenton",
-        "description": "Uwaga! Do prawidłowego działania niezbędne jest utworzenie obiektu wirtualnego HTTP Listener w Grenton (manual https://github.com/jnalepka/grenton-to-homeassistant).",
+        "description": "Uwaga! Do prawidłowego działania niezbędne jest utworzenie obiektu wirtualnego HTTP Listener w Grenton (manual https://github.com/jnalepka/grenton-objects-home-assistant).",
         "data": {
           "device_type": "Typ urządzenia"
         }
