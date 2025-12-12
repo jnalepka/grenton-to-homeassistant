@@ -1,43 +1,51 @@
 
 <img src="https://github.com/user-attachments/assets/08571ca3-a9b2-404b-820f-dccc688f62e8" width="600"/>
 
-# Grenton to Home Assistant (custom integration)
+# Grenton Objects (Home Assistant)
 
-A Home Assistant custom integration for presenting and controlling Grenton objects.
+[![hacs_badge](https://img.shields.io/badge/HACS-Custom-41BDF5.svg?style=for-the-badge)](https://github.com/hacs/integration)
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/jnalepka/grenton-objects-home-assistant?style=for-the-badge)](https://github.com/jnalepka/grenton-objects-home-assistant/releases)
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg?style=for-the-badge)](https://github.com/jnalepka/grenton-objects-home-assistant/graphs/commit-activity)
+[![License: Non-Commercial](https://img.shields.io/badge/License-Non--Commercial-red.svg?style=for-the-badge)](LICENSE)
+[![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-support-yellow.svg?style=for-the-badge&logo=buy-me-a-coffee)](https://tipply.pl/@jnalepka)
+
+Grenton Objects is a custom integration for Home Assistant for presenting and controlling objects from Grenton Smart Home system.
 
 This integration creates objects in Home Assistant based on selected objects from Grenton. The HTTP Gate module is required, as well as the creation of a virtual HttpListener object and a script, according to the instructions. After providing the identifiers of Grenton objects, they will appear in Home Assistant. It is possible to display statuses and control Grenton devices.
 
 ![image](https://github.com/user-attachments/assets/4cab82f8-548c-4b96-ae29-daaea8c5c11e)
 
+If you like what I do, buy me a `coffee`!
 
 <a href="https://tipply.pl/@jnalepka">
     <img src="https://img.shields.io/static/v1?label=Donate&message=%E2%9D%A4&logo=GitHub&color=%23fe8e86" alt="Donate" width="130" height="30">
 </a>
 
-If you like what I do, buy me a `coffee`!
+## ✨ Features
 
-# License
+* **Device Support** - Display Grenton objects in Home Assistant, including lights, blinds, sensors, thermostats, and more.
+* **Auto-updates** - Addon update states automatically.
+* **Event-Based Updates** – Optional dynamic updates based on Grenton events.
 
-This project is free for personal and non-commercial use.  
-Commercial use requires the author's prior written permission.  
-The full license text can be found in the [LICENSE](LICENSE) file.
+## 🚀 Installation
 
-**Note:** Starting from version 3.0.0, this license applies.  
-
-# Installation
-
-## Using HASC (recommended)
-
-The best way to install is by using the Home Assistant Community Store (HACS). [Downloading HACS](https://www.hacs.xyz/docs/use/download/download/).
-After installing HACS, search for and install Grenton Objects.
+### Option 1: HACS (Recommended)
 
 <img src="https://user-images.githubusercontent.com/47686437/168548113-b3cd4206-3281-445b-b7c6-bc0a3251293d.png" height="20"> Youtube tutorial: [HACS and Grenton Objects Installation](https://youtu.be/LEcBMFAkLcY)
 
-## Manual installation (not recommended)
+1.  Open [HACS](https://www.hacs.xyz/docs/use/download/download/) in your Home Assistant instance.
+2.  Search **Grenton Objects** and **Download**.
+3.  Restart Home Assistant.
 
-To install manually, copy the grenton_objects folder along with all its contents into the custom_components folder of your Home Assistant setup. This folder is typically found within the /config directory.
+### Option 2: Manual Installation
 
-# Requirements on the Grenton side
+1.  Download the latest release from the [Releases](https://github.com/jnalepka/grenton-objects-home-assistant/releases) section.
+2.  Extract the zip file.
+3.  Copy the `grenton_objects` folder into your `custom_components` directory (usually `/config/custom_components/`).
+4.  Restart Home Assistant.
+
+
+## 🟥 Requirements on the Grenton side
 
 <img src="https://user-images.githubusercontent.com/47686437/168548113-b3cd4206-3281-445b-b7c6-bc0a3251293d.png" height="20"> Youtube tutorial: [Configure Grenton side and add first object](https://youtu.be/QOVhQc0x1ro)
 
@@ -104,7 +112,7 @@ GATE_HTTP->HA_Integration_Listener->SendResponse()
 <img width="836" height="643" alt="image" src="https://github.com/user-attachments/assets/d5fcac49-6656-4b1b-9964-fb2b280c7792" />
 
 
-# How to add an object
+## 📖 Usage
 
 <img src="https://user-images.githubusercontent.com/47686437/168548113-b3cd4206-3281-445b-b7c6-bc0a3251293d.png" height="20"> Youtube tutorial: [Configure Grenton side and add first object](https://youtu.be/QOVhQc0x1ro)
 
@@ -122,29 +130,27 @@ GATE_HTTP->HA_Integration_Listener->SendResponse()
 - Binary Sensor 0/1 – DIN / BINARY_SENSOR / ZWAVE
 - User Scripts
 
-# Auto updates
+## 🔄 Auto updates
 
 The add-on automatically retrieves the status of objects from Grenton. This works well for a small number of objects (around 15) and when immediate state updates are not required.
 You can also go to `Settings -> Devices & Services -> Grenton Objects` and, by clicking the settings icon for a specific object, configure its data refresh interval.
 
-> NOTE! After changing the object settings, a Home Assistant restart is required.
-
 For a larger number of objects or when dynamic state updates are needed, dynamic updates should be configured.
 
-# Dynamic updates
+## 💫 Dynamic updates
 
 <img src="https://user-images.githubusercontent.com/47686437/168548113-b3cd4206-3281-445b-b7c6-bc0a3251293d.png" height="20"> Youtube tutorial: [Dynamic update - Lamp (DOUT)](https://youtu.be/Au0BVK2WPuM)
 
 To configure dynamic updates, go to `Settings -> Devices & Services -> Grenton Objects`, and for each object you want to enable dynamic updates for, disable automatic updates.
 
-## Create long-lived access tokens
+### Create long-lived access tokens
 
 To use the Home Assistant REST API, you need to create an access token. To do this, go to `Profile → Security → Long-Lived Access Tokens`, create a token, and then copy it.
 
 <img width="603" height="295" alt="image" src="https://github.com/user-attachments/assets/36c3a1c8-783d-4bc6-b8cb-6ffcf7e15014" />
 
 
-## Grenton-side requirement for calling Grenton services
+### Grenton-side requirement for calling Grenton services
 
 1. Create a two `user features` on the `GATE_HTTP`:
    * `queueHA`, type `OTHER`, init value `0`
@@ -292,7 +298,7 @@ GATE_HTTP->HA_Integration_Process_Queue_Timer->Start()
    * OnTImer - `GATE_HTTP->HA_Integration_Process_Queue()`
 
 
-## How to perform a dynamic update
+### How to perform a dynamic update
 
 | Grenton object type               |   object event  | ha_entity example   |  grenton service    | value_1             | value_2  | value_3  | string_value |
 |-----------------------------------|-----------------|---------------------|---------------------|---------------------|----------|----------|--------------|
@@ -307,9 +313,9 @@ GATE_HTTP->HA_Integration_Process_Queue_Timer->Start()
 | -                     | OnChange   | climate.therm1         |   set_therm_target_temp         | CLU->thermostat->PointValue  |    (default)     |      (default)    |       (default)     |
 | *THERMOSTAT temp sensor  | OnValueChange   | climate.therm1         |   set_therm_current_temp         | CLU->sensor->Value  |    (default)     |      (default)    |       (default)     | -->
 
-## Usage example
+### Usage example
 
-### DOUT - Light / Switch / Binary Sensor
+#### DOUT - Light / Switch / Binary Sensor
 
 <img width="864" height="643" alt="image" src="https://github.com/user-attachments/assets/bd2fdec5-912d-432f-8859-488c2ed02dba" />
 
@@ -318,7 +324,7 @@ GATE_HTTP->HA_Integration_Process_Queue_Timer->Start()
 
 
 
-## All Grenton services
+### All Grenton services
 
 | HA device_type                     |  grenton service       | parameters                                        |
 |------------------------------------|------------------------|---------------------------------------------------|
@@ -332,3 +338,14 @@ GATE_HTTP->HA_Integration_Process_Queue_Timer->Start()
 <!-- | Climate                            |  set_therm_state       | state [0 (off), 1 (on)], direction (optional) [0 (normal/heat), 1 (reverse/cool)] |
 | Climate                            |  set_therm_target_temp | temp (target temp)                                |
 | Climate                            |  set_therm_current_temp | temp (current temp)                              | -->
+
+
+## 📄 License
+
+This project is licensed for **Personal, Non-Commercial Use Only**. You are free to use, copy, and modify this software for your own personal home automation setup.
+
+❌ **Commercial use is prohibited** without prior written permission.
+
+See the [LICENSE](LICENSE) file for the full text.
+
+**Note:** Starting from version 3.0.0, this license applies.  
