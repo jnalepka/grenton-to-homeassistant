@@ -161,7 +161,7 @@ async def test_async_set_cover_tilt_position(monkeypatch):
     await obj.async_set_cover_tilt_position(tilt_position=100)
 
     assert captured_command["value"] == {
-        "command": "CLU220000000:execute(0, 'ROL0000:execute(9, 90)')"
+        "command": "CLU220000000:execute(0, 'ROL0000:execute(9, 0)')"
     }
     assert obj._last_command_time == 123.456
     assert obj.unique_id == "grenton_ROL0000"
@@ -174,7 +174,7 @@ async def test_async_open_cover_tilt(monkeypatch):
     await obj.async_open_cover_tilt()
 
     assert captured_command["value"] == {
-        "command": "CLU220000000:execute(0, 'ROL0000:execute(9, 90)')"
+        "command": "CLU220000000:execute(0, 'ROL0000:execute(9, 0)')"
     }
     assert obj._last_command_time == 123.456
     assert obj.unique_id == "grenton_ROL0000"
@@ -187,7 +187,7 @@ async def test_async_close_cover_tilt(monkeypatch):
     await obj.async_close_cover_tilt()
 
     assert captured_command["value"] == {
-        "command": "CLU220000000:execute(0, 'ROL0000:execute(9, 0)')"
+        "command": "CLU220000000:execute(0, 'ROL0000:execute(9, 90)')"
     }
     assert obj._last_command_time == 123.456
     assert obj.unique_id == "grenton_ROL0000"
@@ -205,7 +205,7 @@ async def test_async_update(monkeypatch):
     assert obj.unique_id == "grenton_ROL0000"
     assert obj.is_opening
     assert obj.current_cover_position == 50
-    assert obj.current_cover_tilt_position == 100
+    assert obj.current_cover_tilt_position == 0
 
 @pytest.mark.asyncio
 async def test_async_update_zwave(monkeypatch):
@@ -220,7 +220,7 @@ async def test_async_update_zwave(monkeypatch):
     assert obj.unique_id == "grenton_ZWA0000"
     assert not obj.is_closed
     assert obj.current_cover_position == 50
-    assert obj.current_cover_tilt_position == 100
+    assert obj.current_cover_tilt_position == 0
 
 @pytest.mark.asyncio
 async def test_async_update_reversed(monkeypatch):
@@ -235,7 +235,7 @@ async def test_async_update_reversed(monkeypatch):
     assert obj.unique_id == "grenton_ROL0000"
     assert obj.is_closed
     assert obj.current_cover_position == 0
-    assert obj.current_cover_tilt_position == 100
+    assert obj.current_cover_tilt_position == 0
 
 @pytest.mark.asyncio
 async def test_async_update_zwave_reversed(monkeypatch):
@@ -250,4 +250,4 @@ async def test_async_update_zwave_reversed(monkeypatch):
     assert obj.unique_id == "grenton_ZWA0000"
     assert obj.is_closing
     assert obj.current_cover_position == 0
-    assert obj.current_cover_tilt_position == 0
+    assert obj.current_cover_tilt_position == 100
