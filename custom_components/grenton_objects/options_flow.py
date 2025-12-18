@@ -15,6 +15,7 @@ from .const import (
     CONF_UPDATE_INTERVAL, 
     DEFAULT_UPDATE_INTERVAL,
     CONF_REVERSED,
+    CONF_REVERSED_TILT,
     CONF_GRENTON_TYPE,
     LIGHT_GRENTON_TYPE_OPTIONS,
     SENSOR_GRENTON_TYPE_OPTIONS,
@@ -57,6 +58,7 @@ class GrentonOptionsFlowHandler(config_entries.OptionsFlow):
             })
         elif device_type == "cover":
             default_reversed = self.config_entry.options.get(CONF_REVERSED, self.config_entry.data.get(CONF_REVERSED))
+            default_reversed_tilt = self.config_entry.options.get(CONF_REVERSED_TILT, self.config_entry.data.get(CONF_REVERSED_TILT, False))
             default_device_type = self.config_entry.options.get(CONF_DEVICE_CLASS, self.config_entry.data.get(CONF_DEVICE_CLASS, CoverDeviceClass.BLIND.value))
             data_schema = data_schema.extend({
                 vol.Required(CONF_DEVICE_CLASS, default=default_device_type): SelectSelector(
@@ -65,7 +67,8 @@ class GrentonOptionsFlowHandler(config_entries.OptionsFlow):
                         translation_key="device_class"
                     )
                 ),
-                vol.Required(CONF_REVERSED, default=default_reversed): bool
+                vol.Required(CONF_REVERSED, default=default_reversed): bool,
+                vol.Required(CONF_REVERSED_TILT, default=default_reversed_tilt): bool
             })
         elif device_type == "sensor":
             default_type = self.config_entry.options.get(CONF_GRENTON_TYPE, self.config_entry.data.get(CONF_GRENTON_TYPE))

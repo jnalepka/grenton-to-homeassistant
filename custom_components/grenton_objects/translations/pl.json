@@ -40,6 +40,7 @@
           "grenton_id": "ID obiektu Grenton",
           "device_class": "Klasa urządzenia",
           "reversed": "Odwrócony kierunek",
+          "reversed_tilt": "Odwrócona pozycja lameli",
           "auto_update": "Automatyczna aktualizacja obiektu",
           "update_interval": "Okres odświeżania (w sekundach)"
         }
@@ -106,6 +107,7 @@
           "auto_update": "Automatyczna aktualizacja obiektu",
           "update_interval": "Okres odświeżania (w sekundach)",
           "reversed": "Odwrócony kierunek",
+          "reversed_tilt": "Odwrócona pozycja lameli",
           "grenton_type": "Typ obiektu Grenton",
           "device_class": "Klasa urządzenia"
         }

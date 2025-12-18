@@ -21,6 +21,7 @@ from .const import (
     CONF_DEVICE_CLASS,
     CONF_STATE_CLASS,
     CONF_REVERSED,
+    CONF_REVERSED_TILT,
     DEVICE_TYPE_OPTIONS,
     DEVICE_CLASS_OPTIONS,
     STATE_CLASS_OPTIONS,
@@ -166,6 +167,7 @@ class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             CONF_OBJECT_NAME: user_input[CONF_OBJECT_NAME],
             CONF_DEVICE_CLASS: user_input[CONF_DEVICE_CLASS],
             CONF_REVERSED: user_input[CONF_REVERSED],
+            CONF_REVERSED_TILT: user_input[CONF_REVERSED_TILT],
             CONF_AUTO_UPDATE: user_input[CONF_AUTO_UPDATE],
             CONF_UPDATE_INTERVAL: user_input[CONF_UPDATE_INTERVAL]
         })
@@ -305,6 +307,7 @@ class GrentonConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     )
                 ),
                 vol.Required(CONF_REVERSED, default=defaults.get(CONF_REVERSED, False)): bool,
+                vol.Required(CONF_REVERSED_TILT, default=defaults.get(CONF_REVERSED_TILT, False)): bool,
                 vol.Required(CONF_AUTO_UPDATE, default=defaults.get(CONF_AUTO_UPDATE, True)): bool,
                 vol.Required(CONF_UPDATE_INTERVAL, default=defaults.get(CONF_UPDATE_INTERVAL, DEFAULT_UPDATE_INTERVAL)): vol.All(vol.Coerce(int), vol.Range(min=5, max=3600))
             })
