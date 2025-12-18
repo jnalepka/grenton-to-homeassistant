@@ -1,8 +1,8 @@
 """
 ==================================================
 Author: Jan Nalepka
-Script version: 3.4
-Date: 29.10.2025
+Script version: 3.5
+Date: 18.12.2025
 Repository: https://github.com/jnalepka/grenton-objects-home-assistant
 ==================================================
 """
@@ -240,7 +240,7 @@ class GrentonCover(CoverEntity):
             grenton_id_part_0, grenton_id_part_1 = self._grenton_id.split('->')
             tilt_position = kwargs.get("tilt_position", 100)
             self._current_cover_tilt_position = tilt_position
-            tilt_position = int(tilt_position * 90 / 100)
+            tilt_position = int((100 - tilt_position) * 90 / 100)
             command = {"command": f"{grenton_id_part_0}:execute(0, '{grenton_id_part_1}:execute(9, {tilt_position})')"}
             self._last_command_time = self.hass.loop.time() if self.hass is not None else None
             self.async_write_ha_state()
@@ -254,7 +254,7 @@ class GrentonCover(CoverEntity):
     async def async_open_cover_tilt(self, **kwargs):
         try:
             grenton_id_part_0, grenton_id_part_1 = self._grenton_id.split('->')
-            command = {"command": f"{grenton_id_part_0}:execute(0, '{grenton_id_part_1}:execute(9, 90)')"}
+            command = {"command": f"{grenton_id_part_0}:execute(0, '{grenton_id_part_1}:execute(9, 0)')"}
             self._last_command_time = self.hass.loop.time() if self.hass is not None else None
             self.async_write_ha_state()
             
@@ -267,7 +267,7 @@ class GrentonCover(CoverEntity):
     async def async_close_cover_tilt(self, **kwargs):
         try:
             grenton_id_part_0, grenton_id_part_1 = self._grenton_id.split('->')
-            command = {"command": f"{grenton_id_part_0}:execute(0, '{grenton_id_part_1}:execute(9, 0)')"}
+            command = {"command": f"{grenton_id_part_0}:execute(0, '{grenton_id_part_1}:execute(9, 90)')"}
             self._last_command_time = self.hass.loop.time() if self.hass is not None else None
             self.async_write_ha_state()
             
@@ -311,7 +311,8 @@ class GrentonCover(CoverEntity):
                     elif data.get("status") == 2:
                         self._state = STATE_CLOSING
                     self._current_cover_position = position
-                    self._current_cover_tilt_position = int(data.get("status_3") * 100 / 90)
+                    angle = data.get("status_3", 0)
+                    self._current_cover_tilt_position = int((90 - angle) * 100 / 90)
                     self.async_write_ha_state()
         except aiohttp.ClientError as ex:
             _LOGGER.error(f"Failed to update the cover state: {ex}")
