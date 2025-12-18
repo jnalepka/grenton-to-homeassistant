@@ -40,6 +40,7 @@
           "grenton_id": "Grenton Object ID",
           "device_class": "Device Class",
           "reversed": "Reversed Direction",
+          "reversed_tilt": "Reversed Tilt Position",
           "auto_update": "Automatic Object Updates",
           "update_interval": "Refresh Interval (in seconds)"
         }
@@ -106,6 +107,7 @@
           "auto_update": "Automatic Object Updates",
           "update_interval": "Refresh Interval (in seconds)",
           "reversed": "Reversed Direction",
+          "reversed_tilt": "Reversed Tilt Position",
           "grenton_type": "Grenton Object Type",
           "device_class": "Device Class"
         }
