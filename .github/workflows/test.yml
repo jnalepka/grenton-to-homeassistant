@@ -12,16 +12,16 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        ha-version: ["2025.12.3"]
+        ha-version: ["2025.1"]
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v4
         with:
-          python-version: "3.13.2"
+          python-version: "3.12"
 
       - name: Show Python version
         run: python --version
