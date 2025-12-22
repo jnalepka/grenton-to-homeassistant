@@ -105,7 +105,7 @@ class GrentonCover(CoverEntity):
             self._state = STATE_CLOSING
         self._current_cover_position = position
         if lamel is not None:
-            self._current_cover_tilt_position = int(lamel * 100 / 90)
+            self._current_cover_tilt_position = int((90 - lamel) * 100 / 90)
         self.async_write_ha_state()
 
     @property
