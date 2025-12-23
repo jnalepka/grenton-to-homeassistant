@@ -1,8 +1,8 @@
 """
 ==================================================
 Author: Jan Nalepka
-Script version: 3.5
-Date: 18.12.2025
+Script version: 3.6
+Date: 23.12.2025
 Repository: https://github.com/jnalepka/grenton-objects-home-assistant
 ==================================================
 """
