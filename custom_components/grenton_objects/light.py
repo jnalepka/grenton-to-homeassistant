@@ -1,8 +1,8 @@
 """
 ==================================================
 Author: Jan Nalepka
-Script version: 3.3
-Date: 20.10.2025
+Script version: 3.4
+Date: 27.12.2025
 Repository: https://github.com/jnalepka/grenton-objects-home-assistant
 ==================================================
 """
@@ -45,7 +45,7 @@ _LOGGER = logging.getLogger(__name__)
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Required(CONF_API_ENDPOINT): str,
     vol.Required(CONF_GRENTON_ID): str,
-    vol.Required(CONF_GRENTON_TYPE, default=CONF_GRENTON_TYPE_DOUT): str, #DOUT, DIMMER, RGB, LED_R, LED_G, LED_B, LED_W
+    vol.Required(CONF_GRENTON_TYPE, default=CONF_GRENTON_TYPE_DOUT): str, #DOUT, DIMMER, RGB, RGBW, LED_R, LED_G, LED_B, LED_W
     vol.Optional(CONF_OBJECT_NAME, default='Grenton Light'): str
 })
 
@@ -75,6 +75,7 @@ class GrentonLight(LightEntity):
         self._supported_color_modes: set[ColorMode | str] = set()
         self._brightness = None
         self._rgb_color = None
+        self._white = None
         self._last_command_time = None
         self._auto_update = auto_update
         self._update_interval = update_interval
@@ -92,6 +93,11 @@ class GrentonLight(LightEntity):
             self._supported_color_modes.add(ColorMode.BRIGHTNESS)
         elif self._grenton_type == CONF_GRENTON_TYPE_RGB:
             self._supported_color_modes.add(ColorMode.RGB)
+        elif self._grenton_type == CONF_GRENTON_TYPE_RGBW:
+            self._supported_color_modes = {
+                ColorMode.RGB,
+                ColorMode.WHITE,
+            }
         else:
             self._supported_color_modes.add(ColorMode.ONOFF)
 
@@ -148,6 +154,10 @@ class GrentonLight(LightEntity):
             return ColorMode.BRIGHTNESS
         elif self._grenton_type == CONF_GRENTON_TYPE_RGB:
             return ColorMode.RGB
+        elif self._grenton_type == CONF_GRENTON_TYPE_RGBW:
+            if self._color_mode in (ColorMode.RGB, ColorMode.WHITE):
+                return self._color_mode
+            return ColorMode.RGB
         else:
             return ColorMode.ONOFF
 
@@ -162,6 +172,10 @@ class GrentonLight(LightEntity):
     @property
     def rgb_color(self):
         return self._rgb_color
+
+    @property
+    def white(self):
+        return self._white
     
     @property
     def should_poll(self):
@@ -210,6 +224,23 @@ class GrentonLight(LightEntity):
                 else:
                     command = self._generate_command("command", grenton_id_part_0, grenton_id_part_1, "execute", 0, scaled_brightness)
                     self._brightness = brightness
+            elif self._grenton_type == CONF_GRENTON_TYPE_RGBW:
+                if self._color_mode == ColorMode.RGB:
+                    if rgb_color:
+                        hex_color = '#{:02x}{:02x}{:02x}'.format(*rgb_color)
+                        hex_color = f'\\"{hex_color}\\"'
+                        if grenton_id_part_1.startswith("ZWA"):
+                            command = self._generate_command("command", grenton_id_part_0, grenton_id_part_1, "execute", 3, hex_color)
+                        else:
+                            command = self._generate_command("command", grenton_id_part_0, grenton_id_part_1, "execute", 6, hex_color)
+                        self._rgb_color = rgb_color
+                    else:
+                        command = self._generate_command("command", grenton_id_part_0, grenton_id_part_1, "execute", 0, scaled_brightness)
+                        self._brightness = brightness
+                else:
+                    config = command_brightness_mapping[CONF_GRENTON_TYPE_LED_W]
+                    command = self._generate_command("command", grenton_id_part_0, grenton_id_part_1, config["action"], config["index"], config["param"])
+                    self._brightness = brightness
             else:
                 command = self._generate_command("command", grenton_id_part_0, grenton_id_part_1, "set", 0, 1)
             self._state = STATE_ON
@@ -239,6 +270,12 @@ class GrentonLight(LightEntity):
                 config = {"action": "execute", "index": 0}
             else:
                 config = command_mapping.get(self._grenton_type, {"action": "set", "index": 0})
+
+            if self._grenton_type == CONF_GRENTON_TYPE_RGBW:
+                if self._color_mode == ColorMode.RGB:
+                    config = command_mapping.get(CONF_GRENTON_TYPE_RGB, {"action": "set", "index": 0})
+                else:
+                    config = command_mapping.get(CONF_GRENTON_TYPE_LED_W, {"action": "set", "index": 0})
             
             command = self._generate_command("command", grenton_id_part_0, grenton_id_part_1, config["action"], config["index"], 0)
             self._state = STATE_OFF
