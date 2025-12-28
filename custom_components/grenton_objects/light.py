@@ -205,6 +205,9 @@ class GrentonLight(LightEntity):
                 CONF_GRENTON_TYPE_LED_B: {"action": "execute", "index": 5, "param": brightness},
                 CONF_GRENTON_TYPE_LED_W: {"action": "execute", "index": 12, "param": brightness},
             }
+            white = kwargs.get("white")
+
+            _LOGGER.info("[GrentonLight] turn_on | kwargs=%s", kwargs)
             
             if self._grenton_type in command_brightness_mapping:
                 if grenton_id_part_1.startswith("ZWA"):
@@ -226,7 +229,7 @@ class GrentonLight(LightEntity):
                     command = self._generate_command("command", grenton_id_part_0, grenton_id_part_1, "execute", 0, scaled_brightness)
                     self._brightness = brightness
             elif self._grenton_type == CONF_GRENTON_TYPE_RGBW:
-                if self._color_mode == ColorMode.RGB:
+                if not white:
                     if rgb_color:
                         hex_color = '#{:02x}{:02x}{:02x}'.format(*rgb_color)
                         hex_color = f'\\"{hex_color}\\"'
@@ -234,14 +237,27 @@ class GrentonLight(LightEntity):
                             command = self._generate_command("command", grenton_id_part_0, grenton_id_part_1, "execute", 3, hex_color)
                         else:
                             command = self._generate_command("command", grenton_id_part_0, grenton_id_part_1, "execute", 6, hex_color)
+                        config = command_brightness_mapping[CONF_GRENTON_TYPE_LED_W]
+                        command.update(self._generate_command("command_2", grenton_id_part_0, grenton_id_part_1, config["action"], config["index"], 0))
+                        self._color_mode = ColorMode.RGB
                         self._rgb_color = rgb_color
                     else:
-                        command = self._generate_command("command", grenton_id_part_0, grenton_id_part_1, "execute", 0, scaled_brightness)
+                        if self._color_mode == ColorMode.RGB:
+                            command = self._generate_command("command", grenton_id_part_0, grenton_id_part_1, "execute", 0, scaled_brightness)
+                            config = command_brightness_mapping[CONF_GRENTON_TYPE_LED_W]
+                            command.update(self._generate_command("command_2", grenton_id_part_0, grenton_id_part_1, config["action"], config["index"], 0))
+                        else:
+                            config = command_brightness_mapping[CONF_GRENTON_TYPE_LED_W]
+                            command = self._generate_command("command", grenton_id_part_0, grenton_id_part_1, config["action"], config["index"], brightness)
+                            command.update(self._generate_command("command_2", grenton_id_part_0, grenton_id_part_1, "execute", 0, 0))
                         self._brightness = brightness
                 else:
                     config = command_brightness_mapping[CONF_GRENTON_TYPE_LED_W]
-                    command = self._generate_command("command", grenton_id_part_0, grenton_id_part_1, config["action"], config["index"], config["param"])
-                    self._brightness = brightness
+                    command = self._generate_command("command", grenton_id_part_0, grenton_id_part_1, config["action"], config["index"], white)
+                    command.update(self._generate_command("command_2", grenton_id_part_0, grenton_id_part_1, "execute", 0, 0))
+                    self._color_mode = ColorMode.WHITE
+                    self._white = white
+                    self._brightness = white
             else:
                 command = self._generate_command("command", grenton_id_part_0, grenton_id_part_1, "set", 0, 1)
             self._state = STATE_ON
