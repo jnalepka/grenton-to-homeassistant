@@ -141,6 +141,23 @@ class GrentonLight(LightEntity):
         self._rgb_color = color_util.rgb_hex_to_rgb_list(hex.strip("#"))
         self.async_write_ha_state()
 
+    async def async_force_rgbw(self, hex: str, brightness: float, white: float):
+        if white > 0:
+            self._state = STATE_ON
+            self._color_mode = ColorMode.WHITE
+            self._white = white
+            self._brightness = white
+            self._last_brightness = white
+        elif hex is not "#000000":
+            self._state = STATE_ON
+            self._color_mode = ColorMode.RGB
+            self._rgb_color = color_util.rgb_hex_to_rgb_list(hex.strip("#"))
+            self._brightness = brightness * 255
+            self._last_brightness = brightness * 255
+        else:
+            self._state = STATE_OFF
+        self.async_write_ha_state()
+
     @property
     def name(self):
         return self._object_name
