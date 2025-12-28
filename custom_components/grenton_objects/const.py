@@ -1,8 +1,8 @@
 """
 ==================================================
 Author: Jan Nalepka
-Script version: 3.1
-Date: 20.10.2025
+Script version: 3.2
+Date: 28.12.2025
 Repository: https://github.com/jnalepka/grenton-objects-home-assistant
 ==================================================
 """
@@ -14,6 +14,7 @@ CONF_GRENTON_TYPE = 'grenton_type'
 CONF_GRENTON_TYPE_DOUT = 'DOUT'
 CONF_GRENTON_TYPE_DIMMER = 'DIMMER'
 CONF_GRENTON_TYPE_RGB = 'RGB'
+CONF_GRENTON_TYPE_RGBW = 'RGB+W'
 CONF_GRENTON_TYPE_LED_R = 'LED_R'
 CONF_GRENTON_TYPE_LED_G = 'LED_G'
 CONF_GRENTON_TYPE_LED_B = 'LED_B'
@@ -103,6 +104,7 @@ LIGHT_GRENTON_TYPE_OPTIONS = [
     CONF_GRENTON_TYPE_DOUT, 
     CONF_GRENTON_TYPE_DIMMER, 
     CONF_GRENTON_TYPE_RGB, 
+    CONF_GRENTON_TYPE_RGBW, 
     CONF_GRENTON_TYPE_LED_R, 
     CONF_GRENTON_TYPE_LED_G, 
     CONF_GRENTON_TYPE_LED_B, 
