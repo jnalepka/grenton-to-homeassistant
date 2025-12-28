@@ -312,11 +312,14 @@ class GrentonLight(LightEntity):
             else:
                 command = self._generate_get_command("status", grenton_id_part_0, grenton_id_part_1, "get", 0)
             
-            if self._grenton_type == CONF_GRENTON_TYPE_RGB:
+            if self._grenton_type == CONF_GRENTON_TYPE_RGB or self._grenton_type == CONF_GRENTON_TYPE_RGBW:
                 if grenton_id_part_1.startswith("ZWA"):
                     command.update(self._generate_get_command("status_2", grenton_id_part_0, grenton_id_part_1, "get", 3))
                 else:
                     command.update(self._generate_get_command("status_2", grenton_id_part_0, grenton_id_part_1, "get", 6))
+
+            if self._grenton_type == CONF_GRENTON_TYPE_RGBW:
+                command.update(self._generate_get_command("status_3", grenton_id_part_0, grenton_id_part_1, "get", 15))
             
             async with aiohttp.ClientSession() as session:
                 async with session.get(f"{self._api_endpoint}", json=command) as response:
@@ -333,7 +336,24 @@ class GrentonLight(LightEntity):
                     
                     if self._grenton_type == CONF_GRENTON_TYPE_RGB:
                         self._rgb_color = color_util.rgb_hex_to_rgb_list(data.get("status_2").strip("#"))
+
+                    #rgbw
+                    if self._grenton_type == CONF_GRENTON_TYPE_RGBW:
+                        if data.get("status_3") > 0:
+                            self._state = STATE_ON
+                            self._color_mode = ColorMode.WHITE
+                            self._white = data.get("status_3")
+                            self._brightness = data.get("status_3")
+                        elif data.get("status") > 0:
+                            self._state = STATE_ON
+                            self._color_mode = ColorMode.RGB
+                            self._rgb_color = color_util.rgb_hex_to_rgb_list(data.get("status_2").strip("#"))
+                            self._brightness = data.get("status") * 255
+                        else:
+                            self._state = STATE_OFF
+
                     self.async_write_ha_state()
+
         except aiohttp.ClientError as ex:
             _LOGGER.error(f"Failed to update the light state: {ex}")
             self._state = None
