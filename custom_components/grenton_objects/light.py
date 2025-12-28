@@ -98,6 +98,7 @@ class GrentonLight(LightEntity):
                 ColorMode.RGB,
                 ColorMode.WHITE,
             }
+            self._color_mode = ColorMode.RGB
         else:
             self._supported_color_modes.add(ColorMode.ONOFF)
 
