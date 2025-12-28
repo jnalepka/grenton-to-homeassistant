@@ -2,7 +2,7 @@
 ==================================================
 Author: Jan Nalepka
 Script version: 3.4
-Date: 27.12.2025
+Date: 29.12.2025
 Repository: https://github.com/jnalepka/grenton-objects-home-assistant
 ==================================================
 """
@@ -74,6 +74,7 @@ class GrentonLight(LightEntity):
         self._state = None
         self._supported_color_modes: set[ColorMode | str] = set()
         self._brightness = None
+        self._last_brightness = None
         self._rgb_color = None
         self._white = None
         self._last_command_time = None
@@ -127,10 +128,13 @@ class GrentonLight(LightEntity):
         if self._grenton_type == CONF_GRENTON_TYPE_RGB or self._grenton_type == CONF_GRENTON_TYPE_DIMMER:
             if self._grenton_type == CONF_GRENTON_TYPE_DIMMER and grenton_id_part_1.startswith("ZWA"):
                 self._brightness = brightness
+                self._last_brightness = brightness
             else:
                 self._brightness = brightness * 255
+                self._last_brightness = brightness * 255
         elif self._grenton_type == CONF_GRENTON_TYPE_LED_R or self._grenton_type == CONF_GRENTON_TYPE_LED_G or self._grenton_type == CONF_GRENTON_TYPE_LED_B or self._grenton_type == CONF_GRENTON_TYPE_LED_W:
             self._brightness = brightness
+            self._last_brightness = brightness
         self.async_write_ha_state()
 
     async def async_force_rgb(self, hex: str):
@@ -195,7 +199,7 @@ class GrentonLight(LightEntity):
     async def async_turn_on(self, **kwargs):
         try:
             grenton_id_part_0, grenton_id_part_1 = self._grenton_id.split('->')
-            brightness = kwargs.get("brightness", 255)
+            brightness = kwargs.get("brightness", self._last_brightness or 255)
             scaled_brightness = brightness / 255
             rgb_color = kwargs.get("rgb_color")
             command_brightness_mapping = {
@@ -216,6 +220,7 @@ class GrentonLight(LightEntity):
                     config = command_brightness_mapping[self._grenton_type]
                     command = self._generate_command("command", grenton_id_part_0, grenton_id_part_1, config["action"], config["index"], config["param"])
                 self._brightness = brightness
+                self._last_brightness = brightness
             elif self._grenton_type == CONF_GRENTON_TYPE_RGB:
                 if rgb_color:
                     hex_color = '#{:02x}{:02x}{:02x}'.format(*rgb_color)
@@ -228,6 +233,7 @@ class GrentonLight(LightEntity):
                 else:
                     command = self._generate_command("command", grenton_id_part_0, grenton_id_part_1, "execute", 0, scaled_brightness)
                     self._brightness = brightness
+                    self._last_brightness = brightness
             elif self._grenton_type == CONF_GRENTON_TYPE_RGBW:
                 if not white:
                     if rgb_color:
@@ -251,6 +257,7 @@ class GrentonLight(LightEntity):
                             command = self._generate_command("command", grenton_id_part_0, grenton_id_part_1, config["action"], config["index"], brightness)
                             command.update(self._generate_command("command_2", grenton_id_part_0, grenton_id_part_1, "execute", 0, 0))
                         self._brightness = brightness
+                        self._last_brightness = brightness
                 else:
                     config = command_brightness_mapping[CONF_GRENTON_TYPE_LED_W]
                     command = self._generate_command("command", grenton_id_part_0, grenton_id_part_1, config["action"], config["index"], white)
@@ -258,6 +265,7 @@ class GrentonLight(LightEntity):
                     self._color_mode = ColorMode.WHITE
                     self._white = white
                     self._brightness = white
+                    self._last_brightness = white
             else:
                 command = self._generate_command("command", grenton_id_part_0, grenton_id_part_1, "set", 0, 1)
             self._state = STATE_ON
@@ -282,6 +290,8 @@ class GrentonLight(LightEntity):
                 CONF_GRENTON_TYPE_LED_B: {"action": "execute", "index": 5},
                 CONF_GRENTON_TYPE_LED_W: {"action": "execute", "index": 12},
             }
+
+            _LOGGER.info("[GrentonLight] turn_off | kwargs=%s", kwargs)
             
             if self._grenton_type == CONF_GRENTON_TYPE_DIMMER and grenton_id_part_1.startswith("ZWA"):
                 config = {"action": "execute", "index": 0}
@@ -289,12 +299,13 @@ class GrentonLight(LightEntity):
                 config = command_mapping.get(self._grenton_type, {"action": "set", "index": 0})
 
             if self._grenton_type == CONF_GRENTON_TYPE_RGBW:
-                if self._color_mode == ColorMode.RGB:
-                    config = command_mapping.get(CONF_GRENTON_TYPE_RGB, {"action": "set", "index": 0})
-                else:
+                if self._color_mode == ColorMode.WHITE:
                     config = command_mapping.get(CONF_GRENTON_TYPE_LED_W, {"action": "set", "index": 0})
+                else:
+                    config = command_mapping.get(CONF_GRENTON_TYPE_RGB, {"action": "set", "index": 0})
             
             command = self._generate_command("command", grenton_id_part_0, grenton_id_part_1, config["action"], config["index"], 0)
+            self._last_brightness = self._brightness
             self._state = STATE_OFF
             self._last_command_time = self.hass.loop.time() if self.hass is not None else None
             self.async_write_ha_state()
@@ -346,10 +357,13 @@ class GrentonLight(LightEntity):
                     if self._grenton_type == CONF_GRENTON_TYPE_RGB or self._grenton_type == CONF_GRENTON_TYPE_DIMMER:
                         if self._grenton_type == CONF_GRENTON_TYPE_DIMMER and grenton_id_part_1.startswith("ZWA"):
                             self._brightness = data.get("status")
+                            self._last_brightness = data.get("status")
                         else:
                             self._brightness = data.get("status") * 255
+                            self._last_brightness = data.get("status") * 255
                     elif self._grenton_type == CONF_GRENTON_TYPE_LED_R or self._grenton_type == CONF_GRENTON_TYPE_LED_G or self._grenton_type == CONF_GRENTON_TYPE_LED_B or self._grenton_type == CONF_GRENTON_TYPE_LED_W:
                         self._brightness = data.get("status")
+                        self._last_brightness = data.get("status")
                     
                     if self._grenton_type == CONF_GRENTON_TYPE_RGB:
                         self._rgb_color = color_util.rgb_hex_to_rgb_list(data.get("status_2").strip("#"))
@@ -361,11 +375,13 @@ class GrentonLight(LightEntity):
                             self._color_mode = ColorMode.WHITE
                             self._white = data.get("status_3")
                             self._brightness = data.get("status_3")
+                            self._last_brightness = data.get("status_3")
                         elif data.get("status") > 0:
                             self._state = STATE_ON
                             self._color_mode = ColorMode.RGB
                             self._rgb_color = color_util.rgb_hex_to_rgb_list(data.get("status_2").strip("#"))
                             self._brightness = data.get("status") * 255
+                            self._last_brightness = data.get("status") * 255
                         else:
                             self._state = STATE_OFF
 
