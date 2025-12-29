@@ -66,7 +66,7 @@ If you like what I do, buy me a `coffee`!
 -- ║ Description: Display and control Grenton objects in Home Assistant.   ║
 -- ║                                                                       ║
 -- ║ License: Free for non-commercial use                                  ║
--- ║ Github: https://github.com/jnalepka/grenton-objects-home-assistant          ║
+-- ║ Github: https://github.com/jnalepka/grenton-objects-home-assistant    ║
 -- ║                                                                       ║
 -- ║ Script version: 1.0.0                                                 ║
 -- ║                                                                       ║
@@ -176,9 +176,9 @@ To use the Home Assistant REST API, you need to create an access token. To do th
 -- ║ Description: Prepare queue for the grenton service request to the HA. ║
 -- ║                                                                       ║
 -- ║ License: Free for non-commercial use                                  ║
--- ║ Github: https://github.com/jnalepka/grenton-objects-home-assistant          ║
+-- ║ Github: https://github.com/jnalepka/grenton-objects-home-assistant    ║
 -- ║                                                                       ║
--- ║ Version: 1.0.0                                                        ║
+-- ║ Version: 1.1.0                                                        ║
 -- ║                                                                       ║
 -- ║ Requirements:                                                         ║
 -- ║    Gate Http:                                                         ║
@@ -201,6 +201,11 @@ local builders = {
     set_state = function(r) r.v1 = value_1 end,
     set_brightness = function(r) r.v1 = value_1 end,
     set_rgb = function(r) r.v4 = string_value end,
+    set_rgbw = function(r, n)
+        r.v4 = string_value
+        r.v1 = value_1 
+        r.v2 = value_2
+    end,
     set_value = function(r) r.v1 = value_1 end,
     set_cover = function(r)
         r.v1 = value_1
@@ -238,9 +243,9 @@ end
 -- ║ Description: Send grenton service request to the HA.                  ║
 -- ║                                                                       ║
 -- ║ License: Free for non-commercial use                                  ║
--- ║ Github: https://github.com/jnalepka/grenton-objects-home-assistant          ║
+-- ║ Github: https://github.com/jnalepka/grenton-objects-home-assistant    ║
 -- ║                                                                       ║
--- ║ Version: 1.0.0                                                        ║
+-- ║ Version: 1.1.0                                                        ║
 -- ║                                                                       ║
 -- ║ Requirements:                                                         ║
 -- ║    Gate Http:                                                         ║
