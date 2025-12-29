@@ -141,6 +141,23 @@ class GrentonLight(LightEntity):
         self._rgb_color = color_util.rgb_hex_to_rgb_list(hex.strip("#"))
         self.async_write_ha_state()
 
+    async def async_force_rgbw(self, hex: str, brightness: float, white: float):
+        if white > 0:
+            self._state = STATE_ON
+            self._color_mode = ColorMode.WHITE
+            self._white = white
+            self._brightness = white
+            self._last_brightness = white
+        elif hex != "#000000":
+            self._state = STATE_ON
+            self._color_mode = ColorMode.RGB
+            self._rgb_color = color_util.rgb_hex_to_rgb_list(hex.strip("#"))
+            self._brightness = brightness * 255
+            self._last_brightness = brightness * 255
+        else:
+            self._state = STATE_OFF
+        self.async_write_ha_state()
+
     @property
     def name(self):
         return self._object_name
@@ -211,7 +228,7 @@ class GrentonLight(LightEntity):
             }
             white = kwargs.get("white")
 
-            _LOGGER.info("[GrentonLight] turn_on | kwargs=%s", kwargs)
+            # _LOGGER.info("[GrentonLight] turn_on | kwargs=%s", kwargs)
             
             if self._grenton_type in command_brightness_mapping:
                 if grenton_id_part_1.startswith("ZWA"):
@@ -290,8 +307,6 @@ class GrentonLight(LightEntity):
                 CONF_GRENTON_TYPE_LED_B: {"action": "execute", "index": 5},
                 CONF_GRENTON_TYPE_LED_W: {"action": "execute", "index": 12},
             }
-
-            _LOGGER.info("[GrentonLight] turn_off | kwargs=%s", kwargs)
             
             if self._grenton_type == CONF_GRENTON_TYPE_DIMMER and grenton_id_part_1.startswith("ZWA"):
                 config = {"action": "execute", "index": 0}

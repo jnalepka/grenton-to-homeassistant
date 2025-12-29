@@ -66,7 +66,7 @@ If you like what I do, buy me a `coffee`!
 -- ║ Description: Display and control Grenton objects in Home Assistant.   ║
 -- ║                                                                       ║
 -- ║ License: Free for non-commercial use                                  ║
--- ║ Github: https://github.com/jnalepka/grenton-objects-home-assistant          ║
+-- ║ Github: https://github.com/jnalepka/grenton-objects-home-assistant    ║
 -- ║                                                                       ║
 -- ║ Script version: 1.0.0                                                 ║
 -- ║                                                                       ║
@@ -176,9 +176,9 @@ To use the Home Assistant REST API, you need to create an access token. To do th
 -- ║ Description: Prepare queue for the grenton service request to the HA. ║
 -- ║                                                                       ║
 -- ║ License: Free for non-commercial use                                  ║
--- ║ Github: https://github.com/jnalepka/grenton-objects-home-assistant          ║
+-- ║ Github: https://github.com/jnalepka/grenton-objects-home-assistant    ║
 -- ║                                                                       ║
--- ║ Version: 1.0.0                                                        ║
+-- ║ Version: 1.1.0                                                        ║
 -- ║                                                                       ║
 -- ║ Requirements:                                                         ║
 -- ║    Gate Http:                                                         ║
@@ -201,6 +201,11 @@ local builders = {
     set_state = function(r) r.v1 = value_1 end,
     set_brightness = function(r) r.v1 = value_1 end,
     set_rgb = function(r) r.v4 = string_value end,
+    set_rgbw = function(r, n)
+        r.v4 = string_value
+        r.v1 = value_1 
+        r.v2 = value_2
+    end,
     set_value = function(r) r.v1 = value_1 end,
     set_cover = function(r)
         r.v1 = value_1
@@ -238,9 +243,9 @@ end
 -- ║ Description: Send grenton service request to the HA.                  ║
 -- ║                                                                       ║
 -- ║ License: Free for non-commercial use                                  ║
--- ║ Github: https://github.com/jnalepka/grenton-objects-home-assistant          ║
+-- ║ Github: https://github.com/jnalepka/grenton-objects-home-assistant    ║
 -- ║                                                                       ║
--- ║ Version: 1.0.0                                                        ║
+-- ║ Version: 1.1.0                                                        ║
 -- ║                                                                       ║
 -- ║ Requirements:                                                         ║
 -- ║    Gate Http:                                                         ║
@@ -275,6 +280,11 @@ local handlers = {
     set_state = function(r, n) r.state = n.v1 end,
     set_brightness = function(r, n) r.brightness = n.v1 end,
     set_rgb = function(r, n) r.hex = n.v4 end,
+    set_rgbw = function(r, n)
+        r.hex = n.v4
+        r.brightness = n.v1
+        r.white = n.v2
+    end,
     set_value = function(r, n) r.value = n.v1 end,
     set_cover = function(r, n)
         r.state = n.v1
@@ -306,6 +316,7 @@ GATE_HTTP->HA_Integration_Process_Queue_Timer->Start()
 | DIMMER - Light                    | OnValueChange   | light.lamp2         |   set_brightness         | CLU->dimmer->Value  |    (default)     |     (default)    |       (default)    |
 | LED - Light <br><img src="https://user-images.githubusercontent.com/47686437/168548113-b3cd4206-3281-445b-b7c6-bc0a3251293d.png" height="20"> [Tutorial](https://youtu.be/V0ZJ0n-DFUM)                     | OnValueChange   | light.lamp3         |   set_brightness         | CLU->led->Value  |    (default)    |     (default)    |       (default)     |
 | -                             | OnValueChange   | light.lamp3         |   set_rgb         | (default)  |    (default)     |      (default)    |       CLU->led->RGB     |
+| LED (RGB+W) - Light  | OnValueChange   | light.lamp3         |   set_rgbw         | CLU->led->Value  |    CLU->led->White   |     (default)    |       CLU->led->RGB     |
 | ONE_WIRE / TEMPERATURE / ANALOG IN / Other - Sensor  | OnValueChange   | sensor.tempsens1         |   set_value         | CLU->sensor->Value  |    (default)    |     (default)    |       (default)     |
 | ROLLER_SHUTTER - Cover  <br><img src="https://user-images.githubusercontent.com/47686437/168548113-b3cd4206-3281-445b-b7c6-bc0a3251293d.png" height="20"> [Tutorial](https://youtu.be/7x7XXVD65iI)  | OnStateChange   | cover.blinds1         |   set_cover         | CLU->roller->State  |    CLU->roller->Position   |     CLU->roller->LamelPosition    |       (default)     |
 <!-- | THERMOSTAT - Climate  | OnStart   | climate.therm1         |   set_therm_state         | CLU->thermostat->State  |    (default)     |      (default)    |       (default)     |
@@ -333,6 +344,7 @@ GATE_HTTP->HA_Integration_Process_Queue_Timer->Start()
 | Light                              |  set_state             | state [0 (off), 1 (on)]                           |
 | Light                              |  set_brightness        | brightness [0.00 (0%, off), 1.00 or 255 (100%)]   |
 | Light                              |  set_rgb               | hex [#RRGGBB]                                     |
+| Light                              |  set_rgbw              | hex [#RRGGBB], brightness [0.00 (0%, off), 1.00 (100%)], white [0 (off), 255 (100%)]   |
 | Sensor                             |  set_value             | value [-999999999.99 to 999999999.99]             |
 | Cover                              |  set_cover             | state [0-4], position [0-100%], lamel (optional) [0-90°] |
 <!-- | Climate                            |  set_therm_state       | state [0 (off), 1 (on)], direction (optional) [0 (normal/heat), 1 (reverse/cool)] |

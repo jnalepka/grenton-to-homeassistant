@@ -1,8 +1,8 @@
 """
 ==================================================
 Author: Jan Nalepka
-Script version: 3.2
-Date: 16.10.2025
+Script version: 3.3
+Date: 29.12.2025
 Repository: https://github.com/jnalepka/grenton-objects-home-assistant
 ==================================================
 """
@@ -33,6 +33,19 @@ SERVICE_SET_BRIGHTNESS_SCHEMA = vol.Schema({
 SERVICE_SET_RGB_SCHEMA = vol.Schema({
     vol.Required("entity_id"): str,
     vol.Required("hex"): vol.Match(r"^#[0-9A-Fa-f]{6}$")
+})
+
+SERVICE_SET_RGBW_SCHEMA = vol.Schema({
+    vol.Required("entity_id"): str,
+    vol.Required("hex"): vol.Match(r"^#[0-9A-Fa-f]{6}$"),
+    vol.Required("brightness"): vol.All(
+        vol.Coerce(float),
+        vol.Range(min=0.0, max=255.0)
+    ),
+    vol.Required("white"): vol.All(
+        vol.Coerce(float),
+        vol.Range(min=0.0, max=255.0)
+    )
 })
 
 SERVICE_SET_VALUE_SCHEMA = vol.Schema({
@@ -110,6 +123,21 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
             raise ServiceValidationError(
                 f"Nie udało się ustawić rgb hex dla encji {entity_id}: {err}"
             ) from err
+
+    async def handle_set_rgbw(call: ServiceCall) -> None:
+        entity_id = call.data["entity_id"]
+        hex = call.data["hex"]
+        brightness = call.data["brightness"]
+        white = call.data["white"]
+        entity = hass.data.get(DOMAIN, {}).get("entities", {}).get(entity_id)
+        if entity is None:
+            raise ServiceValidationError(f"Encja {entity_id} nie została znaleziona")
+        try:
+            await entity.async_force_rgbw(hex, brightness, white)
+        except Exception as err:
+            raise ServiceValidationError(
+                f"Nie udało się ustawić rgbw dla encji {entity_id}: {err}"
+            ) from err
         
     async def handle_set_value(call: ServiceCall) -> None:
         entity_id = call.data["entity_id"]
@@ -183,6 +211,7 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     ("set_state", handle_set_state, SERVICE_SET_STATE_SCHEMA),
     ("set_brightness", handle_set_brightness, SERVICE_SET_BRIGHTNESS_SCHEMA),
     ("set_rgb", handle_set_rgb, SERVICE_SET_RGB_SCHEMA),
+    ("set_rgbw", handle_set_rgbw, SERVICE_SET_RGBW_SCHEMA),
     ("set_value", handle_set_value, SERVICE_SET_VALUE_SCHEMA),
     ("set_cover", handle_set_cover, SERVICE_SET_COVER_SCHEMA),
     ("set_therm_state", handle_set_therm_state, SERVICE_SET_THERM_STATE_SCHEMA),
