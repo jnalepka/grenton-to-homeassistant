@@ -148,7 +148,7 @@ class GrentonLight(LightEntity):
             self._white = white
             self._brightness = white
             self._last_brightness = white
-        elif hex is not "#000000":
+        elif hex != "#000000":
             self._state = STATE_ON
             self._color_mode = ColorMode.RGB
             self._rgb_color = color_util.rgb_hex_to_rgb_list(hex.strip("#"))
