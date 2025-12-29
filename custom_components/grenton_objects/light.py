@@ -228,7 +228,7 @@ class GrentonLight(LightEntity):
             }
             white = kwargs.get("white")
 
-            _LOGGER.info("[GrentonLight] turn_on | kwargs=%s", kwargs)
+            # _LOGGER.info("[GrentonLight] turn_on | kwargs=%s", kwargs)
             
             if self._grenton_type in command_brightness_mapping:
                 if grenton_id_part_1.startswith("ZWA"):
@@ -307,8 +307,6 @@ class GrentonLight(LightEntity):
                 CONF_GRENTON_TYPE_LED_B: {"action": "execute", "index": 5},
                 CONF_GRENTON_TYPE_LED_W: {"action": "execute", "index": 12},
             }
-
-            _LOGGER.info("[GrentonLight] turn_off | kwargs=%s", kwargs)
             
             if self._grenton_type == CONF_GRENTON_TYPE_DIMMER and grenton_id_part_1.startswith("ZWA"):
                 config = {"action": "execute", "index": 0}
