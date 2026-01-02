@@ -25,6 +25,9 @@ from homeassistant.helpers.selector import SelectSelector, SelectSelectorConfig
 
 
 class GrentonOptionsFlowHandler(config_entries.OptionsFlow):
+    def __init__(self, config_entry: config_entries.ConfigEntry) -> None:
+        self.config_entry = config_entry
+
     async def async_step_init(self, user_input=None):
         device_type = self.config_entry.data.get("device_type", "")
 
